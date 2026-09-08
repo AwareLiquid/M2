@@ -2,6 +2,10 @@
 
 Owner: Everest.
 
+2026-09-09：先读 [历史候选与训练准入](docs/RESEARCH_RECOVERY.md)。
+融合式 PCLiquidCore＋生成式重放列回研究候选，不等于已接入本仓主模型；
+旧快照中的测试计数和“所有旧路径均兼容”不能代表当前状态。
+
 Local checkout: `E:\AwareLiquid\M2`.
 Remote: https://github.com/AwareLiquid/M2.
 
