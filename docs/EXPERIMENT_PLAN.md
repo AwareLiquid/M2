@@ -36,3 +36,38 @@
 - 同参数同预算;每机制独立记账;不互借结论
 - 不自动启用"已判负"旧开关(snap/STE/Hebbian 正则等)
 - 历史可复用结果不重训;新结果须多 seed + 配对
+
+## 实验结果登记(2026-09-09 三队列完成)
+
+### 队列 1:probe 机制对比(pointer_chase,5000 步,batch=128,3 seeds)
+
+| experiment | seeds | avg | 稳定性 |
+|---|---|---|---|
+| hamiltonian_world_model | .98/.98/.98 | **0.980** | 唯一稳定学会 |
+| fast_weight_memory | .78/.27/1.0 | 0.685 | 高方差 |
+| baseline | .71/.28/1.0 | 0.661 | 高方差 |
+| latent_core | .37/.37/.99 | 0.578 | 高方差 |
+| world_model | .89/.38/.41 | 0.559 | 高方差 |
+| top_down | .53/.99/.15 | 0.554 | 高方差 |
+| competitive_workspace | .98/.42/.15 | 0.515 | 高方差 |
+| selective_state | .19/.96/.15 | 0.432 | 高方差 |
+| global_rhythm | .36/.15/.13 | 0.212 | 低-中 |
+| predictive_coding | .16/.16/.17 | 0.166 | 稳定低 |
+| global_coherence | .16/.15/.17 | 0.159 | 稳定低 |
+| latent_stack | .13/.15/.18 | 0.152 | 稳定低 |
+| workspace | .14/.15/.14 | 0.143 | 稳定低 |
+
+观察:① hamiltonian 是唯一 3-seed 稳定机制;② 高方差主导(碰巧学会 vs 没学会),机制差异被 seed 方差淹没 → 该协议需更多 seeds/更长训练才能可靠区分;③ "稳定低组"(workspace/latent_stack/predictive_coding/global_coherence 0.14-0.17)在 pointer_chase 上稳定学不会(≈随机 0.125)。
+
+### 队列 2:PCLiquidCore(5 seeds)
+
+- **nchain**:PC 最差任务 0.965 vs GRU 1.327(4/5 配对);mean_forget 3/5
+  → worst-task 稳定性优势复现(对齐 M1 E3)
+- **genreplay**:重放消除遗忘(forget 无回放 +1.2 → 真实回放 +0.006 / 生成 +0.022);
+  PC-gen 4/5 优于 GRU-gen;PC-gen 略逊真实回放(+0.016)
+
+### 结论与后续
+
+- hamiltonian_world_model 0.98 是唯一稳定信号,值得深挖(是否 Hamiltonian 辅助稳定了训练)
+- 降方差方案:加 seeds(5-10)/ 降 lr / 加长训练至收敛;或 medium + 更长步数验证 top 机制
+- mod_chain 对照与 2b 评估排队(算力余量时)
