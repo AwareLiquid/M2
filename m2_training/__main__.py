@@ -21,6 +21,7 @@ def main() -> None:
     parser.add_argument("--sequence-length", type=int)
     parser.add_argument("--batch", type=int)
     parser.add_argument("--grad-accum", type=int)
+    parser.add_argument("--lr", type=float)
     args = parser.parse_args()
     if args.steps < 1 or args.save_every < 1:
         parser.error("--steps and --save-every must be positive")
@@ -35,6 +36,7 @@ def main() -> None:
             sequence_length=128 if args.sequence_length is None else args.sequence_length,
             batch=8 if args.batch is None else args.batch,
             grad_accum=1 if args.grad_accum is None else args.grad_accum,
+            lr=0.0003 if args.lr is None else args.lr,
         ), args.device)
     else:
         if any(value is not None for value in (
