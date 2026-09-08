@@ -68,11 +68,17 @@ outside its implemented scope. Do not describe the preset as trained 2B weights.
 |---|---|
 | baseline | Complete train/save/resume/evaluate path |
 | selective_state | Complete path; input-dependent liquid transition |
+| fast_weight_memory | Complete path; content-addressable fast-weight core (forward-pass) |
 | latent_core / latent_stack | Complete path; fixed four iterations |
 | workspace | Complete path; GWT parent enabled, four workspace iterations |
+| competitive_workspace | Complete path; competitive GWT bids (forward-pass) |
+| predictive_coding | Complete path; aux loss verified live |
+| world_model | Complete path; aux loss verified live |
+| hamiltonian_world_model | Complete path; aux loss verified live |
+| global_rhythm | Complete path; LAVI rhythm gate (forward-pass) |
+| global_coherence | Complete path; sparse top-k coherence (forward-pass) |
 | top_down | Not exposed: model accepts the signal, trainer has no goal source |
-| world_model / predictive_coding / Hamiltonian head | Imported implementations and some direct tests; task-specific objectives and resumable auxiliary state not audited here |
-| fast-weight core / Hebbian / rhythm / competitive workspace / coherence | Imported; not exposed until checkpoint-state and task wiring are audited |
+| Hebbian | Not exposed: aux loss measured ~0 (LAVI-gate inert), keep rejected until re-wired |
 | astrocyte / neuromodulation / sleep | Research components; no closed training loop in this entry point |
 
 CLI rejects unsupported experiment names. Availability of a Python profile

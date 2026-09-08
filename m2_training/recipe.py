@@ -5,7 +5,9 @@ from mt_lnn.config import MTLNNConfig
 from mt_lnn.profiles import M2Experiment, m2_research_config
 
 TRAINABLE_EXPERIMENTS: Final = (
-    "baseline", "selective_state", "latent_core", "latent_stack", "workspace",
+    "baseline", "selective_state", "fast_weight_memory", "latent_core",
+    "latent_stack", "workspace", "competitive_workspace", "predictive_coding",
+    "world_model", "hamiltonian_world_model", "global_rhythm", "global_coherence",
 )
 
 
