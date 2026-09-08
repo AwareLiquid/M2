@@ -383,6 +383,7 @@ class MTLNNConfig:
     # residual can't destabilise training once the gate opens.
     use_top_down: bool = False
     top_down_gate_init: float = 0.0           # per-block residual gate init (0 → identity)
+    top_down_goal: bool = False  # goal 源 = 上一步 GWTB 输出(跨步缓存,类脑高层调制低层)
     # GWT docking entry: additionally offer the top-down goal as an external bid
     # in the top-level global-workspace competition (reuses the world-model bid
     # pathway; needs a CompetitiveGWTBLayer, i.e. gwtb_external_bids=True). The bid

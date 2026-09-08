@@ -60,7 +60,7 @@ def m2_research_config(
                     use_competitive_gwtb=True,
                 )
             case M2Experiment.TOP_DOWN:
-                config = replace(config, use_top_down=True)
+                config = replace(config, use_top_down=True, use_gwtb=True, top_down_goal=True)
             case M2Experiment.PREDICTIVE_CODING:
                 config = replace(config, use_predictive_coding=True)
             case M2Experiment.WORLD_MODEL:

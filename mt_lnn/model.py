@@ -481,6 +481,17 @@ class MTLNNModel(nn.Module):
                 torch.tensor(float(getattr(config, "top_down_gwtb_gate_init", 0.0)))
             )
 
+        # Top-down goal source: 上一步 GWTB 输出的 summary 作为 goal(跨步缓存)。
+        self._top_down_goal_src = (
+            getattr(config, "use_top_down", False)
+            and getattr(config, "top_down_goal", False)
+            and self.gwtb is not None
+        )
+        if self._top_down_goal_src:
+            self.register_buffer("_top_down_goal", torch.zeros(config.d_model))
+        else:
+            self._top_down_goal = None
+
         # Synaptic memory -> GWT docking entry (Gap 1, 2026-06-25): close the
         # "spatial position code -> Hebbian/associative synaptic memory -> global
         # workspace" chain by letting a content-addressed FastWeightMemory recall
@@ -749,6 +760,9 @@ class MTLNNModel(nn.Module):
         stack_iter_logits: Optional[list] = (
             [] if (return_stack_iter_logits and _stack_iters > 1) else None
         )
+        _goal = top_down
+        if _goal is None and getattr(self, "_top_down_goal_src", False):
+            _goal = self._top_down_goal.detach().clone().unsqueeze(0)
         for _pass in range(_stack_iters):
             _shared_active_idx = None
             for i, block in enumerate(self.blocks):
@@ -766,7 +780,7 @@ class MTLNNModel(nn.Module):
                     position_offset=position_offset,
                     use_cache=use_cache,
                     use_lnn_recurrence=use_lnn_recurrence,
-                    top_down=top_down,
+                    top_down=_goal,
                     ladder_base=_pass * block.core_iterations,
                 )
                 if _is_leader and _gate_period > 1:
@@ -847,6 +861,9 @@ class MTLNNModel(nn.Module):
                 )
             if use_cache:
                 new_cache.gwtb_kv = gwtb_new_kv
+
+        if getattr(self, "_top_down_goal_src", False):
+            self._top_down_goal.copy_(x.detach().mean(dim=(0, 1)))
 
         if self.coherence is not None:
             coh_past = cache.coherence_kv if cache is not None else None

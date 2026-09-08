@@ -8,6 +8,7 @@ TRAINABLE_EXPERIMENTS: Final = (
     "baseline", "selective_state", "fast_weight_memory", "latent_core",
     "latent_stack", "workspace", "competitive_workspace", "predictive_coding",
     "world_model", "hamiltonian_world_model", "global_rhythm", "global_coherence",
+    "top_down",
 )
 
 
