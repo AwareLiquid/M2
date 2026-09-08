@@ -57,5 +57,6 @@ def model_config(recipe: Recipe, vocab: int, length: int) -> MTLNNConfig:
         m2_research_config(experiments),
         vocab_size=vocab, max_seq_len=length, d_model=width, n_layers=layers,
         n_heads=heads, n_kv_heads=kv, d_head=width // heads, gwtb_n_heads=1,
+        n_global_heads=max(2, heads // 2),
         dropout=0.0, attention_dropout=0.0,
     )
