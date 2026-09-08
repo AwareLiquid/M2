@@ -32,7 +32,7 @@ class TrainingRun:
             )
             length = self.generator(1, np.random.default_rng(recipe.seed)).tokens.shape[1]
         self.model = MTLNNModel(model_config(recipe, vocab, length)).to(self.device)
-        self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=recipe.lr, betas=(0.9, 0.95))
+        self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=recipe.lr, betas=(0.9, 0.95), weight_decay=0.01)
         self.step = 0
 
     def train_until(self, total_steps: int) -> float | None:
