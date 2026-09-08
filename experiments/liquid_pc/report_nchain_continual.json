@@ -1,0 +1,94 @@
+{
+  "config": {
+    "seeds": [
+      0
+    ],
+    "n_tasks": 2,
+    "buf": 8,
+    "n_seq": 32,
+    "seq_len": 32,
+    "d_in": 1,
+    "epochs": 3,
+    "batch": 32,
+    "lr": 0.003,
+    "replay_batch": 16,
+    "warmup": 16
+  },
+  "summary": {
+    "PC": {
+      "mean_forget": {
+        "mean": -0.3001725301146507,
+        "std": 0.0,
+        "max": -0.3001725301146507,
+        "n": 1,
+        "vals": [
+          -0.30017
+        ]
+      },
+      "worst_final": {
+        "mean": 0.14891110360622406,
+        "std": 0.0,
+        "max": 0.14891110360622406,
+        "n": 1,
+        "vals": [
+          0.14891
+        ]
+      },
+      "final_per_task": [
+        [
+          0.10278,
+          0.14891
+        ]
+      ],
+      "worst_task_idx": [
+        1
+      ]
+    },
+    "GRU": {
+      "mean_forget": {
+        "mean": -0.29606735706329346,
+        "std": 0.0,
+        "max": -0.29606735706329346,
+        "n": 1,
+        "vals": [
+          -0.29607
+        ]
+      },
+      "worst_final": {
+        "mean": 0.5021294355392456,
+        "std": 0.0,
+        "max": 0.5021294355392456,
+        "n": 1,
+        "vals": [
+          0.50213
+        ]
+      },
+      "final_per_task": [
+        [
+          0.42192,
+          0.50213
+        ]
+      ],
+      "worst_task_idx": [
+        1
+      ]
+    }
+  },
+  "edge_pc_minus_gru": {
+    "mean_forget": {
+      "mean_diff_pc_minus_gru": -0.004105173051357269,
+      "pc_lower_in": "1/1",
+      "diffs": [
+        -0.00411
+      ]
+    },
+    "worst_final": {
+      "mean_diff_pc_minus_gru": -0.35321833193302155,
+      "pc_lower_in": "1/1",
+      "diffs": [
+        -0.35322
+      ]
+    }
+  },
+  "seconds": 2.9
+}
