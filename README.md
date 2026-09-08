@@ -16,7 +16,7 @@ No trained M2 checkpoint or benchmark improvement is claimed by this migration.
 
 ## Training and checkpoint resume
 
-An independent synthetic-reasoning training entry point is available:
+An independent synthetic-reasoning and pretokenized-text training entry point is available:
 
 ```sh
 python -m m2_training train --checkpoint runs/probe.pt --steps 30
@@ -25,7 +25,9 @@ python -m m2_training evaluate --checkpoint runs/probe.pt
 ```
 
 See [training instructions and module wiring](docs/TRAINING.md) for supported
-experiments, GPU usage and limitations. This is not a 2B pretraining pipeline.
+experiments, text preparation, GPU usage and limitations. A roughly 2B model
+configuration is available for appropriately provisioned machines; no trained
+2B checkpoint is provided. Extracted experiments live in `mt_lnn/research/`.
 
 ## Research direction
 

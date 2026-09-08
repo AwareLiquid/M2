@@ -9,3 +9,5 @@ dist/
 *.pt
 *.pth
 benchmarks/results/
+runs/
+data/

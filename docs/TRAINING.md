@@ -22,12 +22,45 @@ It is loaded using `weights_only=True`. Resume requires the same device type.
 Bit-exact reproducibility is tested on CPU; GPU portability across hardware,
 PyTorch versions or nondeterministic kernels is not guaranteed.
 
-This entry point is a small FP32 synthetic-reasoning trainer, not a 2B language
-pretraining pipeline. It fixes a 104-wide, two-layer model, batch 8, constant
-learning rate, and answer-only supervision. Tasks are `pointer_chase` and
-`mod_chain`; evaluation regenerates fixed held-out synthetic batches.
-It does not implement dataset-file training, a scheduler, AMP, distributed
-training or production-model instruction tuning.
+The default is a small FP32 synthetic-reasoning trainer (104-wide, two layers,
+batch 8, constant learning rate, answer-only supervision). Tasks are
+`pointer_chase`, `mod_chain` and `text`. Text training uses all next-token
+targets, an independently held-out corpus and validation PPL. Synthetic
+evaluation reports accuracy. `--grad-accum` controls microbatches per optimizer
+step; checkpoints are written only at completed optimizer steps.
+
+## Real text and scale configuration
+
+Prepare separate UTF-8 files, then train:
+
+```sh
+python -m m2_training.prepare --train train.txt --validation validation.txt --output data/corpus
+python -m m2_training train --task text --corpus data/corpus/manifest.json --checkpoint runs/text.pt --sequence-length 128 --batch 2 --grad-accum 4 --steps 100 --device cuda
+python -m m2_training resume --checkpoint runs/text.pt --steps 200 --device cuda
+python -m m2_training evaluate --checkpoint runs/text.pt --device cuda
+python -m m2_training.inspect --size 2b --vocab-size 32768
+```
+
+Preparation uses UTF-8 **byte tokens** (vocabulary 256), a dependency-free
+pipeline check, not a recommended production tokenizer. A custom pretokenized
+corpus uses the same manifest schema: `format_version=1`, a nonempty `tokenizer`
+identity, `vocab_size`, and `train`/`validation` objects containing a relative
+`.npy` `file` path and SHA-256 `sha256`. Arrays must be one-dimensional integer
+token IDs in vocabulary range. Record the tokenizer revision in its identity.
+Corpus checksums and manifest identity are verified on resume. Keep corpus
+paths unchanged when resuming; corpus relocation is not implemented.
+
+`--size 2b` configures width 2080, 34 layers, 16 query heads and 4 KV heads.
+At vocabulary 32768 its baseline has **2,064,984,584 parameters**, counted on
+the meta device without allocating weights. Parameter count changes with
+vocabulary and experiment. FP32 Adam training-state lower bound is
+33,039,753,344 bytes, **excluding activations, temporary allocations and
+checkpoint loading peaks**. This preset has not been trained at full scale.
+Use a suitably provisioned machine; the local 8GB GPU is only for probe runs.
+
+This is a single-device FP32 training path. Scheduler, AMP, activation
+checkpointing, distributed training and production instruction tuning remain
+outside its implemented scope. Do not describe the preset as trained 2B weights.
 
 ## Module wiring
 
@@ -47,11 +80,16 @@ does not establish that its mechanism is useful or fully integrated.
 
 ## Source boundary
 
-`mt_lnn/` remains the imported compatibility runtime, including shared core
-and embedded experiments. `m2_training/` owns the new M2 recipe, runner and CLI;
+`mt_lnn/research/` now owns ten physically extracted research implementations:
+world model, Hamiltonian head, rhythm, predictive coding, Hebbian plasticity,
+astrocyte, neuromodulation, sleep consolidation, coherence and GWT workspace.
+Their old `mt_lnn.<module>` paths resolve to the same module objects for
+compatibility. Main-model integration and core/stack loop assembly remain in
+`mt_lnn/model.py`; not every experimental code path has been extracted.
+`m2_training/` owns the M2 recipe, runner and CLI;
 `benchmarks/reasoning_tasks.py` supplies synthetic data. Packaging includes
 these modules, so installed usage does not reach into an M1 checkout.
-Physical extraction of embedded experimental layers remains a separate task.
+No corresponding source removal was performed in the separate M1 repository.
 
 Validation: five configurations pass exact CPU continuous-vs-resumed parameter
 comparisons. CUDA selective-state training, cross-process resume and evaluation
