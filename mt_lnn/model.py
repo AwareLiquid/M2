@@ -503,7 +503,7 @@ class MTLNNModel(nn.Module):
             and getattr(self.gwtb, "accept_external_bids", False)
         )
         if self._memory_gwtb_bid:
-            from .llama_adapter import FastWeightMemory
+            from .fast_weight_memory import FastWeightMemory
             self.memory_fast_weight = FastWeightMemory(
                 d_model=config.d_model,
                 d_mem=int(getattr(config, "gwtb_memory_bid_dim", 64)),
