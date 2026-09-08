@@ -34,7 +34,7 @@ def main() -> None:
             corpus=str(args.corpus.resolve()) if args.corpus else None,
             size=args.size or "probe",
             sequence_length=128 if args.sequence_length is None else args.sequence_length,
-            batch=8 if args.batch is None else args.batch,
+            batch=128 if args.batch is None else args.batch,
             grad_accum=1 if args.grad_accum is None else args.grad_accum,
             lr=0.0003 if args.lr is None else args.lr,
         ), args.device)

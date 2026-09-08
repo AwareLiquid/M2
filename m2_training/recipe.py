@@ -17,7 +17,7 @@ class Recipe:
     task: str = "pointer_chase"
     experiment: str = "baseline"
     seed: int = 0
-    batch: int = 8
+    batch: int = 128
     difficulty: int = 2
     n_values: int = 8
     lr: float = 0.0003
