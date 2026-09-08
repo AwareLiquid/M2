@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "awareliquid-m2"
+version = "0.1.0"
+description = "Experimental recurrent reasoning and cognitive mechanisms"
+requires-python = ">=3.11"
+dependencies = ["torch>=2.0.0", "numpy>=1.24.0"]
+
+[project.optional-dependencies]
+test = ["pytest>=7.0.0"]
+
+[tool.setuptools.packages.find]
+include = ["mt_lnn*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["slow: longer-running model checks"]

@@ -10,9 +10,9 @@ Next-generation model architecture research, owned by Everest.
 
 ## Current status
 
-Repository established on 2026-09-08. Experimental source migration from M1
-is pending dependency mapping and regression verification. No trained M2
-checkpoint or benchmark improvement is claimed by this initialization.
+Experimental sources and their fixed-version runtime dependencies are now
+imported from M1. See [migration provenance and usage](docs/MIGRATION.md).
+No trained M2 checkpoint or benchmark improvement is claimed by this migration.
 
 ## Direction
 
