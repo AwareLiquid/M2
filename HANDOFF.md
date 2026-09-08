@@ -3,8 +3,12 @@
 Owner: Everest.
 
 2026-09-09：先读 [历史候选与训练准入](docs/RESEARCH_RECOVERY.md)。
-融合式 PCLiquidCore＋生成式重放列回研究候选，不等于已接入本仓主模型；
-旧快照中的测试计数和“所有旧路径均兼容”不能代表当前状态。
+融合式 PCLiquidCore 已从 M1 迁移到 `experiments/liquid_pc/`（保留 M1 原始副本），
+数值等价验证通过（nchain smoke：PC 最差任务 0.149 vs GRU 0.502，防遗忘优势复现）。
+完整 nchain（5 seeds×5 tasks）与 genreplay（生成式重放对照）在服务器后台运行中。
+2026-09-09 训练器修复：`batch` 默认 8→128（小批量梯度噪声是 pointer_chase
+学不会的根因，batch=128 后 accuracy 0.09→0.71）、`weight_decay=0.01`（对齐 M1）、
+新增 `medium` 规模（416 宽 8 层 17.7M）。完整测试 177 passed。
 
 Local checkout: `E:\AwareLiquid\M2`.
 Remote: https://github.com/AwareLiquid/M2.
