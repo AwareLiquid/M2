@@ -17,7 +17,7 @@ def main() -> None:
     parser.add_argument("--task", choices=("pointer_chase", "mod_chain", "text"))
     parser.add_argument("--seed", type=int)
     parser.add_argument("--corpus", type=Path)
-    parser.add_argument("--size", choices=("probe", "2b"))
+    parser.add_argument("--size", choices=("probe", "medium", "2b"))
     parser.add_argument("--sequence-length", type=int)
     parser.add_argument("--batch", type=int)
     parser.add_argument("--grad-accum", type=int)
