@@ -7,6 +7,11 @@ Remote: https://github.com/AwareLiquid/M2.
 
 ## Immediate work
 
+- Independent training entry point: `python -m m2_training`.
+- Train/checkpoint/resume/evaluate verified; five configurations pass exact CPU resume tests.
+- GPU selective-state train and cross-process resume/evaluation verified.
+- Unwired modules and the remaining physical source split are listed in `docs/TRAINING.md`.
+
 1. Experimental sources and their shared runtime are imported; provenance is pinned in `docs/MIGRATION.md`.
 2. Direct tests pass (156); the reasoning-depth GPU smoke completes training and evaluation.
 3. Keep future research changes here; graduate validated mechanisms to M1 through reviewed changes.

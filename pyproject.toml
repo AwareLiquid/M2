@@ -13,7 +13,7 @@ dependencies = ["torch>=2.0.0", "numpy>=1.24.0"]
 test = ["pytest>=7.0.0"]
 
 [tool.setuptools.packages.find]
-include = ["mt_lnn*"]
+include = ["mt_lnn*", "m2_training*", "benchmarks"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

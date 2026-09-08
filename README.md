@@ -14,7 +14,20 @@ Experimental sources and their fixed-version runtime dependencies are now
 imported from M1. See [migration provenance and usage](docs/MIGRATION.md).
 No trained M2 checkpoint or benchmark improvement is claimed by this migration.
 
-## Direction
+## Training and checkpoint resume
+
+An independent synthetic-reasoning training entry point is available:
+
+```sh
+python -m m2_training train --checkpoint runs/probe.pt --steps 30
+python -m m2_training resume --checkpoint runs/probe.pt --steps 60
+python -m m2_training evaluate --checkpoint runs/probe.pt
+```
+
+See [training instructions and module wiring](docs/TRAINING.md) for supported
+experiments, GPU usage and limitations. This is not a 2B pretraining pipeline.
+
+## Research direction
 
 Develop a compact reasoning engine with persistent memory and optional external
 knowledge retrieval. The 2B target is a research objective; parity with 70B
