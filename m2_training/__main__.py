@@ -22,6 +22,8 @@ def main() -> None:
     parser.add_argument("--batch", type=int)
     parser.add_argument("--grad-accum", type=int)
     parser.add_argument("--lr", type=float)
+    parser.add_argument("--difficulty", type=int)
+    parser.add_argument("--n-values", type=int)
     args = parser.parse_args()
     if args.steps < 1 or args.save_every < 1:
         parser.error("--steps and --save-every must be positive")
@@ -37,6 +39,8 @@ def main() -> None:
             batch=128 if args.batch is None else args.batch,
             grad_accum=1 if args.grad_accum is None else args.grad_accum,
             lr=0.0003 if args.lr is None else args.lr,
+            difficulty=2 if args.difficulty is None else args.difficulty,
+            n_values=8 if args.n_values is None else args.n_values,
         ), args.device)
     else:
         if any(value is not None for value in (
