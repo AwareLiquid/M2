@@ -82,3 +82,17 @@ global_rhythm 0.992 仅个 seed 略低)。
 价值 = 确认所有接入机制在简单顺序任务上都能学会(无机制损坏)。
 区分机制须用 pointer_chase 类"查表/推理"任务(见队列 1:hamiltonian 稳定 0.98、
 workspace/latent_stack/predictive_coding/global_coherence 稳定 ~0.15)。
+
+### 降 lr 验证(2026-09-09,pointer_chase,lr=1e-4,4 机制 × 5 seeds)
+
+| 机制 | 5-seed 值 | avg |
+|---|---|---|
+| hamiltonian_world_model | .42/.23/.33/.93/.77 | 0.536 |
+| fast_weight_memory | .91/.32/.32/.19/.79 | 0.505 |
+| baseline | .90/.29/.31/.16/.78 | 0.489 |
+| workspace | .16/.99/.28/.28/.13 | 0.367 |
+
+**关键结论:单 lr + 5000 步的 probe 机制对比不可靠。**
+lr=3e-4 时 hamiltonian 稳定 0.98、workspace 稳定 0.14;降 lr=1e-4 后 hamiltonian
+变高方差(0.23-0.93)、workspace 部分 seed 到 0.99——机制排名随 lr 翻转,seed 方差主导。
+⇒ 区分机制需 lr 扫描/训练至收敛/更大模型,或换更敏感的任务与指标。
