@@ -96,3 +96,14 @@ workspace/latent_stack/predictive_coding/global_coherence 稳定 ~0.15)。
 lr=3e-4 时 hamiltonian 稳定 0.98、workspace 稳定 0.14;降 lr=1e-4 后 hamiltonian
 变高方差(0.23-0.93)、workspace 部分 seed 到 0.99——机制排名随 lr 翻转,seed 方差主导。
 ⇒ 区分机制需 lr 扫描/训练至收敛/更大模型,或换更敏感的任务与指标。
+
+### medium 加长训练验证(2026-09-09,medium 17.7M,batch=128,pointer_chase,15000 步)
+
+| 机制 | loss 轨迹 | accuracy |
+|---|---|---|
+| baseline | 1.95→1.81(缓慢下降) | 0.219(没学会) |
+| **hamiltonian_world_model** | 1.95→1.63→0.06→**0.005**(9000 步后突降) | **1.0**(学会) |
+
+**medium 规模澄清了 probe 的假象**:hamiltonian_world_model 在 medium 下稳定学会
+pointer_chase(查表任务),baseline 学不会。结合 probe 高方差,结论是 medium + 加长训练
+是可靠对比协议,hamiltonian 的机制优势需多 seed 确认(见下)。
