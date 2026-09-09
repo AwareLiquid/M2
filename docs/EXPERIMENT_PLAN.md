@@ -71,3 +71,14 @@
 - hamiltonian_world_model 0.98 是唯一稳定信号,值得深挖(是否 Hamiltonian 辅助稳定了训练)
 - 降方差方案:加 seeds(5-10)/ 降 lr / 加长训练至收敛;或 medium + 更长步数验证 top 机制
 - mod_chain 对照与 2b 评估排队(算力余量时)
+
+### mod_chain 对照队列(2026-09-09,probe,5000 步,batch=128,3 seeds)
+
+几乎所有机制 accuracy = 1.0(baseline/selective_state/latent_*/workspace/predictive_coding/
+world_model/hamiltonian/global_*/top_down 全 1.0;fast_weight 0.994、competitive 0.994、
+global_rhythm 0.992 仅个 seed 略低)。
+
+结论:mod_chain(顺序累积任务)对 probe 规模过简单 → **天花板效应**,无法区分机制;
+价值 = 确认所有接入机制在简单顺序任务上都能学会(无机制损坏)。
+区分机制须用 pointer_chase 类"查表/推理"任务(见队列 1:hamiltonian 稳定 0.98、
+workspace/latent_stack/predictive_coding/global_coherence 稳定 ~0.15)。
