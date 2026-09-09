@@ -110,12 +110,13 @@ pointer_chase(查表任务),baseline 学不会。结合 probe 高方差,结论�
 
 ### medium 多 seed 确认(2026-09-09,medium,15000 步,batch=128)
 
-| 机制 | seeds(medium_long + medium_ms) |
-|---|---|
-| baseline | 0.219(seed0)/ **0.998**(seed1)/ **1.0**(seed2) |
-| hamiltonian_world_model | 1.0(seed0)/ seed1-2 待完成 |
+| 机制 | seeds(medium_long + medium_ms) | avg | 学会 |
+|---|---|---|---|
+| baseline | 0.219 / 0.998 / 1.0 | 0.74 | 2/3 |
+| hamiltonian_world_model | 1.0 / 0.303 / 1.0 | 0.77 | 2/3 |
 
-**关键反证:medium 下 baseline 也能学会 pointer_chase(2/3 seeds = 0.998/1.0)**。
-此前 "hamiltonian 1.0 vs baseline 0.219" 是 **seed 假象**(baseline seed0 碰巧未收敛)。
-⇒ medium + 15000 步 + batch=128 下 pointer_chase 可学会(高方差,seed0 例外),机制对比
-须多 seed;hamiltonian 无明显机制优势(样本内)。
+**最终结论:medium 下 baseline 与 hamiltonian 均 2/3 学会、avg 接近 → 无机制差异。**
+此前 probe(0.98 稳定)与 medium_long(1.0 vs 0.219)观察到的 "hamiltonian 机制优势"
+均为 **seed 假象**(各自只有 seed0 碰巧学会/未学会)。多 seed 后两者表现相同。
+⇒ 高方差(seed 依赖)是本训练协议的根本问题;区分机制需更强任务(更高跳数/
+更长链)/更多 seeds/lr 扫描。**不得据此 graduate 任何机制。**
