@@ -107,3 +107,15 @@ lr=3e-4 时 hamiltonian 稳定 0.98、workspace 稳定 0.14;降 lr=1e-4 后 hami
 **medium 规模澄清了 probe 的假象**:hamiltonian_world_model 在 medium 下稳定学会
 pointer_chase(查表任务),baseline 学不会。结合 probe 高方差,结论是 medium + 加长训练
 是可靠对比协议,hamiltonian 的机制优势需多 seed 确认(见下)。
+
+### medium 多 seed 确认(2026-09-09,medium,15000 步,batch=128)
+
+| 机制 | seeds(medium_long + medium_ms) |
+|---|---|
+| baseline | 0.219(seed0)/ **0.998**(seed1)/ **1.0**(seed2) |
+| hamiltonian_world_model | 1.0(seed0)/ seed1-2 待完成 |
+
+**关键反证:medium 下 baseline 也能学会 pointer_chase(2/3 seeds = 0.998/1.0)**。
+此前 "hamiltonian 1.0 vs baseline 0.219" 是 **seed 假象**(baseline seed0 碰巧未收敛)。
+⇒ medium + 15000 步 + batch=128 下 pointer_chase 可学会(高方差,seed0 例外),机制对比
+须多 seed;hamiltonian 无明显机制优势(样本内)。
