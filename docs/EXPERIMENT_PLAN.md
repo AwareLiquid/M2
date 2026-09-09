@@ -133,3 +133,13 @@ pointer_chase(查表任务),baseline 学不会。结合 probe 高方差,结论�
 **结论:difficulty=4(4 跳查表)对 probe 太硬**——baseline/fast_weight 全随机学不会,
 hamiltonian 仅 1 seed 偶然学会(0.73)。任务硬化未降低方差,反使大部分机制退化到随机。
 ⇒ difficulty=2 可学会但高方差,difficulty=4 学不会;当前协议无"方差低且可区分"窗口。
+
+### genreplay_stability(2026-09-09,PCLiquidCore 生成式重放稳定性,5 seeds × 6 dreams)
+
+| 指标 | PC | GRU |
+|---|---|---|
+| within-seed std(forget) | 0.00484 ± 0.00338 | 0.01856 ± 0.01974 |
+| mean forget | +0.02834 | +0.06024 |
+
+**PC 更稳定(4/5 seeds within-seed std 更低,mean std diff -0.014)+ 遗忘更低(3/5,-0.032)。**
+PC 的生成式重放训练可重复性显著优于 GRU(within-seed std 差 ~4×),对"可靠复现"是有力证据。
