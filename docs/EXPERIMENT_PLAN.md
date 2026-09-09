@@ -120,3 +120,16 @@ pointer_chase(查表任务),baseline 学不会。结合 probe 高方差,结论�
 均为 **seed 假象**(各自只有 seed0 碰巧学会/未学会)。多 seed 后两者表现相同。
 ⇒ 高方差(seed 依赖)是本训练协议的根本问题;区分机制需更强任务(更高跳数/
 更长链)/更多 seeds/lr 扫描。**不得据此 graduate 任何机制。**
+
+### difficulty=4 硬化(2026-09-09,probe,pointer_chase k=4,5000 步,3 seeds)
+
+| 机制 | 3 seeds | avg |
+|---|---|---|
+| baseline | .15/.14/.16 | 0.146(全随机) |
+| hamiltonian_world_model | .19/.73/.25 | 0.393(seed1 学会) |
+| fast_weight_memory | .15/.15/.16 | 0.152(全随机) |
+| workspace | .21/.23/.14 | 0.193(接近随机) |
+
+**结论:difficulty=4(4 跳查表)对 probe 太硬**——baseline/fast_weight 全随机学不会,
+hamiltonian 仅 1 seed 偶然学会(0.73)。任务硬化未降低方差,反使大部分机制退化到随机。
+⇒ difficulty=2 可学会但高方差,difficulty=4 学不会;当前协议无"方差低且可区分"窗口。
