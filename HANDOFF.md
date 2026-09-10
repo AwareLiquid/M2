@@ -2,6 +2,10 @@
 
 Owner: Everest.
 
+2026-09-09：新增 `mt_lnn/research/rl/dpo_grpo.py` —— DPO / GRPO 对齐损失参考实现
+（标准公式，数学经 8 个合成测试验证；**未在真实训练验证**，仅供未来 2B 线 RL
+阶段使用，默认不接入任何训练路径）。全仓测试 185 passed（177+8），无回归。
+
 2026-09-09：先读 [历史候选与训练准入](docs/RESEARCH_RECOVERY.md)。
 融合式 PCLiquidCore 已从 M1 迁移到 `experiments/liquid_pc/`（保留 M1 原始副本），
 数值等价验证通过（nchain smoke：PC 最差任务 0.149 vs GRU 0.502，防遗忘优势复现）。
