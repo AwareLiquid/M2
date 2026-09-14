@@ -43,3 +43,7 @@ Experimental code, direct tests, reasoning benchmark and research documents
 have been imported. See `docs/MIGRATION.md` for the exact source revision.
 The imported suite passed 156 tests locally. No new capability claim follows
 from this migration. M1 compatibility code remains in its source repository.
+2026-09-11：新增 [数据形态规范](docs/DATA_FORMS.md) —— 数据形态必须匹配训练目标
+(分线匹配表/情节流格式/反模式清单)。核心结论: 世界模型线与类脑评估线改用
+情节流(观测-动作-时间戳), 语言主线语料不动。
+
