@@ -22,6 +22,17 @@
 | **30K 步（本次完成）** | **2.73** |
 | 末步 loss | 1.00 |
 
+## 评估（2026-09-17，checkpoint 推理评测）
+
+| 指标 | 结果 |
+|---|---|
+| val PPL @seq128（复现） | 2.718 ✅ |
+| val PPL @seq256 | **2.721**（无退化） |
+| val PPL @seq512 | **2.676**（略好） |
+| 生成样例 | 通顺英语（"The second, the second, was a second, ..."——30K 步 byte 模型正常水平） |
+
+**发现**：PPL 在 4× 训练长度上**完全平坦**（2.72→2.68）——循环架构的上下文泛化无长度退化。
+
 ## 备注
 
 - **checkpoint**：服务器 `/root/M2/runs/t2b_30k.pt`（4.1GB bf16 参数，无 optimizer state）
