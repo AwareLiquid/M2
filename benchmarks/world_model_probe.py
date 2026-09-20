@@ -59,13 +59,17 @@ class LiquidBlock(nn.Module):
         self.log_tau = nn.Parameter(torch.linspace(-2.0, 3.0, n_scales))
         self.blend = nn.Parameter(torch.zeros(n_scales))
 
-    def forward(self, x, h_prev=None):
+    def forward(self, x, h_prev=None, err=None):
         B, T, d = x.shape
         u = torch.tanh(self.W(x))  # (B, T, d)
+        if err is not None:
+            # predictive-coding closed loop: step t's input is gated by the
+            # PREVIOUS step's prediction error (surprise suppresses input)
+            g = 1.0 - F.pad(err, (1, 0))  # (B, T) — step 0 ungated
+            u = u * g.unsqueeze(-1)
         tau = F.softplus(self.log_tau)  # (S,)
         decay = torch.exp(-1.0 / tau)  # (S,)
         a = torch.softmax(self.blend, dim=0)  # (S,)
-        hs = []
         h = torch.zeros(B, self.n_scales, d, device=x.device) if h_prev is None else h_prev
         out = []
         for t in range(T):
@@ -84,10 +88,10 @@ class LiquidBackbone(nn.Module):
             [LiquidBlock(d_model) for _ in range(n_layers)])
         self.norm = nn.LayerNorm(d_model)
 
-    def forward(self, s):
+    def forward(self, s, err=None):
         x = self.inp(s)
         for blk in self.blocks:
-            x, _ = blk(x)
+            x, _ = blk(x, err=err)
         return self.norm(x)  # (B, T, d_model)
 
 
@@ -108,8 +112,20 @@ def train(args):
     for step in range(args.steps):
         idx = torch.randint(0, args.n_traj, (args.batch,))
         s = data[idx]  # (B, T, 2)
-        h = backbone(s)  # (B, T, d)
-        _, loss = head(h, compute_loss=True)
+        if args.mode == "closed":
+            # pass 1 (open): errors for the feedback
+            h1 = backbone(s)
+            z_pred, loss1 = head(h1, compute_loss=True)
+            with torch.no_grad():
+                z_tgt = F.normalize(head.online_proj(h1[:, 1:]), dim=-1)
+                err = (1.0 - (z_pred[:, :-1] * z_tgt).sum(-1)) / 2.0  # (B, T-1)
+            # pass 2 (closed): previous error gates the input
+            h = backbone(s, err=err)
+            _, loss2 = head(h, compute_loss=True)
+            loss = loss1 + loss2
+        else:
+            h = backbone(s)
+            _, loss = head(h, compute_loss=True)
         opt.zero_grad()
         loss.backward()
         torch.nn.utils.clip_grad_norm_(backbone.parameters(), 1.0)
@@ -174,6 +190,7 @@ def main():
     ap.add_argument("--batch", type=int, default=32)
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--steps", type=int, default=2000)
+    ap.add_argument("--mode", choices=["open", "closed"], default="open")
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
     train(args)
