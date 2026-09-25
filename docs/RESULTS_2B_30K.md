@@ -26,15 +26,16 @@
 
 30K → 60K 改善 6.4%；60K → 90K 改善 2.9%；90K → 150K 改善 2.8%——收敛持续，未饱和。
 
-## selective_state 变体对照（09-22~24）
+## selective_state 变体对照（09-22~25，DEAD）
 
-| 变体 | 30K PPL | vs baseline 30K |
-|---|---|---|
-| baseline | 2.73 | — |
-| **selective_state** | **2.713** | +0.6%（噪声内持平） |
+| 变体 | 30K PPL | 60K PPL | vs baseline 同步 |
+|---|---|---|---|
+| baseline | 2.73 | 2.556 | — |
+| **selective_state** | 2.713 | **2.566** | 30K +0.6% / 60K −0.4%（噪声内持平） |
 
-**判定**：selective_state 机制在 2b byte-LM 上 30K 步**无优势**（2.713 vs 2.73）。
-60K 续跑中（`runs/t2b_selective.pt` → 60K，看是否后程分化）。
+**判定：DEAD**——selective_state 机制在 2b byte-LM 上 30K/60K 两步均与 baseline
+持平（2.713 vs 2.73；2.566 vs 2.556），无任何优势。选择性状态（输入依赖的门控）
+不改变 byte 语言建模的收敛轨迹。与 M1 小模型上 selective 的持平结论一致。
 
 ## 评估（2026-09-17，checkpoint 推理评测）
 
