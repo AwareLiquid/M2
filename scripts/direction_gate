@@ -1,0 +1,105 @@
+#!/usr/bin/env python3
+"""direction_gate — 提交前判单门(v1,移植自 AwareLiquid-Physic 轮 291 硬化版)
+
+每个产出心跳提交前:
+  --add --round N --direction X --evidence Y
+      追加一行 JSON 判单到 docs/loop/direction-gate.jsonl
+      (round/direction/evidence/ts),direction 必答:本轮工作与四轴目标
+      (数学代码推理/长流式记忆/持续学习/端侧延迟)的耦合声明。
+  --check-round N
+      校验末条判单存在且 round == N、direction/evidence 非空。
+      退出码 0=过 1=不过(缺判单/轮号不符/字段空)。
+
+连续 2 条 DRIFT(direction 含 "DRIFT" 标记)⇒ 提示转 state: BLOCKED-HUMAN
+(由 goal_check 输出与 GOAL-PROMPT-M2 纪律条款执行,本脚本只机械计数提示)。
+"""
+import argparse
+import json
+import os
+import sys
+import time
+
+DRIFT_STREAK_LIMIT = 2
+
+
+def repo_root():
+    root = os.environ.get("M2_LOOP_ROOT")
+    if root:
+        return os.path.abspath(root)
+    return os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+
+
+def gate_path(root):
+    return os.path.join(root, "docs", "loop", "direction-gate.jsonl")
+
+
+def read_entries(path):
+    entries = []
+    if not os.path.exists(path):
+        return entries
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                entries.append(json.loads(line))
+            except json.JSONDecodeError:
+                print(f"direction_gate: 畸变行(非 JSON): {line[:80]}…")
+                sys.exit(1)
+    return entries
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--add", action="store_true")
+    ap.add_argument("--check-round", type=int, metavar="N")
+    ap.add_argument("--round", type=int)
+    ap.add_argument("--direction", default="")
+    ap.add_argument("--evidence", default="")
+    args = ap.parse_args()
+
+    root = repo_root()
+    path = gate_path(root)
+
+    if args.add:
+        if args.round is None or not args.direction.strip() or not args.evidence.strip():
+            ap.error("--add 需要 --round/--direction/--evidence 全部非空")
+        entry = {
+            "round": args.round,
+            "direction": args.direction.strip(),
+            "evidence": args.evidence.strip(),
+            "ts": int(time.time()),
+        }
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+        print(f"direction_gate: 判单已追加 round={args.round} direction={entry['direction'][:60]}")
+        streak = 0
+        for e in read_entries(path):
+            streak = streak + 1 if "DRIFT" in e.get("direction", "").upper() else 0
+        if streak >= DRIFT_STREAK_LIMIT:
+            print(f"direction_gate: 连续 {streak} 条 DRIFT — 按 GOAL-PROMPT-M2 纪律转 state: BLOCKED-HUMAN")
+        return 0
+
+    if args.check_round is not None:
+        entries = read_entries(path)
+        if not entries:
+            print("direction_gate: 判单为空 — 产出心跳提交前必须 --add 判单")
+            return 1
+        last = entries[-1]
+        if last.get("round") != args.check_round:
+            print(f"direction_gate: 末条判单 round={last.get('round')} != 本轮 {args.check_round}(轮 291 硬化:验末条轮号)")
+            return 1
+        if not last.get("direction") or not last.get("evidence"):
+            print("direction_gate: 末条判单 direction/evidence 为空")
+            return 1
+        print(f"direction_gate: round {args.check_round} 判单通过({len(entries)} 条累计)")
+        return 0
+
+    ap.error("需要 --add 或 --check-round N")
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main())
