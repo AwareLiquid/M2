@@ -1,0 +1,381 @@
+{"round": 1, "direction": "loop-bootstrap: 循环体系移植(Physic GOAL-PROMPT-v8 语义) — 与四轴耦合=过程纪律基建(D 维度), 服务全部后续实验轮的预注册/多seed/判单机械化", "evidence": "scripts/goal_check+marathon_guard+direction_gate+ignite.sh; docs/loop/ 四件套; tests/test_loop.py 21 全绿; 全仓 206 passed", "ts": 1790459937}
+{"round": 2, "direction": "loop-hardening: prompt 瘦身 canonical 化+不变式门禁 — 与四轴耦合=D 维度(过程纪律): 单一真相源+铁律机械化消除静默失效面, 保护后续全部实验轮", "evidence": "AMM-002; GOAL-PROMPT-M2 v2(20 行)/v1-ARCHIVED; tests/test_goal_prompt_invariants.py 17 铁律; 细则下沉 GOALS.md; 高危词扫描修三因矛盾", "ts": 1790462910}
+{"round": 2, "direction": "loop-acceptance: v2 粘贴前终检 — 与四轴耦合=D(过程纪律): 补回 --add 判单步防新会话卡门, seed 纪律对齐 ROADMAP §5", "evidence": "生命周期沙箱(guard→route→pop→audit 3=3)全通; 227 tests; invariants 20 过; ignite 围栏提取正常", "ts": 1790463528}
+{"round": 3, "direction": "持续学习×长流式记忆轴耦合:注意力修复(架构原则#1)后复测思考深度命题——深度效应是否在更难组合查找任务上出现,决定递归推理轴是否重启(P1 入口门槛)", "evidence": "benchmarks/verdicts/p0c_prime.prereg.json(判负标准先行)+benchmarks/results/reasoning_depth.jsonl(tag=p0c_prime,3 seeds×4 depths×30k 步,T1 MPS 在途)", "ts": 1790465668}
+{"round": 4, "direction": "持续学习轴:世界模型线/类脑持续学习线统一输入形态落地(DATA_FORMS §2)——情节流+SHA-256 身份是 nchain/genreplay 沉淀为正式实现的前置,直接服务持续学习与睡眠巩固四轴", "evidence": "m2_training/episodic_stream.py(三时标层级+单调性守门+SHA-256 身份)+tests/test_episodic_stream.py(8 测试,含防篡改/防shuffle/往返一致); pytest 235 绿", "ts": 1790465972}
+{"round": 5, "direction": "端侧延迟/内存+数学代码推理轴耦合:GRPO(可验证奖励)是 P2 后训练主路径的前置接线,RL 损失流过真实训练循环=2B 线后训练可行性的第一步工程证据", "evidence": "m2_training/runner.py rl_mode 路径(默认关,SFT 主线逐位不变)+recipe 校验+checkpoint 增量; tests/test_dpo_grpo_wiring.py 7 项集成测试真实训练步, pytest 242 绿", "ts": 1790466213}
+{"round": 6, "direction": "loop-incident-response+AMM-003 拉式驱动: 2026-09-28 全损事故修复(逐深度增量落盘+幂等发射器)+Go 轮次制 — 与四轴耦合=D 维度过程纪律(P0-C′ 判读服务数学/代码推理轴的思考深度命题;崩溃安全+拉式轮次=持续学习轴的循环机制本体可靠性;MPS 本机训练=端侧轴)", "evidence": "AMM-003 ADOPTED+GOAL-PROMPT-M2 v3.0(铁律换形'绝不中途弃轮',不变式测试同提交)+GOALS 细则区轮次化;reasoning_depth.py fsync 增量落盘(2 测试)+scripts/launch_p0c.sh 幂等发射(2 测试);pytest 246 全绿;audit 4=4", "ts": 1790838067}
+{"round": 7, "direction": "P0-C′ 对照先行 v2(数学/代码推理轴:深度命题裁决;长流式记忆轴:grokking 卫生配方)+ AMM-004 PR 流(循环机制)", "evidence": "prereg v2 判据逐字沿用 v1(no_posthoc_move)/pytest 251 绿/MPS 实测对照 300步19s/对照腿 pid96611 在途增量落盘/PR#1 建", "ts": 1790841220}
+{"round": 7, "direction": "轮 7 合轮:数学/代码推理轴(P0-C′ 深度命题:phase_1 对照读数 chance+phase_3 复核发射=裁决链推进)+循环机制轴(AMM-005 蒸馏门:goal_check 全队列达成检测/深位弹出/current_variable 单变量锚点/DISTILL 四栏经验账本;承重句 17→19)", "evidence": "pytest 261 绿/audit 4=4→深位弹出后 2=2/goal_check v2 首跑弹出滞留 2 轮的 episodic+dpo/prereg v2 readout_rule 机械推进 phase_3(pid 24851 在途)/前段会话遗留(AMM-004 PR 流+对照设施 5 测试)复核收编", "ts": 1790844057}
+{"round": 8, "direction": "研究登记轮:外部 RSI 体系对标(8 体系)服务循环机制可靠性=四轴的共同地基;GOAL-PROMPT v3.1/RSI-INDEX 校验自洽", "evidence": "RSI-HORIZON.md 落盘(已具备 5/缺口 2/条件 1/拒 1)+AMM-006/007 PROPOSED+pytest 261 绿+audit 2=2+DISTILL 轮 8 条目", "ts": 1790846222}
+{"round": 9, "direction": "数学/代码推理轴(社区先验直接喂 P0-C′ 判读链与下一预注册量级)+循环机制轴(AMM-008 社区蒸馏门:问表四栏+颗粒度对齐纪律)", "evidence": "HORIZON 协议区+首批 2 问表条目(Dream-RSI 4 启发式/EACL2026+NeurIPS2024 可达性先验)+AMM-008 ADOPTED+测试守护+pytest 全绿/audit 2=2", "ts": 1790849220}
+{"round": 10, "direction": "循环机制轴(AMM-009 大道至简:蒸馏门全量进宪法 v4.0,承重句 19→21;程序计数器瘦身+变动率仪表=机制长期可维持性,间接服务四轴)", "evidence": "GOAL-PROMPT v4.0(读回环/四栏/单变量/问表全在宪法)+GOALS 175→~115 行(current_action 95→23)+RSI-INDEX 一行仪表+AMM-006/007 随案裁决+测试守护(21 承重句+块高 ≤48 行)+pytest 全绿/audit 2=2", "ts": 1790850984}
+{"round": 11, "direction": "循环机制轴收尾(清理轮:十轮节拍合一+死件归档,零承重句变动;体系自此进入近零机制改动窗口,服务四轴的判读产出)", "evidence": "四钟合一(RSI-INDEX 唯一定义处)+ignite/agent-cmd 归档+HORIZON-16 行/DISTILL-9 行+HANDOFF 过时段修正+pytest 全绿/audit 2=2;例外轮连击(10+11)按铁律转 BLOCKED-HUMAN", "ts": 1790853153}
+{"round": 12, "direction": "循环机制轴(例外轮计数语义补丁:半例外/重置条款;阈值与后果不动——机制完整性服务四轴的长期判读可靠性)", "evidence": "GOALS 细则区+DISTILL 头各补计数语义(3 行,零承重句变动)+state 回 RUNNING(用户明示授权)+pytest 全绿/audit 2=2;BLOCKED-HUMAN→人裁介入→解除全链路实测", "ts": 1790854363}
+{"round": 13, "direction": "四轴·数学/代码推理(P0-C′ 深度命题判读链:phase_3 d=1 终评 M=0.066=chance 按预注册口径判读+d=8 步速计量,直接推进队首 verdict 成熟;非机制轮)", "evidence": "冻结 partial 台账 d1 终评行 M(1,0)=0.066(k1-15 口径,k16 退化桶透明报 1.000)与对照 phase_1 0.0637 同平台;5min 窗实测 0.67 step/s⇒ETA≈10-02 07:00;禁中途判,终判归下轮;pytest 266 绿(RC=0 显式)/audit 2=2(RC=0)/GOALS 计数器推进轮13(块高29≤48)/DISTILL 轮13 四栏/清遗留 watcher 1 个", "ts": 1790860476}
+{"round": 14, "direction": "四轴·数学/代码推理(承重):P0-C′ 深度命题判读链护航轮——d=8 复核臂在途(pid 40268)未动,本轮=阶梯④工程硬化,把轮13b 两次真实事故暴露的 launcher 缺口(异 pidfile 双开+stdout 缓冲误判)闭环,服务四轴实验的执行可靠性;承重句零变动", "evidence": "launch_p0c.sh 双开防护扩展同目录全部 *.pid+PYTHONUNBUFFERED=1;桩 fixture 增环境探针列;+2 测试(268 绿 RC=0 显式);训练腿终检 pid 40268 alive;GOALS 计数器推进轮 14;DISTILL 轮 14 四栏(例外轮:工程硬化,连击=1)", "ts": 1790861883}
+{"round": 15, "direction": "四轴·数学/代码推理(承重):P0-C′ 终判分叉弹药轮——社区蒸馏门(用户点名触发③)三路检索各 ≥2 独立源入 HORIZON #3:①递归状态追踪表达性下界(arXiv 2404.08819)给 d=8 判负时的架构侧归因;②looped transformer 算法任务正先验给换任务候选;③grokking 视界变量(wd 在位实证)给预算决策。全部喂 current_variable 判读链,无机制改动", "evidence": "HORIZON 条目 #3(问表+来源+先验+判读链输入+四分法判定);grep 实证 runner wd=0.01 配方在位;预算换算 10^5≈2 天/臂 10^6≈17 天/臂(T1 0.67 step/s)⇒T2/T3 人裁;pytest 268 绿 RC=0 显式;audit RC=0;GOALS 轮 15 推进(块高测试过);DISTILL 轮 15 四栏(非例外轮,连击=0)", "ts": 1790863226}
+{"round": 16, "direction": "循环机制轴(AMM-010 单目标连续循环:goal 校验驱动轮次迭代直至队列清空或 BLOCKED-HUMAN——机制完整性服务四轴判读的连续性与用户驱动体验;21 承重句零改动,空转闸保留)", "evidence": "GOAL-PROMPT v4.1 三处改订(开篇/步骤3尾/终止铁律换形);AMM-010 ADOPTED(依据=用户指令'不断通过 goal 校验的模式不断循环');AMENDMENTS 语义保全链(绝不中途弃轮作用域=轮内/禁外部调度原样/三事故防御已由存档点+幂等发射+双开防护独立承担);GOALS 细则区驱动模型+锁判读同步;pytest 268 绿 RC=0(21 fragment 零变动+块高测试);audit RC=0", "ts": 1790864644}
+{"round": 17, "direction": "循环机制轴(AMM-010 落地一致性验收:3 处旧驱动模型残留修补——阶梯⑤/current_goal/HANDOFF,宪法与全体系一致;承重句零变动)", "evidence": "全仓关键词扫描(等下次点火/一次 Go 轮次/一轮自包含/版本引用)二次复扫干净,剩余命中=轮 16/17 自述历史;AMENDMENTS 旧语义=立法史(AMM-010 自述取代关系);pytest 268 绿 RC=0(21 fragment+块高);audit RC=0;交付 v4.1 全文给用户", "ts": 1790866098}
+{"round": 18, "direction": "数学/代码推理(p0c-prime-depth 复核腿在途推进;节拍轮零方向漂移,记账与判读链服务 current_variable 终判)", "evidence": "RSI-INDEX 夜账轮 7-17 条目+RSI-HORIZON #4 例行问表拒绝留痕+变动率 IRON_LAWS 17→21=+4≤6 实证;训练进度 3400/30000 禁中途判", "ts": 1790867233}
+{"round": 19, "direction": "数学/代码推理(p0c-prime-depth 复核腿在途跟进;零方向漂移)", "evidence": "d=8 臂 4400/30000 步 loss 平台 2.77 禁中途判;自家锁三证据判例入 DISTILL(锁互斥语义保全);fork 分支补同步清偿 amend 差 1 行", "ts": 1790867997}
+{"round": 20, "direction": "数学/代码推理(在途跟进为主)+工程硬化(账本隔离=判读可信度基建,零方向漂移)", "evidence": "复现实锤 mtime 推走(23:06/23:19 两度)→P0C_RESULTS_DIR 三方同旋钮隔离+零接触回归门;验收=269 绿+canonical size/mtime_ns 前后全等+零桩行;d=8 臂 4800+/30000 禁中途判", "ts": 1790869053}
+{"round": 21, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 5600/30000 禁中途判;隔离修复真实轮内首验(pytest 前后 jsonl size/mtime_ns 全等);欠账 3 提交复测 443 四连败", "ts": 1790869700}
+{"round": 22, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 5800+/30000 禁中途判;隔离修复连续第二轮 pytest 零触碰(指纹三次全等);清偿后首次推送快进验证", "ts": 1790870170}
+{"round": 23, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 6000/30000 禁中途判;partial 冻结预测验证=未到 mid_eval 旁证;指纹连续第四轮全等", "ts": 1790870368}
+{"round": 24, "direction": "数学/代码推理(p0c-prime-depth 终判预演,零方向漂移)", "evidence": "prereg v2 readout_rule/negative_diagnoses 逐字装填(出数前锁死判据=no_posthoc_move 强化);M(8,0) 落账路径+ROADMAP §4.5 登记位确认;d=8 臂 6200+/30000 禁中途判", "ts": 1790870657}
+{"round": 25, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 6400+/30000 禁中途判;PR #2 MERGEABLE 实测(上游零冲突);指纹连续第六轮全等", "ts": 1790870882}
+{"round": 26, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 6600/30000 禁中途判;mid_eval 预测已立(partial 增行+mtime 迁移约 01:53)待下轮核对;指纹连续第七轮全等", "ts": 1790871087}
+{"round": 27, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 6600/30000 禁中途判;mid_eval 预测前置条件核对成立(未到期非落空);指纹连续第八轮全等", "ts": 1790871237}
+{"round": 28, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 6800/30000 禁中途判;mid_eval 预测前置仍成立;指纹连续第九轮全等", "ts": 1790871387}
+{"round": 29, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 6800/30000 禁中途判;预测前置仍成立;指纹连续第十轮全等", "ts": 1790871560}
+{"round": 30, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 7000/30000 禁中途判;预测前置仍成立;指纹连续第十一轮全等", "ts": 1790871649}
+{"round": 31, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 7200/30000 禁中途判;预测前置仍成立;指纹连续第十二轮全等", "ts": 1790872038}
+{"round": 32, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 7200/30000 禁中途判;预测前置仍成立;指纹连续第十三轮全等", "ts": 1790872125}
+{"round": 33, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 7400/30000 禁中途判;预测前置仍成立;指纹连续第十四轮全等", "ts": 1790872308}
+{"round": 34, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 7400/30000 禁中途判;预测前置仍成立;指纹连续第十五轮全等", "ts": 1790872473}
+{"round": 35, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 7600/30000 禁中途判;轮 34 推送欠账复测清偿(领先归 0);指纹连续第十六轮全等", "ts": 1790872726}
+{"round": 36, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "step 7800 loss 崩落 2.74→0.026=在途观察非判定(禁中途判);终局分支按轮 24 预载;指纹连续第十七轮全等", "ts": 1790872886}
+{"round": 37, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "崩落后首条 log 待出(8000 步约 00:46);指纹连续第十八轮全等;禁中途判不变", "ts": 1790873028}
+{"round": 38, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 8400/30000 回平台(伪影证伪后走势正常);mid_eval 核对窗约 01:53;指纹连续第十九轮全等", "ts": 1790873628}
+{"round": 39, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 8400/30000 回平台;mid_eval 核对窗约 01:53;指纹连续第二十轮全等", "ts": 1790873832}
+{"round": 40, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 8400/30000 回平台;mid_eval 核对窗约 01:53;指纹连续第廿一轮全等", "ts": 1790873975}
+{"round": 41, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 8600/30000 回平台;mid_eval 核对窗约 01:53;指纹连续第廿二轮全等", "ts": 1790874086}
+{"round": 42, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 8600/30000 回平台;mid_eval 核对窗约 01:53;指纹连续第廿三轮全等", "ts": 1790874201}
+{"round": 43, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 8800/30000 回平台;mid_eval 核对窗约 01:53;指纹连续第廿四轮全等", "ts": 1790874366}
+{"round": 44, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 8800/30000 回平台;mid_eval 核对窗约 01:53;指纹连续第廿五轮全等", "ts": 1790874477}
+{"round": 45, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 9000/30000 回平台(距 mid_eval@10000 约 25 分钟);指纹连续第廿六轮全等", "ts": 1790874617}
+{"round": 46, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 9000/30000 回平台;mid_eval 核对窗临近(约 01:35-01:53),落地即核对轮 26 预测;指纹连续第廿七轮全等", "ts": 1790874797}
+{"round": 47, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 9200/30000;伪影按预测复现@9200(0.0252)=轮 37 证伪结论的又一次兑现;mid_eval 未到(9200<10000);指纹连续第廿八轮全等", "ts": 1790874927}
+{"round": 48, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 9200/30000;mid_eval 未到(9200<10000,核对窗 01:35-01:53);指纹连续第廿九轮全等", "ts": 1790875092}
+{"round": 49, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 9400/30000;mid_eval@10000 约 01:35 落地(下轮核对);指纹连续第三十轮全等", "ts": 1790875213}
+{"round": 50, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 9400/30000;mid_eval@10000 落地在即(下轮核对);指纹连续第卅二轮全等", "ts": 1790875327}
+{"round": 51, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 9400/30000;mid_eval@10000 落地在即;指纹连续第卅三轮全等", "ts": 1790875442}
+{"round": 52, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 9600/30000 回平台;mid_eval@10000 落地在即;指纹连续第卅四轮全等", "ts": 1790875586}
+{"round": 53, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 9600/30000 回平台;mid_eval@10000 落地在即;指纹连续第卅五轮全等", "ts": 1790875689}
+{"round": 54, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 9800/30000 回平台;mid_eval@10000 约 01:34-01:36 落地(下轮核对);指纹连续第卅六轮全等", "ts": 1790875791}
+{"round": 55, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 9800/30000 回平台;mid_eval@10000 落地在即(下轮核对);指纹连续第卅七轮全等", "ts": 1790875905}
+{"round": 56, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 9800/30000 回平台;mid_eval@10000 本轮落地(下轮核对轮 26 预测);指纹连续第卅八轮全等", "ts": 1790876006}
+{"round": 57, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "轮 26 预测三项兑现(partial 增行 01:36:41+mtime 迁移+log mid-eval);中点读数 chance(记录非判定,四层标签);轮 56 推送欠账清偿;指纹连续第卅九轮全等", "ts": 1790876314}
+{"round": 58, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 10000/30000,mid_eval 已核对(chance 记录非判定),下一实质点=终评约 09:45;指纹连续第四十轮全等", "ts": 1790876429}
+{"round": 59, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 10000/30000,mid_eval 已核对,终评约 09:45;指纹连续第四十一轮全等", "ts": 1790876546}
+{"round": 60, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 10200/30000,mid_eval 已核对,终评约 09:45;指纹连续第四十二轮全等", "ts": 1790876663}
+{"round": 61, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 10200/30000,mid_eval 已核对,终评约 09:45;指纹连续第四十三轮全等", "ts": 1790876795}
+{"round": 62, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 10400/30000 回平台,mid_eval 已核对,终评约 09:45;指纹连续第四十四轮全等", "ts": 1790876915}
+{"round": 63, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 10400/30000 回平台,mid_eval 已核对,终评约 09:45;指纹连续第四十五轮全等", "ts": 1790877031}
+{"round": 64, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 10400/30000 回平台,mid_eval 已核对,终评约 09:45;指纹连续第四十六轮全等", "ts": 1790877152}
+{"round": 65, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 10600/30000 回平台,mid_eval 已核对,终评约 09:45;指纹连续第四十七轮全等", "ts": 1790877278}
+{"round": 66, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 10600/30000 回平台,mid_eval 已核对,终评约 09:45;指纹连续第四十八轮全等", "ts": 1790877391}
+{"round": 67, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 10800/30000 回平台,mid_eval 已核对,终评约 09:45;指纹连续第四十九轮全等", "ts": 1790877520}
+{"round": 68, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 10800/30000 回平台,mid_eval 已核对,终评约 09:45;轮 67 推送欠账复测清偿(领先归 0);指纹连续第五十轮全等", "ts": 1790877727}
+{"round": 69, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 11000/30000 回平台,mid_eval 已核对,终评约 09:45;指纹连续第五十一轮全等", "ts": 1790877903}
+{"round": 70, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 11000/30000 回平台,mid_eval 已核对,终评约 09:45;指纹连续第五十二轮全等", "ts": 1790878029}
+{"round": 71, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 11200/30000 回平台,mid_eval 已核对,终评约 09:45;轮 70 推送欠账复测清偿(领先归 0);指纹连续第五十三轮全等", "ts": 1790878242}
+{"round": 72, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 11400/30000 回平台,mid_eval 已核对,终评约 09:45;指纹连续第五十四轮全等", "ts": 1790878420}
+{"round": 73, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 11400/30000 回平台,mid_eval 已核对,终评约 09:45;指纹连续第五十五轮全等", "ts": 1790878590}
+{"round": 74, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 11600/30000 回平台,mid_eval 已核对,终评约 09:45;指纹连续第五十六轮全等", "ts": 1790878692}
+{"round": 75, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 11600/30000 回平台,mid_eval 已核对,终评约 09:45;指纹连续第五十七轮全等", "ts": 1790878805}
+{"round": 76, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 11600/30000 回平台,mid_eval 已核对,终评约 09:45;指纹连续第五十八轮全等", "ts": 1790878920}
+{"round": 77, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 11800/30000 回平台,mid_eval 已核对,终评约 09:45;指纹连续第五十九轮全等", "ts": 1790879031}
+{"round": 78, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 12000/30000 回平台,mid_eval 已核对,终评约 09:45;轮 77 推送欠账复测仍 443(欠账 1 笔,下轮再清);指纹连续第六十轮全等", "ts": 1790879361}
+{"round": 79, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 12200/30000 回平台,mid_eval 已核对,终评约 09:45;推送欠账 2 笔(443 长断窗口延续);指纹连续第六十一轮全等", "ts": 1790879734}
+{"round": 80, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 12400/30000 回平台,mid_eval 已核对,终评约 09:45;推送欠账清偿态健康;指纹连续第六十二轮全等", "ts": 1790879856}
+{"round": 81, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 12400/30000 回平台,mid_eval 已核对,终评约 09:45;指纹连续第六十三轮全等", "ts": 1790880010}
+{"round": 82, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 12600/30000 回平台,mid_eval 已核对,终评约 09:45;指纹连续第六十四轮全等", "ts": 1790880147}
+{"round": 83, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 12800/30000 回平台,mid_eval 已核对,终评约 09:45;推送欠账 1 笔(443 长断延续);指纹连续第六十五轮全等", "ts": 1790880432}
+{"round": 85, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 14000/30000 chance 平台,mid_eval 已核对,终评约 09:45;开场锁判读接管(锁后已提交残留,腿活≠并行);推送欠账 3 笔(443 长断延续)", "ts": 1790882415}
+{"round": 86, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 14200/30000 chance 平台,mid_eval 已核对,终评约 09:45;自家锁三证据判例续用;推送欠账 4 笔(443 长断延续)", "ts": 1790882673}
+{"round": 87, "direction": "数学/代码推理(p0c-prime-depth 在途跟进+远端同步纠正;零方向漂移)", "evidence": "d=8 臂 14400+/30000 chance 平台;欠账清偿归 0(4856234..83c0035 远端实测);refspec 纠正+fork main=用户线判例入账", "ts": 1790883196}
+{"round": 88, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 14600/30000 chance 平台,终评约 09:45;欠账 0(轮 87 清偿点口径)", "ts": 1790883443}
+{"round": 89, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 14800/30000 chance 平台,终评约 09:45;欠账 0", "ts": 1790883559}
+{"round": 90, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 15000/30000(50%)chance 平台,终评约 09:45;欠账 1 笔待校准", "ts": 1790883837}
+{"round": 91, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 15000/30000 chance 平台,终评约 09:45;欠账校准 2 笔实欠(远端 ece055c)", "ts": 1790883981}
+{"round": 92, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 15200/30000 chance 平台,终评约 09:45;欠账 0(轮 91 清偿,远端实测)", "ts": 1790884133}
+{"round": 93, "direction": "数学/代码推理(p0c-prime-depth 在途跟进+十轮节拍;零方向漂移)", "evidence": "d=8 臂 15200/30000 chance 平台,终评约 09:45;节拍①夜账 84-93 ②HORIZON 复检 ③社区门推迟留痕 ④变动率 0/窗 ⑤守望段方向动作=2b 人裁弹药;轮 92 带红合轮事故修复(块高 49→47+显式 RC)", "ts": 1790884478}
+{"round": 94, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 15400/30000 chance 平台,终评约 09:45;欠账 0", "ts": 1790884587}
+{"round": 95, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 15600/30000 chance 平台,终评约 09:45;欠账 0", "ts": 1790884728}
+{"round": 96, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 15600/30000 chance 平台,终评约 09:45;欠账 0", "ts": 1790884883}
+{"round": 97, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 15800/30000 chance 平台,终评约 09:45;欠账 0", "ts": 1790884968}
+{"round": 98, "direction": "工程硬化(合轮收尾机械化;队列头在途跟进为辅)", "evidence": "轮 92/97 带红合轮两事故同族结类;loop_closer.sh+2 测试;块高 48;d=8 臂 15800/30000", "ts": 1790885170}
+{"round": 98, "direction": "工程硬化(合轮收尾机械化;队列头在途跟进为辅)", "evidence": "轮 92/97 带红合轮两事故同族结类;loop_closer.sh+2 测试;块高 48;d=8 臂 15800/30000", "ts": 1790885228}
+{"round": 99, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 16000/30000 chance 平台,终评约 09:45;欠账 0", "ts": 1790885309}
+{"round": 100, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 16000/30000 chance 平台;欠账 0;守望点=mid_eval@20000+终评", "ts": 1790885383}
+{"round": 100, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 16000/30000 chance 平台;欠账 0;守望点=mid_eval@20000+终评", "ts": 1790885436}
+{"round": 101, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 16000/30000 chance 平台;欠账 0", "ts": 1790885520}
+{"round": 101, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 16000/30000 chance 平台;欠账 0", "ts": 1790885572}
+{"round": 102, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 16200/30000 chance 平台;欠账 0", "ts": 1790885654}
+{"round": 103, "direction": "数学/代码推理(p0c-prime-depth 在途跟进+十轮节拍;零方向漂移)", "evidence": "d=8 臂 16200/30000;节拍①夜账②复检③推迟留痕④0/窗⑤closer+2b 人裁弹药", "ts": 1790885854}
+{"round": 104, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 16400/30000 chance 平台;欠账 2 笔", "ts": 1790886008}
+{"round": 104, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 16400/30000 chance 平台;欠账 2 笔", "ts": 1790886061}
+{"round": 105, "direction": "循环终止响应(MODE-OFF 手动停;无方向漂移)", "evidence": "用户约 04:24 mode ON→OFF;删锁报告;腿 40268 保留 16600/30000 终评约 09:45;closer+测试补入库", "ts": 1790886391}
+{"round": 106, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 17000/30000 chance 平台;closer 全仓入库硬化结类轮 105 账实缺口(+1 测试);推送欠账 0 远端实测", "ts": 1790887384}
+{"round": 107, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 17400/30000 chance 平台;欠账 0;自持锁判据落账", "ts": 1790887567}
+{"round": 108, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 17400/30000 chance 平台;D=5 方向动作=停车场审计 4 条维持;欠账 0", "ts": 1790887682}
+{"round": 109, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 17600/30000 chance 平台;欠账 0;D=1 归位", "ts": 1790887753}
+{"round": 110, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 17600/30000 chance 平台;109 推送远端复测实落欠账 0", "ts": 1790887914}
+{"round": 111, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 17800/30000 chance 平台;110 推送远端实测实落欠账 0", "ts": 1790888214}
+{"round": 112, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 18000/30000 chance 平台;欠账 0", "ts": 1790888275}
+{"round": 113, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 18000/30000 chance 平台;节拍四事全执行;D=5 方向动作=prereg 复验+落账路径;欠账 0", "ts": 1790888432}
+{"round": 114, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 18000/30000 chance 平台;欠账 0", "ts": 1790888491}
+{"round": 115, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 18200/30000 chance 平台;114 推送远端实测实落欠账 0", "ts": 1790888717}
+{"round": 116, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 18200/30000 chance 平台;115 推送重试实落欠账 0", "ts": 1790888785}
+{"round": 117, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 18200/30000 chance 平台;欠账 0", "ts": 1790888842}
+{"round": 118, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 18200/30000 chance 平台;D=5 方向动作=终评判读预案三错配钉死+k16 口径实证;欠账 0", "ts": 1790889220}
+{"round": 119, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 18600/30000 chance 平台;欠账 0", "ts": 1790889280}
+{"round": 120, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 18600/30000 chance 平台;欠账 0", "ts": 1790889361}
+{"round": 121, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 18600/30000 chance 平台;欠账 0", "ts": 1790889416}
+{"round": 122, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 18600/30000 chance 平台;欠账 0", "ts": 1790889472}
+{"round": 123, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 18800/30000 chance 平台;节拍四事+D=5 mid_eval 预案;欠账 0", "ts": 1790889571}
+{"round": 124, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 18800/30000 chance 平台;欠账 0", "ts": 1790889668}
+{"round": 125, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 18800/30000 chance 平台;欠账 0", "ts": 1790889722}
+{"round": 126, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 18800/30000 chance 平台;欠账 0", "ts": 1790889777}
+{"round": 127, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 19000/30000 chance 平台;欠账 0", "ts": 1790889831}
+{"round": 128, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 19000/30000 chance 平台;D=5 方向动作=verdict schema 预钉;欠账 0", "ts": 1790889989}
+{"round": 129, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 19000/30000 chance 平台;欠账 0", "ts": 1790890050}
+{"round": 130, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 19200/30000 chance 平台;欠账 0", "ts": 1790890105}
+{"round": 131, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 19200/30000 chance 平台;欠账 0", "ts": 1790890160}
+{"round": 132, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 19200/30000 chance 平台;欠账 0", "ts": 1790890229}
+{"round": 133, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 19200/30000 chance 平台;节拍四事+D=5 停车场复核结论不变;欠账 0", "ts": 1790890319}
+{"round": 134, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 19200/30000 chance 平台;欠账 0", "ts": 1790890375}
+{"round": 135, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "step 19400 loss 崩落观察级落账;欠账 0", "ts": 1790890471}
+{"round": 136, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "19400 崩落证伪=单步伪影(19600 回平台);欠账 0", "ts": 1790890826}
+{"round": 137, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "mid_eval@20000 M=0.0658 chance 落地入账,三读数一致;欠账 0", "ts": 1790891593}
+{"round": 138, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 20000/30000;D=5 方向动作=终评后人裁菜单预案;欠账 0", "ts": 1790891686}
+{"round": 139, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 20200/30000 chance 平台;欠账 0", "ts": 1790891759}
+{"round": 140, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 20200/30000 chance 平台;欠账 0", "ts": 1790891826}
+{"round": 141, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 20200/30000 chance 平台;欠账 0", "ts": 1790891882}
+{"round": 142, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 20200/30000 chance 平台;欠账 0", "ts": 1790891942}
+{"round": 143, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 20400/30000;节拍四事+D=5 终评计算干跑验证;欠账 0", "ts": 1790892047}
+{"round": 144, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 20400/30000 chance 平台;欠账 0", "ts": 1790892104}
+{"round": 145, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 20400/30000 chance 平台;欠账 0", "ts": 1790892185}
+{"round": 146, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 20400/30000 chance 平台;欠账 0", "ts": 1790892242}
+{"round": 147, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 20600/30000 chance 平台;欠账 0", "ts": 1790892336}
+{"round": 148, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 20600/30000;D=5 方向动作=数据链源码终检(嵌套路径钉死);欠账 0", "ts": 1790892471}
+{"round": 149, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 20600/30000 chance 平台;欠账 0", "ts": 1790892531}
+{"round": 150, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 20600/30000 chance 平台;欠账 0", "ts": 1790892585}
+{"round": 151, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 20800/30000 chance 平台;欠账 0", "ts": 1790892678}
+{"round": 152, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 20800/30000 chance 平台;欠账 0", "ts": 1790892733}
+{"round": 153, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 20800/30000;节拍四事+D=5 留痕(准备清单在案);欠账 0", "ts": 1790892816}
+{"round": 154, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 20800/30000 chance 平台;欠账 0", "ts": 1790892872}
+{"round": 155, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21000/30000 chance 平台;欠账 0", "ts": 1790892926}
+{"round": 156, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21000/30000 chance 平台;欠账 0", "ts": 1790892980}
+{"round": 157, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21000/30000 chance 平台;欠账 0", "ts": 1790893035}
+{"round": 158, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21000/30000;D=5 方向动作=2b 菜单做实(实名证据+专荐改判据);欠账 0", "ts": 1790893158}
+{"round": 159, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21200/30000 chance 平台;欠账 0", "ts": 1790893234}
+{"round": 160, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21200/30000 chance 平台;欠账 0", "ts": 1790893288}
+{"round": 161, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21200/30000 chance 平台;欠账 0", "ts": 1790893346}
+{"round": 162, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21200/30000 chance 平台;欠账 0", "ts": 1790893401}
+{"round": 163, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21200/30000;节拍四事+D=5 留痕(状态未变);欠账 0", "ts": 1790893468}
+{"round": 164, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21400/30000 chance 平台;欠账 0", "ts": 1790893523}
+{"round": 165, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21400/30000 chance 平台;欠账 0", "ts": 1790893588}
+{"round": 166, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21400/30000 chance 平台;165 推送重试实落欠账 0", "ts": 1790893659}
+{"round": 167, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21400/30000 chance 平台;欠账 0", "ts": 1790893727}
+{"round": 168, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21400/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790893809}
+{"round": 169, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21600/30000 chance 平台;欠账 0", "ts": 1790893883}
+{"round": 170, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21600/30000 chance 平台;欠账 0", "ts": 1790893945}
+{"round": 171, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21600/30000 chance 平台;欠账 0", "ts": 1790894001}
+{"round": 172, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21600/30000 chance 平台;欠账 0", "ts": 1790894060}
+{"round": 173, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21600/30000;节拍四事+D=5 留痕;欠账 0", "ts": 1790894130}
+{"round": 174, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21800/30000 chance 平台;欠账 0", "ts": 1790894238}
+{"round": 175, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21800/30000 chance 平台;欠账 0", "ts": 1790894291}
+{"round": 176, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 21800/30000 chance 平台;欠账 0", "ts": 1790894345}
+{"round": 177, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22000/30000 chance 平台;欠账 0", "ts": 1790894416}
+{"round": 178, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22000/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790894469}
+{"round": 179, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22000/30000 chance 平台;欠账 0", "ts": 1790894526}
+{"round": 180, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22000/30000 chance 平台;欠账 0", "ts": 1790894603}
+{"round": 181, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22000/30000 chance 平台;欠账 0", "ts": 1790894660}
+{"round": 182, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22200/30000 chance 平台;欠账 0", "ts": 1790894717}
+{"round": 183, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22200/30000;节拍四事+D=5 留痕;欠账 0", "ts": 1790894775}
+{"round": 184, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22200/30000 chance 平台;欠账 0", "ts": 1790894829}
+{"round": 185, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22200/30000 chance 平台;欠账 0", "ts": 1790894883}
+{"round": 186, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22200/30000 chance 平台;欠账 0", "ts": 1790894937}
+{"round": 187, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22400/30000 chance 平台;欠账 0", "ts": 1790894997}
+{"round": 188, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22400/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790895107}
+{"round": 189, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22400/30000 chance 平台;欠账 0", "ts": 1790895162}
+{"round": 190, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22400/30000 chance 平台;欠账 0", "ts": 1790895216}
+{"round": 191, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22600/30000 chance 平台;欠账 0", "ts": 1790895284}
+{"round": 192, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22600/30000 chance 平台;欠账 0", "ts": 1790895344}
+{"round": 193, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22600/30000;节拍四事+D=5 留痕;欠账 0", "ts": 1790895404}
+{"round": 194, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22600/30000 chance 平台;欠账 0", "ts": 1790895480}
+{"round": 195, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22600/30000 chance 平台;欠账 0", "ts": 1790895536}
+{"round": 196, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22800/30000 chance 平台;欠账 0", "ts": 1790895597}
+{"round": 197, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22800/30000 chance 平台;欠账 0", "ts": 1790895652}
+{"round": 198, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22800/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790895714}
+{"round": 199, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22800/30000 chance 平台;欠账 0", "ts": 1790895769}
+{"round": 200, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 22800/30000 chance 平台;欠账 0", "ts": 1790895824}
+{"round": 201, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23000/30000 chance 平台;欠账 0", "ts": 1790895878}
+{"round": 202, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23000/30000 chance 平台;欠账 0", "ts": 1790895933}
+{"round": 203, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23000/30000;节拍四事+D=5 留痕;欠账 0", "ts": 1790896035}
+{"round": 204, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23000/30000 chance 平台;欠账 0", "ts": 1790896100}
+{"round": 205, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23200/30000 chance 平台;欠账 0", "ts": 1790896193}
+{"round": 206, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23200/30000 chance 平台;欠账 0", "ts": 1790896255}
+{"round": 207, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23200/30000 chance 平台;欠账 0", "ts": 1790896313}
+{"round": 208, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23200/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790896368}
+{"round": 209, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23200/30000 chance 平台;欠账 0", "ts": 1790896423}
+{"round": 210, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23400/30000 chance 平台;欠账 0", "ts": 1790896479}
+{"round": 211, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23400/30000 chance 平台;欠账 0", "ts": 1790896534}
+{"round": 212, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23400/30000 chance 平台;欠账 0", "ts": 1790896590}
+{"round": 213, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23400/30000;节拍四事+D=5 留痕;欠账 0", "ts": 1790896650}
+{"round": 214, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23400/30000 chance 平台;欠账 0", "ts": 1790896706}
+{"round": 215, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23400/30000 chance 平台;欠账 0", "ts": 1790896761}
+{"round": 216, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "23600 崩落当轮证伪=伪影(23800 回平台);欠账 0", "ts": 1790897074}
+{"round": 217, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23800/30000 chance 平台;欠账 0", "ts": 1790897135}
+{"round": 218, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23800/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790897193}
+{"round": 219, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23800/30000 chance 平台;欠账 0", "ts": 1790897248}
+{"round": 220, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 23800/30000 chance 平台;欠账 0", "ts": 1790897303}
+{"round": 221, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 24000/30000 chance 平台;欠账 0", "ts": 1790897369}
+{"round": 222, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 24000/30000 chance 平台;欠账 0", "ts": 1790897445}
+{"round": 223, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 24000/30000;节拍四事+D=5 留痕;欠账 0", "ts": 1790897522}
+{"round": 224, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 24000/30000 chance 平台;欠账 0", "ts": 1790897584}
+{"round": 225, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 24000/30000 chance 平台;欠账 0", "ts": 1790897638}
+{"round": 226, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 24200/30000 chance 平台;欠账 0", "ts": 1790897726}
+{"round": 227, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 24200/30000 chance 平台;欠账 0", "ts": 1790897826}
+{"round": 228, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 24200/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790897922}
+{"round": 229, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "24400 崩落当轮证伪=伪影(24600 回平台);欠账 0", "ts": 1790898373}
+{"round": 230, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 24600/30000 chance 平台;欠账 0", "ts": 1790898478}
+{"round": 231, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 24800/30000 chance 平台;欠账 0", "ts": 1790898533}
+{"round": 232, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 24800/30000 chance 平台;欠账 0", "ts": 1790898593}
+{"round": 233, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 24800/30000;节拍四事+D=5 留痕;欠账 0", "ts": 1790898677}
+{"round": 234, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 24800/30000 chance 平台;欠账 0", "ts": 1790898735}
+{"round": 235, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 24800/30000 chance 平台;欠账 0", "ts": 1790898801}
+{"round": 236, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25000/30000 chance 平台;欠账 0", "ts": 1790898857}
+{"round": 237, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25000/30000 chance 平台;欠账 0", "ts": 1790898912}
+{"round": 238, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25000/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790898970}
+{"round": 239, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25000/30000 chance 平台;欠账 0", "ts": 1790899026}
+{"round": 240, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25000/30000 chance 平台;欠账 0", "ts": 1790899096}
+{"round": 241, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25200/30000 chance 平台;欠账 0", "ts": 1790899151}
+{"round": 242, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25200/30000 chance 平台;欠账 0", "ts": 1790899219}
+{"round": 243, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25200/30000;节拍四事+D=5 留痕;欠账 0", "ts": 1790899278}
+{"round": 244, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25200/30000 chance 平台;欠账 0", "ts": 1790899345}
+{"round": 245, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25200/30000 chance 平台;欠账 0", "ts": 1790899412}
+{"round": 246, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25400/30000 chance 平台;欠账 0", "ts": 1790899469}
+{"round": 247, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25400/30000 chance 平台;欠账 0", "ts": 1790899554}
+{"round": 248, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25400/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790899609}
+{"round": 249, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25400/30000 chance 平台;欠账 0", "ts": 1790899666}
+{"round": 250, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25600/30000 chance 平台;欠账 0", "ts": 1790899737}
+{"round": 251, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25600/30000 chance 平台;欠账 0", "ts": 1790899927}
+{"round": 252, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25600/30000 chance 平台;欠账 0", "ts": 1790900014}
+{"round": 253, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 25600/30000;节拍四事+D=5 留痕;欠账 0", "ts": 1790900093}
+{"round": 254, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "25800 崩落当轮证伪=伪影(26000 回平台);欠账 0", "ts": 1790900465}
+{"round": 255, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 26000/30000 chance 平台;欠账 0", "ts": 1790900560}
+{"round": 256, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 26200/30000 chance 平台;欠账 0", "ts": 1790900616}
+{"round": 257, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 26200/30000 chance 平台;欠账 0", "ts": 1790900674}
+{"round": 258, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 26200/30000 chance 平台;欠账 0", "ts": 1790900752}
+{"round": 259, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 26200/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790900805}
+{"round": 260, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 26200/30000 chance 平台;欠账 0", "ts": 1790900861}
+{"round": 261, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 26400/30000 chance 平台;欠账 0", "ts": 1790900930}
+{"round": 262, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 26400/30000 chance 平台;欠账 0", "ts": 1790900989}
+{"round": 263, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 26400/30000;节拍四事+D=5 留痕;欠账 0", "ts": 1790901074}
+{"round": 264, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 26400/30000 chance 平台;欠账 0", "ts": 1790901138}
+{"round": 265, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 26400/30000 chance 平台;欠账 0", "ts": 1790901194}
+{"round": 266, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 26600/30000 chance 平台;欠账 0", "ts": 1790901255}
+{"round": 267, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 26600/30000 chance 平台;欠账 0", "ts": 1790901448}
+{"round": 268, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 26600/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790901516}
+{"round": 269, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 26800/30000 chance 平台;欠账 0", "ts": 1790901573}
+{"round": 270, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 26800/30000 chance 平台;欠账 0", "ts": 1790901702}
+{"round": 271, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 26800/30000 chance 平台;欠账 0", "ts": 1790901758}
+{"round": 272, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27000/30000 chance 平台;欠账 0", "ts": 1790901867}
+{"round": 273, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27000/30000;节拍四事+D=5 留痕;欠账 0", "ts": 1790901932}
+{"round": 274, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27000/30000 chance 平台;欠账 0", "ts": 1790901989}
+{"round": 275, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27000/30000 chance 平台;欠账 0", "ts": 1790902045}
+{"round": 276, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27200/30000 chance 平台;欠账 0", "ts": 1790902101}
+{"round": 277, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27200/30000 chance 平台;欠账 0", "ts": 1790902162}
+{"round": 278, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27200/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790902221}
+{"round": 279, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27200/30000 chance 平台;欠账 0", "ts": 1790902279}
+{"round": 280, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27200/30000 chance 平台;欠账 0", "ts": 1790902368}
+{"round": 281, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27400/30000 chance 平台;欠账 0", "ts": 1790902429}
+{"round": 282, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27400/30000 chance 平台;欠账 0", "ts": 1790902486}
+{"round": 283, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27400/30000;节拍四事+D=5 留痕;欠账 0", "ts": 1790902555}
+{"round": 284, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27400/30000 chance 平台;欠账 0", "ts": 1790902612}
+{"round": 285, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27400/30000 chance 平台;欠账 0", "ts": 1790902674}
+{"round": 286, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27600/30000 chance 平台;欠账 0", "ts": 1790902731}
+{"round": 287, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27600/30000 chance 平台;欠账 0", "ts": 1790902796}
+{"round": 288, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27600/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790902850}
+{"round": 289, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27600/30000 chance 平台;欠账 0", "ts": 1790902908}
+{"round": 290, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27600/30000 chance 平台;欠账 0", "ts": 1790902968}
+{"round": 291, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27800/30000 chance 平台;欠账 0", "ts": 1790903026}
+{"round": 292, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27800/30000 chance 平台;欠账 0", "ts": 1790903133}
+{"round": 293, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27800/30000;节拍四事+D=5 留痕;欠账 0", "ts": 1790903193}
+{"round": 294, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 27800/30000 chance 平台;欠账 0", "ts": 1790903264}
+{"round": 295, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28000/30000 chance 平台;欠账 0", "ts": 1790903325}
+{"round": 296, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28000/30000 chance 平台;欠账 0", "ts": 1790903382}
+{"round": 297, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28000/30000 chance 平台;欠账 0", "ts": 1790903476}
+{"round": 298, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28000/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790903555}
+{"round": 299, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28200/30000 chance 平台;欠账 0", "ts": 1790903618}
+{"round": 300, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28200/30000 chance 平台;欠账 0", "ts": 1790903707}
+{"round": 301, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28200/30000 chance 平台;欠账 0", "ts": 1790903763}
+{"round": 302, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28200/30000 chance 平台;欠账 0", "ts": 1790903819}
+{"round": 303, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28200/30000;节拍四事+D=5 留痕;欠账 0", "ts": 1790903877}
+{"round": 304, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28400/30000 chance 平台;欠账 0", "ts": 1790903937}
+{"round": 305, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28400/30000 chance 平台;欠账 0", "ts": 1790904005}
+{"round": 306, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28400/30000 chance 平台;欠账 0", "ts": 1790904061}
+{"round": 307, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28400/30000 chance 平台;欠账 0", "ts": 1790904118}
+{"round": 308, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28400/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790904172}
+{"round": 309, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28600/30000 chance 平台;欠账 0", "ts": 1790904229}
+{"round": 310, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28600/30000 chance 平台;欠账 0", "ts": 1790904300}
+{"round": 311, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28600/30000 chance 平台;欠账 0", "ts": 1790904368}
+{"round": 312, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28600/30000 chance 平台;欠账 0", "ts": 1790904427}
+{"round": 313, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28600/30000;节拍四事+D=5 留痕;欠账 0", "ts": 1790904489}
+{"round": 314, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28800/30000 chance 平台;欠账 0", "ts": 1790904547}
+{"round": 315, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28800/30000 chance 平台;欠账 0", "ts": 1790904603}
+{"round": 316, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28800/30000 chance 平台;欠账 0", "ts": 1790904666}
+{"round": 317, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28800/30000 chance 平台;欠账 0", "ts": 1790904732}
+{"round": 318, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 28800/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790904786}
+{"round": 319, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29000/30000 chance 平台;欠账 0", "ts": 1790904842}
+{"round": 320, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29000/30000 chance 平台;欠账 0", "ts": 1790904936}
+{"round": 321, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29000/30000 chance 平台;欠账 0", "ts": 1790904995}
+{"round": 322, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29000/30000 chance 平台;欠账 0", "ts": 1790905073}
+{"round": 323, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29000/30000;节拍四事+D=5 留痕;欠账 0", "ts": 1790905133}
+{"round": 324, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29200/30000 chance 平台;欠账 0", "ts": 1790905193}
+{"round": 325, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29200/30000 chance 平台;欠账 0", "ts": 1790905292}
+{"round": 326, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29200/30000 chance 平台;欠账 0", "ts": 1790905349}
+{"round": 327, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29400/30000 chance 平台;欠账 0", "ts": 1790905417}
+{"round": 328, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29400/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790905474}
+{"round": 329, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29400/30000 chance 平台;欠账 0", "ts": 1790905548}
+{"round": 330, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29400/30000 chance 平台;欠账 0", "ts": 1790905606}
+{"round": 331, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29400/30000 chance 平台;欠账 0", "ts": 1790905664}
+{"round": 332, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29600/30000 chance 平台;欠账 0", "ts": 1790905725}
+{"round": 333, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29600/30000;节拍四事+D=5 留痕;欠账 0", "ts": 1790905794}
+{"round": 334, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29600/30000 chance 平台;欠账 0", "ts": 1790905854}
+{"round": 335, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29600/30000 chance 平台;欠账 0", "ts": 1790905911}
+{"round": 336, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29600/30000 chance 平台;欠账 0", "ts": 1790905969}
+{"round": 337, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29800/30000 chance 平台;欠账 0", "ts": 1790906028}
+{"round": 338, "direction": "数学/代码推理(p0c-prime-depth 在途跟进;零方向漂移)", "evidence": "d=8 臂 29800/30000;D=5 留痕(状态未变);欠账 0", "ts": 1790906086}
+{"round": 339, "direction": "数学/代码推理(p0c-prime-depth 终评判读;负结果入 K,零方向漂移)", "evidence": "P0-C′ h_supported=false 诊断 budget_wall;verdict+ROADMAP+夜账 K+1 落盘;队首弹出", "ts": 1790906799}
+{"round": 340, "direction": "数学/代码推理(p0c-prime-depth 判负收官;零方向漂移)", "evidence": "ALL-BLOCKED 阶梯走查空审计置 BLOCKED-HUMAN;菜单四选报告;欠账 0", "ts": 1790906957}
+{"round": 341, "direction": "数学/代码推理(终止后账实纠偏;零方向漂移)", "evidence": "程序计数器链断 235 轮结类:current_action 全量重建+state 补写;循环保持终态 BLOCKED-HUMAN", "ts": 1790907438}
+{"round": 342, "direction": "数学/代码推理(AMM-013 立法;接力链武装排序类首棒;零方向漂移)", "evidence": "AMM-013 ADOPTED:宪法 v4.4+relay_tree v1+2b 迁移登记弹出+队列播种;pytest 281 绿/audit 1=1", "ts": 1790964929}
+{"round": 343, "direction": "数学/代码推理(排版卫生+蒸馏门完整性核查;零方向漂移)", "evidence": "v4.4 重排两长行零语义;蒸馏门五组件行号在案未漏", "ts": 1790965325}
+{"round": 344, "direction": "数学/代码推理(AMM-014 立法;蒸馏续向+T3 发射器首棒;零方向漂移)", "evidence": "AMM-014 ADOPTED:宪法 v4.5+30min 红线/T3+relay_tree 废除+队列两棒;pytest 281 绿/audit 2=2", "ts": 1790967035}
+{"round": 345, "direction": "数学/代码推理(治理可读性;零方向漂移)", "evidence": "版本一览表落 AMENDMENTS 头部;蒸馏门/驱动语义零变更", "ts": 1790977366}
+{"round": 346, "direction": "数学/代码推理(社区蒸馏门 #5;服务 AMM-015 裁决;零方向漂移)", "evidence": "四体系四源入 HORIZON #5;AMM-015 两候选获双源支撑;DGM 事故背书修宪门", "ts": 1790978127}
+{"round": 347, "direction": "数学/代码推理(AMM-015 立法;围栏分层+注入管道;零方向漂移)", "evidence": "AMM-015 ADOPTED:宪法 v4.6+IRON-LAWS.md+distill_inject.py+围栏 36 行;pytest 285 绿/audit 2=2", "ts": 1790979018}
+{"round": 348, "direction": "数学/代码推理(AMM-016 立法+验收;零方向漂移)", "evidence": "AMM-016 ADOPTED:宪法 v4.7 围栏 17 行+细节全下沉仍被守护;验收七项全过;pytest 285 绿/audit 2=2", "ts": 1790979628}
+{"round": 349, "direction": "数学/代码推理(AMM-017 立法;资源约束进蒸馏;零方向漂移)", "evidence": "AMM-017 ADOPTED:宪法 v4.8 资源=蒸馏约束/愿望登记不停车/BLOCKED-HUMAN=仅手动停;pytest 285 绿/audit 1=1", "ts": 1790980316}
+{"round": 350, "direction": "数学/代码推理轴:排序类多步比较链=组合推理深度探针(HRM 式 latent thinking 能力验证,p0c-prime-depth 判负后的换任务续测);四轴耦合=思考深度机制是端侧小模型的推理能力杠杆", "evidence": "benchmarks/verdicts/p0c_sort.prereg.json(判据先行,0c7fbf1)+benchmarks/results/reasoning_depth.jsonl tag=p0c_sort seed0 行(wall 1559.2s)+M/gain 判读数字(本消息)", "ts": 1790986636}
+{"round": 350, "direction": "数学/代码推理轴:排序类多步比较链=组合推理深度探针(HRM 式 latent thinking 能力验证,p0c-prime-depth 判负后的换任务续测);四轴耦合=思考深度机制是端侧小模型的推理能力杠杆", "evidence": "benchmarks/verdicts/p0c_sort.prereg.json(判据先行,0c7fbf1)+benchmarks/results/reasoning_depth.jsonl tag=p0c_sort seed0 行(wall 1559.2s)+M/gain 判读数字(本消息)", "ts": 1790986768}
+{"round": 351, "direction": "数学/代码推理轴:排序类多步比较链深度探针第 2 腿(3-seed 判据推进);四轴耦合=思考深度机制是端侧小模型推理能力杠杆", "evidence": "benchmarks/results/reasoning_depth.jsonl tag=p0c_sort seed1 行(wall 1565.9s)+gain_s1=+0.0183 判读数字(本消息)+预注册 p0c_sort.prereg.json 判据", "ts": 1790988522}
+{"round": 352, "direction": "数学/代码推理轴:排序类深度探针判决(负结果+机制归因)+stack 旋钮续作推导;四轴耦合=深度机制是端侧小模型推理能力杠杆,判负的旋钮错配解释直接定位下一步机制对照", "evidence": "benchmarks/verdicts/p0c_sort.json(h_supported=false,flat_iterations_ignored)+ROADMAP §4.5 第八轮+canonical 行 tag=p0c_sort seeds{0,1,2}", "ts": 1790990472}
+{"round": 352, "direction": "数学/代码推理轴:排序类深度探针判决(负结果+机制归因)+stack 旋钮续作推导;四轴耦合=深度机制是端侧小模型推理能力杠杆,判负的旋钮错配解释直接定位下一步机制对照", "evidence": "benchmarks/verdicts/p0c_sort.json(h_supported=false,flat_iterations_ignored)+ROADMAP §4.5 第八轮+canonical 行 tag=p0c_sort seeds{0,1,2}", "ts": 1790990533}
+{"round": 353, "direction": "数学/代码推理轴:深度旋钮机制对照探针(stack vs core)首腿——深度信号归因的时间/空间维度分解;四轴耦合=端侧小模型推理能力的机制级定位", "evidence": "benchmarks/verdicts/p0c_sort_stack.prereg.json(判据先行 fefc67b)+canonical 行 tag=p0c_sort_stack seed0(wall 1862.3s 如实超线记账)+M/gain 判读数字(本消息)", "ts": 1790993178}
+{"round": 354, "direction": "数学/代码推理轴:深度旋钮机制对照第 2 腿+节拍账实同步;四轴耦合=深度两旋钮(时间/空间维度)判负证据链=端侧推理能力机制定位的诚实积累", "evidence": "canonical 行 tag=p0c_sort_stack seed1(wall 1585.2s)+M/gain 判读数字(本消息)+RSI-INDEX 夜账 345-354 条目+预注册 p0c_sort_stack.prereg.json", "ts": 1791022792}
+{"round": 355, "direction": "数学/代码推理轴:深度旋钮对照判决收官+深度命题探针级总结论(三重错配)+深监督续作推导;四轴耦合=端侧小模型深度-能力命题的诚实负结果链与机制定位", "evidence": "benchmarks/verdicts/p0c_sort_stack.json(h_supported=false,budget_wall,字面偏离 caveat)+ROADMAP §4.5 第九轮+canonical 行 tag=p0c_sort_stack seeds{0,1,2}", "ts": 1791024732}
+{"round": 355, "direction": "数学/代码推理轴:深度旋钮对照判决收官+深度命题探针级总结论(三重错配)+深监督续作推导;四轴耦合=端侧小模型深度-能力命题的诚实负结果链与机制定位", "evidence": "benchmarks/verdicts/p0c_sort_stack.json(h_supported=false,budget_wall,字面偏离 caveat)+ROADMAP §4.5 第九轮+canonical 行 tag=p0c_sort_stack seeds{0,1,2}", "ts": 1791024781}
+{"round": 356, "direction": "数学/代码推理轴:深监督机制检验探针首腿(深度信号归因的梯度通路假设检验);四轴耦合=端侧小模型深堆叠可训练性的机制级定位", "evidence": "benchmarks/verdicts/p0c_sort_stack_ds.prereg.json(判据先行 9d897be)+canonical 行 tag=p0c_sort_stack_ds seed0(wall 1344.5s)+M(8)_ds=0.1423 判读数字(本消息)", "ts": 1791026563}
+{"round": 356, "direction": "数学/代码推理轴:深监督机制检验探针首腿(深度信号归因的梯度通路假设检验);四轴耦合=端侧小模型深堆叠可训练性的机制级定位", "evidence": "benchmarks/verdicts/p0c_sort_stack_ds.prereg.json(判据先行 9d897be)+canonical 行 tag=p0c_sort_stack_ds seed0(wall 1344.5s)+M(8)_ds=0.1423 判读数字(本消息)", "ts": 1791026613}
+{"round": 356, "direction": "数学/代码推理轴:深监督机制检验探针首腿(深度信号归因的梯度通路假设检验);四轴耦合=端侧小模型深堆叠可训练性的机制级定位", "evidence": "benchmarks/verdicts/p0c_sort_stack_ds.prereg.json(判据先行 9d897be)+canonical 行 tag=p0c_sort_stack_ds seed0(wall 1344.5s)+M(8)_ds=0.1423 判读数字(本消息)", "ts": 1791026662}
+{"round": 356, "direction": "数学/代码推理轴:深监督机制检验探针首腿(深度信号归因的梯度通路假设检验);四轴耦合=端侧小模型深堆叠可训练性的机制级定位", "evidence": "benchmarks/verdicts/p0c_sort_stack_ds.prereg.json(判据先行 9d897be)+canonical 行 tag=p0c_sort_stack_ds seed0(wall 1344.5s)+M(8)_ds=0.1423 判读数字(本消息)", "ts": 1791026760}
+{"round": 356, "direction": "数学/代码推理轴:深监督机制检验探针首腿(深度信号归因的梯度通路假设检验);四轴耦合=端侧小模型深堆叠可训练性的机制级定位", "evidence": "benchmarks/verdicts/p0c_sort_stack_ds.prereg.json(判据先行 9d897be)+canonical 行 tag=p0c_sort_stack_ds seed0(wall 1344.5s)+M(8)_ds=0.1423 判读数字(本消息)", "ts": 1791026833}
+{"round": 357, "direction": "数学/代码推理轴:深监督机制检验第 2 腿(梯度通路假设的 seed 依赖性检查);四轴耦合=端侧小模型深堆叠可训练性机制定位续证", "evidence": "canonical 行 tag=p0c_sort_stack_ds seed1(wall 1310.6s)+M(8)_ds=0.1254 判读数字(本消息)+预注册 p0c_sort_stack_ds.prereg.json 判据", "ts": 1791028300}
+{"round": 357, "direction": "数学/代码推理轴:深监督机制检验第 2 腿(梯度通路假设的 seed 依赖性检查);四轴耦合=端侧小模型深堆叠可训练性机制定位续证", "evidence": "canonical 行 tag=p0c_sort_stack_ds seed1(wall 1310.6s)+M(8)_ds=0.1254 判读数字(本消息)+预注册 p0c_sort_stack_ds.prereg.json 判据", "ts": 1791028360}
+{"round": 357, "direction": "数学/代码推理轴:深监督机制检验第 2 腿(梯度通路假设的 seed 依赖性检查);四轴耦合=端侧小模型深堆叠可训练性机制定位续证", "evidence": "canonical 行 tag=p0c_sort_stack_ds seed1(wall 1310.6s)+M(8)_ds=0.1254 判读数字(本消息)+预注册 p0c_sort_stack_ds.prereg.json 判据", "ts": 1791028424}
+{"round": 358, "direction": "数学/代码推理轴:深监督变体判决收官(梯度通路假设的方向性裁决)+阶段 2 深度对照推导;四轴耦合=端侧小模型深堆叠训练动力学的机制定位", "evidence": "benchmarks/verdicts/p0c_sort_stack_ds.json(h_supported=false,direction_but_underpowered)+ROADMAP §4.5 第十轮+canonical 行 tag=p0c_sort_stack_ds seeds{0,1,2}", "ts": 1791029992}
+{"round": 358, "direction": "数学/代码推理轴:深监督变体判决收官(梯度通路假设的方向性裁决)+阶段 2 深度对照推导;四轴耦合=端侧小模型深堆叠训练动力学的机制定位", "evidence": "benchmarks/verdicts/p0c_sort_stack_ds.json(h_supported=false,direction_but_underpowered)+ROADMAP §4.5 第十轮+canonical 行 tag=p0c_sort_stack_ds seeds{0,1,2}", "ts": 1791030072}
+{"round": 359, "direction": "数学/代码推理轴:ds 平面深度对照判决(深度信号方向终裁)+S5 正先验角落推导;四轴耦合=端侧小模型深度-能力命题探针级全路径诚实收官", "evidence": "benchmarks/verdicts/p0c_sort_ds_depth.json(h_supported=false,depth_hurts,ds 无害性 check)+ROADMAP §4.5 第十一轮+canonical 行 tag=p0c_sort_ds_d1 seeds{0,1,2}", "ts": 1791030992}
+{"round": 359, "direction": "数学/代码推理轴:ds 平面深度对照判决(深度信号方向终裁)+S5 正先验角落推导;四轴耦合=端侧小模型深度-能力命题探针级全路径诚实收官", "evidence": "benchmarks/verdicts/p0c_sort_ds_depth.json(h_supported=false,depth_hurts,ds 无害性 check)+ROADMAP §4.5 第十一轮+canonical 行 tag=p0c_sort_ds_d1 seeds{0,1,2}", "ts": 1791031051}
+{"round": 360, "direction": "数学/代码推理轴:S5 正先验角落判决+深度变量全路径收官(诚实负结果链完整入账);四轴耦合=端侧小模型深度-能力命题的探针级边界钉死,换轴推导为下一方向做准备", "evidence": "benchmarks/verdicts/p0c_s5_depth.json(h_supported=false,budget_wall_s5)+ROADMAP §4.5 第十二轮+canonical 行 tag=p0c_s5_depth seeds{0,1,2}+修复提交 a618425", "ts": 1791034282}
+{"round": 361, "direction": "长流式记忆轴:长度外推+延迟平坦性探针立项(换轴推导,与端侧延迟轴耦合);四轴耦合=O(1) 状态长流保持是 M2 端侧 thesis 的核心主张,本探针为其最小本机证据路径", "evidence": "GOALS 队列 p0c-stream-len todo(四栏推导全文)+DISTILL 轮 361+EXPERIMENT_PLAN 盘点留痕(本消息)", "ts": 1791034538}
+{"round": 362, "direction": "长流式记忆轴:长度外推探针首判决(基础设施建成+任务量级瓶颈定位);四轴耦合=O(1) 状态长流主张的最小证据路径推进,延迟诚实边界自证", "evidence": "benchmarks/verdicts/p0c_stream_len.json(h_supported=false,task_unreachable)+ROADMAP §4.5 第十三轮+canonical 行 streaming_recall.jsonl tag=p0c_stream_len", "ts": 1791037931}
+{"round": 363, "direction": "长流式记忆轴:易变体判决收官(预算墙三连证据)+端侧延迟轴推导候选;四轴耦合=同宽延迟差 8× 的诚实边界与纯液体核延迟平坦性=端侧 thesis 的下一步最小证据路径", "evidence": "benchmarks/verdicts/p0c_stream_len_e8.json(h_supported=false,still_unreachable)+ROADMAP §4.5 第十四轮+canonical 行 tag=p0c_stream_len_e8", "ts": 1791039969}
+{"round": 364, "direction": "端侧延迟轴:纯液体核延迟平坦性正判决(O(1) 主张独立成立)+混合架构二次墙定位;四轴耦合=端侧延迟/内存轴的架构原则级正面证据,循环首个 h_supported=true", "evidence": "benchmarks/verdicts/p0c_latency.json(h_supported=true,G 25.4× vs 1052.9×)+ROADMAP §4.5 第十五轮+canonical 行 latency_probe.jsonl tag=p0c_latency_r2", "ts": 1791040869}
+{"round": 365, "direction": "三轴三变量收官快照(深度/长流式记忆/端侧延迟)+重入口断点登记;四轴耦合=端侧延迟轴首个正判决 O(1) 液体子层独立成立为体系架构原则级产出", "evidence": "GOALS TERMINATED 快照+DISTILL 轮 365 终局条目+八判决文件(深度×6/流式×2)+p0c_latency.json(h_supported=true)", "ts": 1791041069}

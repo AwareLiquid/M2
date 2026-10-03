@@ -1,0 +1,69 @@
+{
+  "id": "p0c-prime-depth-retest",
+  "title": "P0-C′ 思考深度命题复测 v2 — 对照先行执行改订(hypothesis/metrics/判据/诊断逐字沿用 v1,不可变)",
+  "kind": "preregistration",
+  "revision": 2,
+  "supersedes": "benchmarks/verdicts/p0c_prime.prereg.json (v1, round 3)",
+  "revised_at": "2026-10-01T15:48:22+08:00",
+  "round": 7,
+  "revision_rationale": "v1 在途训练腿死于 2026-09-28 事故(canonical jsonl 零行,残留 stdout log 已降级为 exploratory 语境参考,不入任何指标)。用户 2026-10-01 批准'对照先行'重发。本版只动执行计划(分阶段/新增 tag/中途可见性 checkpoint);hypothesis/metrics/h_supported_criteria/negative_diagnoses/conclusion_grade 与 v1 逐字一致(no_posthoc_move 条款延续:本文件提交后判据不可修改)。",
+  "hypothesis": {
+    "statement": "注意力修复(架构原则#1: 每层配额 K=2 个全局头 + full MHA)后的 MT-LNN, 在深度敏感任务上 fixed-depth sweep 的准确率随 core 迭代深度 d 单调上升 — 即 P0-C 结论 3 待验的 '修好注意力后, 更深任务上迭代深度开始起作用'",
+    "h_origin": "docs/ROADMAP_M2.md §4.5 轮 5 P0-C 结论 3; 队列 docs/loop/GOALS.md p0c-prime-depth-retest"
+  },
+  "execution_plan_v2": {
+    "phase_1_control": "ModernCausalTransformer 对照臂单发: 1 seed × 30k 步 × mix(pointer_chase d16/n16), --transformer_only --mid_eval 10000 20000, tag=p0c_prime_v2_control, T1 MPS。实测计时(轮 7): 300 步 19s wall ⇒ 对照腿 ETA≈30min(远 cheap 于 MT-LNN 腿;死亡腿 6h/depth 是 core 迭代扫描速度)。对照臂同承 grokking 卫生(beta2=0.999/clip=0,与 MT-LNN 臂一致): 对照职责=任务可达性佐证, 须给它最好的 grok 机会; 对照行不入判据(v1 protocol.control 定义不变)。",
+    "readout_rule": "对照 grok(按 metrics.primary 口径 M ≥ grok_definition 阈值 0.90)⇒ 任务在该预算可达 → 进 phase_2 全量重发。对照全 chance ⇒ 进 phase_3 复核; 复核仍全 chance ⇒ 按 v1 protocol.budget_wall_precommit 与 negative_diagnoses.budget_wall 判负登记, 新方向(换任务/加预算)另立预注册, 不得现场改判据。",
+    "phase_2_full_relaunch": "MT-LNN 按 v1 protocol 原样重发: depths{1,2,4,8} × seeds{0,1,2} × 30k 步, tag=p0c_prime — 与 v1 判据句 'verdict 由 tag=p0c_prime 原始 jsonl 行以本口径计算' 保持字面一致(事故后该 tag 在盘 canonical 行数=0, 新腿无污染)。发射 P0C_MODE=sweep P0C_SKIP_TRANSFORMER=1(可达性佐证已由 phase_1 行承担, 省 ~3×6h 预算; 判据不消费 transformer 行, 非判据移动)。",
+    "phase_3_mtlnn_recheck": "仅 phase_1 对照全 chance 时: MT-LNN 1 seed × depths{1,8}(tag=p0c_prime_v2_recheck, ETA≈12h 串行)复核对照非假阴性; 复核仍全 chance ⇒ budget_wall 判负登记。",
+    "mid_eval_discipline": "10k/20k checkpoint 只写 partial 台账(kind=mid_eval_partial), 不产生 canonical 行、不中断训练。'grokking 可晚发' 纪律: 禁止基于中途值做任何判定或提前终止。",
+    "data_integrity": "2026-09-28 死亡腿 log(benchmarks/results/*.log 残留)= exploratory 语境参考, 不入 M(d,s)、不入 verdict; verdict 仅由本预注册各阶段 tag 的新 canonical 行计算。",
+    "launcher": "scripts/launch_p0c.sh(P0C_MODE=control|sweep; 逐 seed 幂等判重 + caffeinate -is 防睡 + pidfile 双开拒 + 逐深度/逐 seed fsync 增量落盘; 均带回归测试)"
+  },
+  "protocol": {
+    "task": "pointer_chase 单环(n-cycle 捷径已封, benchmarks/reasoning_tasks.py 默认) + mix 课程 k~U{1..16}",
+    "difficulty": 16,
+    "n_values": 16,
+    "seq_len_note": "T=54 (BOS + 16*(u ARROW v) + START s k THINK + ANS)",
+    "model": "MT-LNN n_layers=2 d_model=104 (203K 量级), n_heads=4, n_global_heads=2, full_mha=true",
+    "depth_knob": "core_iterations (fixed: 每个 d 训一个全新模型, 训练与评估在同一 d)",
+    "depths": [1, 2, 4, 8],
+    "seeds": [0, 1, 2],
+    "steps": 30000,
+    "batch": 128,
+    "lr": 0.0003,
+    "beta2": 0.999,
+    "clip": 0,
+    "hygiene_rationale": "beta2=0.999 + clip=0 为 grokking 卫生配方(2026-08-05 二分: 两者各自独立阻断 parity 突破; train_model docstring)",
+    "control": "ModernCausalTransformer 同数据同预算(任务可达性佐证), 不入判据",
+    "runner": "scripts/launch_p0c.sh(v2: P0C_MODE=control 发 phase_1;P0C_MODE=sweep 发 phase_2;内部仍 reasoning_depth.py --mode fixed --mix --device mps 按 seed 分段落盘)",
+    "exec_tier": "T1 (MPS, Apple Silicon 本地)",
+    "eta_h": "phase_1 ≈0.5h(轮 7 实测计时外推); phase_2 ≈45-66h(死亡腿历史 ≈6h/depth×12 腿×3 seeds 中扣除对照臂)",
+    "budget_wall_precommit": "若 3 seeds 全部 d8 仍 chance 且 transformer 对照亦 chance → 诊断 budget_wall, 处置=加 steps/换任务另立预注册, 判据不事后移动"
+  },
+  "metrics": {
+    "primary": "M(d,s) = mean_{k∈{1..15}} acc_k(d,s) — mix 学历的 per-k 评估均值",
+    "k16_exclusion": "k=16 桶退化(f^16(s)=s 因 n=16 单环, 答案=起点, k 特征位=k%n=0) → 排除出主指标, 仅透明报告",
+    "grok_definition": "seed s 在深度 d grok ⇔ M(d,s) ≥ 0.90",
+    "grok_rate": "grok_rate(d) = #{s: M(d,s)≥0.90} / 3 — 双峰任务纪律: 报 grok 率, 禁单 seed 声明 (ROADMAP §6 轮 6 新协议)",
+    "paired_gain": "gain_s = M(8,s) − M(1,s); mean_gain = mean_s gain_s; σ_paired = std_s(gain_s, ddof=1)"
+  },
+  "h_supported_criteria": {
+    "verdict_rule": "h_supported = true ⇔ A ∧ B ∧ C 全部成立",
+    "A_absolute": "mean_gain ≥ 0.02",
+    "B_noise": "mean_gain ≥ 2·σ_paired (超出配对噪声; 同 P0-C 原判匈口径)",
+    "C_grok_monotone": "grok_rate(8) ≥ grok_rate(1)",
+    "else": "h_supported = false, 且按 negative_diagnoses 四选一记录诊断",
+    "no_posthoc_move": "本文件提交后判据不可修改; verdict 由 tag=p0c_prime 原始 jsonl 行以本口径计算"
+  },
+  "negative_diagnoses": {
+    "budget_wall": "grok_rate(8)=0 且 transformer 对照 grok 率=0 → 任务在该预算不可达, 深度效应免谈; 非 thesis 反证",
+    "bimodal_grokking_zone": "存在 grok seed 但 B 失败且噪声主导(σ_paired > mean_gain) → 处于 grokking 掷硬币区, 需更多 seeds",
+    "flat_iterations_ignored": "所有深度 grok_rate=1 且 mean_gain < 0.02 → 任务可达但迭代被无视, 同 §4.5 轮 1 任意深度退化在 fixed 口径下的复现",
+    "direction_but_underpowered": "mean_gain > 0 但 B 失败且非 bimodal → 方向存在但 3 seeds 不可裁决(配对符号检验 n=3 最小 p=0.25); 升级 6 seeds 需 T2/T3 授权 = BLOCKED-HUMAN"
+  },
+  "conclusion_grade": "[B] 本机实测 (T1 MPS, 3 seeds 探针级; 对外终局声明需 ≥5 seeds 跨机复现→[C])",
+  "verdict_file": "benchmarks/verdicts/p0c_prime.json",
+  "raw_data": "benchmarks/results/reasoning_depth.jsonl (tag=p0c_prime)",
+  "scope_note": "parity 线不在本预注册内: parity 是 LNN 参数化线(signed/selective decay)的裁决对象, 且 fixed-core 深度对 parity 的先验为平(2026-08-05); 若本探针判负且诊断指向任务选择, 另立预注册"
+}

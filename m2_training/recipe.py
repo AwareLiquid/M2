@@ -25,10 +25,15 @@ class Recipe:
     sequence_length: int = 128
     size: str = "probe"
     grad_accum: int = 1
+    rl_mode: str = ""  # "" = SFT 主线(默认); "dpo" | "grpo" = 实验性 rl 损失路径
 
     def __post_init__(self) -> None:
         if self.task not in ("pointer_chase", "mod_chain", "text"):
             raise ValueError(f"Unsupported task: {self.task}")
+        if self.rl_mode not in ("", "dpo", "grpo"):
+            raise ValueError(f"Unsupported rl_mode: {self.rl_mode}")
+        if self.rl_mode and self.task == "text":
+            raise ValueError("RL loss path requires synthetic preference/reward tasks; corpus text training stays SFT-only")
         if self.experiment not in TRAINABLE_EXPERIMENTS:
             raise ValueError(f"Experiment has no verified training wiring: {self.experiment}")
         if self.batch < 1 or self.difficulty < 1 or self.n_values < 2 or self.lr <= 0:

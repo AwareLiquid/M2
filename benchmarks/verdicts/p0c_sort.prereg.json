@@ -1,0 +1,70 @@
+{
+  "id": "p0c-sort-depth-probe",
+  "title": "p0c-sort-relay 排序类深度探针(AMM-013 立项,AMM-017 预算版)— bubble_trace fixed-depth d=1 vs d=8",
+  "kind": "preregistration",
+  "round": 350,
+  "created_at": "2026-10-03T07:40:00+08:00",
+  "hypothesis": {
+    "statement": "注意力修复(架构原则#1: 每层配额 K=2 个全局头 + full MHA)后的 MT-LNN, 在排序类多步比较链任务(bubble_trace)上, fixed-depth 探针的准确率随 core 迭代深度 d 上升(d=8 > d=1) — P0-C 结论 3 的换任务复测(pointer_chase d16 判负 budget_wall 后, 第七轮 scope_note 指定的换任务线; parity 仍归 LNN 参数化线不混)",
+    "h_origin": "docs/loop/GOALS.md goal_queue p0c-sort-relay(AMM-013 立项, AMM-017 改 30min 预算版); docs/ROADMAP_M2.md §4.5 第七轮判决( budget_wall )后的续向蒸馏推导"
+  },
+  "task_spec": {
+    "name": "bubble_trace(benchmarks/reasoning_tasks.py gen_bubble_trace, 轮 350 新增)",
+    "definition": "输入=从 {0..31} 池无放回抽取的 k=16 个互异值按随机排列呈现; 查询=[START] j [SEP] p; 语义=对输入执行 j 轮左→右相邻比较交换(升序: 小者居左)后, 读位置 p 上的值; 答案=该值单 token。p 采样自争议区 U{j..15-j}(排除排序完成的后缀区与窗口统计可捷径的前缀区)。",
+    "difficulty_axis": "j(比较交换轮数)~U{1..7} 课程混合(mix); k=16 固定(T=23 恒定, 批内齐性); 争议区要求 k>=2j+1。",
+    "vocab": "VALUE_BASE+32=42(标签跨 32 池, 非 k)",
+    "why_labels_from_pool": "冒泡动力学只依赖相对次序模式, 而位置 p 占据者的秩分布强非均匀(海龟/兔子效应, 实测 max mass 0.23): 连续标签下 best-constant 猜测者可达 ~0.3-0.4, 任何边际捷径都不经动力学得高分。池化标签把秩偏斜与超几何标签弥散卷积: per-j best-constant floor 实测 0.035..0.083(mean 0.055) — 边际猜测者被设计杀死。秩→标签查找=O(1) 注意力计数(深度平坦), 不混淆 d1/d8 对照; 唯一通往高分的路=模拟 j 轮比较链。"
+  },
+  "baseline_pinned": {
+    "per_j_floor": {"1": 0.0354, "2": 0.0392, "3": 0.0448, "4": 0.0529, "5": 0.0621, "6": 0.0704, "7": 0.0826},
+    "mean_floor": 0.0554,
+    "measurement": "预注册前 2026-10-03 实测, 每 j N=60000 样本 pooled-p best-constant 频数",
+    "chance_line": "任一 seed 的 M(d,s) <= 0.09(mean floor + 0.035 余量) 视为 chance"
+  },
+  "protocol": {
+    "model": "MT-LNN n_layers=2 d_model=104 (~225K), n_heads=4, n_global_heads=2 (γ 配额 K=2), full_mha=true — 与 p0c_prime 修复配置同型",
+    "mode": "fixed(每个 d 全新模型, 训练与评估在同一 d)",
+    "depths": [1, 8],
+    "seeds": [0, 1, 2],
+    "steps": 2200,
+    "batch": 128,
+    "lr": 0.0003,
+    "beta2": 0.999,
+    "clip": 0,
+    "hygiene_rationale": "beta2=0.999 + clip=0 = grokking 卫生配方(2026-08-05 二分; 与 p0c_prime 各臂一致)",
+    "runner": "scripts/launch_p0c.sh(轮 350 参数化: P0C_TASK=bubble_trace P0C_DIFFICULTY=7 P0C_N_VALUES=16 P0C_TAG=p0c_sort P0C_SKIP_TRANSFORMER=1; --mix 默认开; 逐 seed 幂等判重 + caffeinate -is 防睡 + pidfile 双开拒 + fsync 增量落盘)",
+    "launch_pattern": "3 seeds 分三次发射(AMM-017): 每 seed 一次 launcher 调用, 单进程串行先训 d=1 后训 d=8(等步数), 每次发射墙钟 <=30min; 全部本机 T1, 无外置资源依赖",
+    "exec_tier": "T1 (MPS, Apple Silicon 本地)",
+    "transformer_control": "无(探针预算 30min/发射, 对照臂不入判据; 任务可达性歧义由 budget_wall 诊断+愿望登记升级路径承担)"
+  },
+  "budget_backcompute": {
+    "measured_rates": "轮 350 标定(tag=cal_* 沙箱行, 不入判据): r1=0.0831 s/step, r8=0.5835 s/step(T=23, batch=128, MPS; 线性拟合扣除评估常开销)",
+    "formula": "S = (1800s - 120s 评估/热身余量) / (r1 + r8) ≈ 2400 → 钉 S=2200(预计单 seed 墙钟 ≈26.9min <= 30min)",
+    "pairing_note": "两臂等步数配对(先例 = p0c_prime 30k 等步口径); 墙钟约束落在每次发射整体(d1 臂仅耗 ~12% 墙钟), 如实声明, 非每臂等墙钟"
+  },
+  "metrics": {
+    "primary": "M(d,s) = mean_{j∈{1..7}} acc_j(d,s) — mix 学历的 per-j 桶评估均值(每桶 8×256 样本)",
+    "paired_gain": "gain_s = M(8,s) − M(1,s); mean_gain = mean_s gain_s; σ_paired = std_s(gain_s, ddof=1)",
+    "highj_gain": "highj_gain = mean_s mean_{j∈{5,6,7}} [acc_j(8,s) − acc_j(1,s)] — 深度效应定位桶(诊断/判据 C 用)",
+    "floor_reporting": "每桶随缘基线=baseline_pinned.per_j_floor, 判读时并列报告"
+  },
+  "h_supported_criteria": {
+    "verdict_rule": "h_supported = true ⇔ A ∧ B ∧ C 全部成立",
+    "A_absolute": "mean_gain ≥ 0.02",
+    "B_noise": "mean_gain ≥ 2·σ_paired (超出配对噪声; 同 P0-C 原判口径)",
+    "C_highj_direction": "highj_gain ≥ 0 (深度效应须在高难桶显形, 防低桶噪声翻转)",
+    "else": "h_supported = false, 且按 negative_diagnoses 四选一记录诊断",
+    "no_posthoc_move": "本文件落盘后判据不可修改; verdict 由 tag=p0c_sort 原始 jsonl 行以本口径计算"
+  },
+  "negative_diagnoses": {
+    "budget_wall": "3 seeds 的 M(8,s) 全部 ≤ 0.09 → 任务在该预算不可达, 深度效应免谈; 非 thesis 反证。处置=愿望登记升级(GOALS blocked_on 已挂 30k 步级终判), 判据不事后移动",
+    "flat_iterations_ignored": "M(1) 与 M(8) 均 ≫ chance 且 |mean_gain| < 0.02 → 任务可达但迭代被无视(设计探索已实证: 定 j≤3 配置 d1≈d8≈0.82, 2 层电路可逼近小 j 窗口化动力学 — 见 calibration_disclosure)",
+    "bimodal_grokking_zone": "存在 seed 增益高但 σ_paired > mean_gain → 处于配对噪声主导的掷硬币区, 需更多 seeds(愿望登记, 不停车)",
+    "direction_but_underpowered": "mean_gain > 0 但 B 失败且非 bimodal → 方向存在但 3 seeds 不可裁决(配对符号检验 n=3 最小 p=0.25); 升级 seeds=愿望登记"
+  },
+  "calibration_disclosure": "预注册前的设计空间探索(同日 2026-10-03, 全部 tag=cal_* 沙箱行, 不入任何指标): ①定 j 无 mix 三点 @600 步: j=2,k=8 d1=0.611>d8=0.523(300 步); j=3,k=8 d1=0.8164≈d8=0.8143; j=3,k=12 d1=0.8262≈d8=0.8221 → 定 j 形态无深度信号(2 层电路+MLP 可逼近小 j 窗口化动力学), 据此换课程混合形态(j 为难度轴); ②mix 形态(k=16, j~U{1..7}): d1@1200 步 M=0.5714, d8@2000 步 M=0.7148, 高桶差最大(j=7: 0.783 vs 0.601, +0.182) → 深度对比方向为正, 钉本配置交 canonical 3-seed 判决。canonical 判据只消费 tag=p0c_sort 行。",
+  "conclusion_grade": "[B] 本机实测 (T1 MPS, 3 seeds 探针级; 对外终局声明需 ≥5 seeds 跨机复现 → [C]; 30k 步级终判 = 愿望登记挂账, 不虚报终判)",
+  "verdict_file": "benchmarks/verdicts/p0c_sort.json",
+  "raw_data": "benchmarks/results/reasoning_depth.jsonl (tag=p0c_sort)",
+  "scope_note": "parity 线不在本预注册内: parity 是 LNN 参数化线(signed/selective decay)的裁决对象, 第七轮 scope_note 延续; t3-kaggle-launcher 与 30k 步级终判预算=愿望登记(AMM-017, 凭证/资源到位由用户点火改指入队, 不停车)"
+}

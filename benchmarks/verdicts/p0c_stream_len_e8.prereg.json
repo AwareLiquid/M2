@@ -1,0 +1,43 @@
+{
+  "id": "p0c-stream-len-e8",
+  "title": "流式 KV 回忆易变体(N_FACTS=8:回忆容量降,距离测试保留)— 轮 362 task_unreachable 明文处置",
+  "kind": "preregistration",
+  "round": 363,
+  "created_at": "2026-10-03T23:20:00+08:00",
+  "hypothesis": {
+    "statement": "第十三轮判负(task_unreachable)的归因=32 事实回忆容量超出 2000 步预算;e8 易变体把事实数降到 8(回忆容量降,流长由填充密度变化的距离测试结构逐字保留)⇒ 任务在两模型上可达(acc(256)≥0.8),长度外推问题得以被触及;假设:可达后液体核保持率优于 transformer(B 判据方向未知,如实测)",
+    "h_origin": "benchmarks/verdicts/p0c_stream_len.json negative_diagnosis(task_unreachable)明文处置=换任务参数另立预注册; ROADMAP §4.5 第十三轮"
+  },
+  "single_variable_declaration": "唯一变化=N_FACTS 32→8(harness 单参数,--n_facts 8,轮 363 接线+自测绿);任务结构/两模型/S=2000/batch/lr/eval 长度逐字沿用第十三轮 — 单变量声明",
+  "protocol": {
+    "task": "streaming_kv_recall n_facts=8(T=256 间隔≈6-21 / T=1024 ≈29-93 / T=4096 ≈121-384;chance=1/16=0.0625 不变)",
+    "models": "MT-LNN vs ModernCausalTransformer(同第十三轮配置)",
+    "steps": 2000,
+    "seeds": [0, 1, 2],
+    "eval": "T∈{256, 1024, 4096};latency 描述性不入判据",
+    "runner": ".venv/bin/python -m benchmarks.streaming_recall --model {mtlnn|transformer} --seeds S --steps 2000 --n_facts 8 --eval_lens 256 1024 4096 --device mps --tag p0c_stream_len_e8(受管后台通道分次发射)",
+    "exec_tier": "T1 (MPS, Apple Silicon 本地)"
+  },
+  "metrics": {
+    "primary": "acc_m(T,s);R_m = acc_m(1024)/max(acc_m(256), 0.01)",
+    "descriptive": "fwd_s_by_len(延迟,透明报告不入判据)"
+  },
+  "h_supported_criteria": {
+    "verdict_rule": "h_supported = true ⇔ A ∧ B ∧ C 全部成立",
+    "A_learn": "两模型 3-seed 均值 acc(256) 均 ≥ 0.8(可达门,第十三轮失败位)",
+    "B_retention": "R_mtlnn ≥ R_transformer + 0.10",
+    "C_abs": "3-seed 均值 acc_mtlnn(1024) ≥ 0.5",
+    "else": "h_supported = false, 按 negative_diagnoses 三选一",
+    "no_posthoc_move": "本文件落盘后判据不可修改; verdict 由 tag=p0c_stream_len_e8 原始 jsonl 行以本口径计算"
+  },
+  "negative_diagnoses": {
+    "still_unreachable": "A 仍失败 → 8 事实在 2000 步仍不可学=流式轴探针级预算墙(与深度链 budget_wall 同构);处置=加步数愿望登记,流式轴探针级收官,换轴再推导或阶梯走空",
+    "no_separation": "A 过但 B 失败(两模型保持率同好/同坏)→ O(1) 外推主张无分离;处置=更长流(8k+)愿望登记或换任务族",
+    "liquid_collapse": "A 过但 C 失败且 R_mtlnn < R_transformer → 液体状态长流丢记忆(对架构主张不利);处置=如实登记+记忆机制候选另立预注册"
+  },
+  "honest_prediction_note": "可达性先验中等:8 事实近邻间隔 6-21 与第十三轮 32 事实间隔 6 相比回忆容量降 4×;查表类任务在本规模的教训(第一轮:k=1 也要 6000 步)提示 2000 步仍可能不够——A 门如实裁决,不因易变体名义放松",
+  "conclusion_grade": "[B] 本机实测 (T1 MPS, 3 seeds 探针级; 终局声明须 ≥5 seeds 跨机 → [C])",
+  "verdict_file": "benchmarks/verdicts/p0c_stream_len_e8.json",
+  "raw_data": "benchmarks/results/streaming_recall.jsonl (tag=p0c_stream_len_e8)",
+  "scope_note": "第十三轮明文处置的执行;--n_facts 接线=轮 363(自测绿+单参数烟雾);延迟仍为描述性"
+}

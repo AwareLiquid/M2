@@ -1,0 +1,58 @@
+{
+ "id": "p0c-sort-depth-probe",
+ "kind": "verdict",
+ "prereg": "benchmarks/verdicts/p0c_sort.prereg.json",
+ "h_supported": false,
+ "criteria_eval": {
+  "A_absolute": {
+   "rule": "mean_gain >= 0.02",
+   "observed": -0.0047,
+   "pass": false
+  },
+  "B_noise": {
+   "rule": "mean_gain >= 2*sigma_paired(ddof=1)",
+   "observed": "mean_gain=-0.0047 < 2*sigma_paired=0.0452",
+   "pass": false
+  },
+  "C_highj_direction": {
+   "rule": "highj_gain >= 0 (深度效应须在高难桶 j∈{5,6,7} 显形)",
+   "observed": -0.0035,
+   "pass": false
+  },
+  "verdict_rule": "h_supported = A ∧ B ∧ C 全部成立 ⇒ false(三判据全败)"
+ },
+ "M_table": {
+  "M(1)_per_seed": {"0": 0.6568, "1": 0.6652, "2": 0.6738},
+  "M(8)_per_seed": {"0": 0.6512, "1": 0.6835, "2": 0.6469},
+  "M(1)_mean": 0.6653,
+  "M(8)_mean": 0.6605,
+  "gain_per_seed": {"0": -0.0056, "1": 0.0183, "2": -0.0269},
+  "mean_gain": -0.0047,
+  "sigma_paired": 0.0226,
+  "highj_gain_mean": -0.0035,
+  "口径": "mean over j∈{1..7} per-j 桶评估均值(mix 学历,每桶 8×256 样本);prereg metrics.primary",
+  "per_j_buckets_seed0_d8": {"1": 0.524, "2": 0.624, "3": 0.762, "4": 0.824, "5": 0.837, "6": 0.818, "7": 0.821}
+ },
+ "chance_baseline": {
+  "per_j_floor_pinned": {"1": 0.0354, "2": 0.0392, "3": 0.0448, "4": 0.0529, "5": 0.0621, "6": 0.0704, "7": 0.0826},
+  "mean_floor": 0.0554,
+  "chance_line": 0.09,
+  "note": "双臂 M≈0.66-0.75 ≫ 0.09:任务在该预算可学,chance 排除"
+ },
+ "data_refs": {
+  "rows": "benchmarks/results/reasoning_depth.jsonl tag=p0c_sort seeds={0,1,2} steps=2200 (wall 1559.2/1565.9/1568.6s, 均≤30min 红线)",
+  "prereg_commit": "0c7fbf1 (轮 350 中程提交,判据先于 canonical 数据)"
+ },
+ "negative_diagnosis": "flat_iterations_ignored",
+ "negative_diagnosis_note": "prereg negative_diagnoses.flat_iterations_ignored 双条件兑现:M(1) 与 M(8) 均 ≫ chance(0.6653/0.6605 vs 线 0.09)且 |mean_gain|=0.0047 < 0.02 ⇒ 任务可达但迭代被无视——2 层电路(每层注意力+core+FFN)在满预算下即可逼近 j≤7 比较链动力学,与预注册 calibration_disclosure 定 j 形态探索(d1≈d8≈0.82)机制一致;非 thesis 反证亦非 budget_wall(任务可学);深度信号需更大 j/k 或不同任务族=另立预注册(愿望登记不停车)",
+ "caveats": [
+  "探针级 [B]:3 seeds × 2200 步本机 MPS;对外终局声明须 ≥5 seeds 跨机复现 → [C]",
+  "30k 步级终判预算=愿望登记挂账(GOALS blocked_on,AMM-017 不停车)",
+  "设计探索的 d1 截断预算假信号(轮 350 教训):canonical 等预算下 d1 追平,预注册判据锚最终口径吸收该误差",
+  "seed 1 增益 +0.0183 若单读会误判方向——配对 σ=0.0226 主导,禁单 seed 声明铁律的实证"
+ ],
+ "decided_at": "2026-10-03T09:16:30+08:00",
+ "round": 352,
+ "exec_tier": "T1",
+ "seeds": 3
+}

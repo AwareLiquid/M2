@@ -1,0 +1,55 @@
+{
+ "id": "p0c-stream-len",
+ "kind": "verdict",
+ "prereg": "benchmarks/verdicts/p0c_stream_len.prereg.json",
+ "h_supported": false,
+ "criteria_eval": {
+  "A_learn": {
+   "rule": "两模型 3-seed 均值 acc(256) 均 >= 0.8(任务可达性门)",
+   "observed": "mtlnn=0.0625(chance) transformer=0.1563(均 < 0.8)",
+   "pass": false
+  },
+  "B_retention": {
+   "rule": "R_mtlnn >= R_transformer + 0.10",
+   "observed": "R_mtlnn=0.521 < R_transformer=0.874(但两臂均在 chance 噪声带,保持率无意义)",
+   "pass": false
+  },
+  "C_abs": {
+   "rule": "3-seed 均值 acc_mtlnn(1024) >= 0.5",
+   "observed": 0.0312,
+   "pass": false
+  },
+  "verdict_rule": "h_supported = A ∧ B ∧ C ⇒ false(A 失败:任务不可达,外推问题未触及)"
+ },
+ "M_table": {
+  "acc_by_len": {
+   "mtlnn": {"256": 0.0625, "1024": 0.0312, "4096": 0.0417},
+   "transformer": {"256": 0.1563, "1024": 0.1094, "4096": 0.0625}
+  },
+  "per_seed_mtlnn_256": [0.047, 0.062, 0.078],
+  "per_seed_transformer_256": [0.219, 0.156, 0.094],
+  "chance": 0.0625,
+  "口径": "mean over 3 seeds;eval 4 批×16(T≥4096 时 batch=4,OOM 修复)"
+ },
+ "latency_descriptive": {
+  "fwd_s": {"mtlnn": {"256": 0.109, "1024": 0.547, "4096": 1.667},
+            "transformer": {"256": 0.013, "1024": 0.074, "4096": 0.213}},
+  "ratio_4096_256": {"mtlnn": 15.3, "transformer": 16.4},
+  "note": "描述性报告不入判据:两模型延迟均超线性(MT-LNN 含注意力层,O(1) 主张只覆盖液体子层——架构事实再次自证)"
+ },
+ "data_refs": {
+  "rows": "benchmarks/results/streaming_recall.jsonl tag=p0c_stream_len seeds={0,1,2} × models={mtlnn,transformer} steps=2000 (legs rc=0;mtlnn 0/1 首发因 T=4096 eval MPS OOM 崩,自适应 batch+清缓存修复后重发 rc=0,canonical 零污染)",
+  "prereg_commit": "a4f4847 (轮 362 中程提交,判据先于 canonical 数据)"
+ },
+ "negative_diagnosis": "task_unreachable",
+ "negative_diagnosis_note": "prereg negative_diagnoses.task_unreachable 字面兑现:32 事实流式 KV 回忆(训练长度 T=256,间隔≈6)在 2000 步预算对两模型均不可学(mtlnn 恰 chance,transformer 略超)——长流外推问题未触及;与深度链教训一致:in-context 查表类任务在本架构规模需要更长训练(ROADMAP 第一轮:连 k=1 纯查表 6000 步都学不会的同一现象族);处置=换任务参数另立预注册(N_FACTS=8 易变体:回忆容量 8 条,回忆距离测试保留)或加步数愿望登记",
+ "caveats": [
+  "探针级 [B]:3 seeds × 2000 步本机 MPS;终局声明须 ≥5 seeds 跨机 → [C]",
+  "mtlnn seed 2 与 0/1 重发腿的 T=4096 eval batch=4(修复后),transformer 腿 batch=16(无 OOM)——两模型 4096 采样数不同(16 vs 64),准确率均为无偏估计,caveat 如实登记",
+  "延迟比 15.3/16.4:MT-LNN 的注意力层使其延迟同样超线性——'O(1) 端侧'主张只覆盖液体子层,不含混合架构的注意力层(架构诚实边界再次确认)"
+ ],
+ "decided_at": "2026-10-03T23:55:00+08:00",
+ "round": 362,
+ "exec_tier": "T1",
+ "seeds": 3
+}

@@ -1,0 +1,49 @@
+{
+  "id": "p0c-sort-ds-depth",
+  "title": "p0c-sort 深监督阶段 2 深度对照(d1+ds vs d8+ds)— ds 平面上深度信号方向裁决",
+  "kind": "preregistration",
+  "round": 359,
+  "created_at": "2026-10-03T20:25:00+08:00",
+  "hypothesis": {
+    "statement": "深度命题原式:fixed-depth 下准确率随深度 d 上升。ds 平面上(两臂均开 deep_supervision,排除第九轮'深堆叠不训练'混淆),若深度信号存在则 d8+ds 应优于 d1+ds;对照臂=在盘 d8+ds 三 seed 行(mean 0.1249,verdicts/p0c_sort_stack_ds.json),新发 d1+ds 三 seed 短腿",
+    "h_origin": "benchmarks/verdicts/p0c_sort_stack_ds.json negative_diagnosis(direction_but_underpowered)预注册明文处置=阶段 2 深度对照; 续向蒸馏四栏推导(轮 358 DISTILL); 深度命题原式=ROADMAP §4.5 第七-十轮链条"
+  },
+  "single_variable_declaration": "本探针相对 p0c_sort_stack_ds.prereg.json(轮 356)的唯一变化=深度 d8→d1(两臂均 ds 开,任务/课程/S=2000/batch/lr/hygiene/stack 旋钮逐字沿用);对照臂=在盘 d8+ds 三 seed canonical 行,不新发 d8 腿 — 单变量声明",
+  "protocol": {
+    "model": "MT-LNN n_layers=2 d_model=104, n_heads=4, n_global_heads=2, full_mha=true — 同前五轮修复配置",
+    "mode": "fixed, depth_knob=stack_iterations, deep_supervision=true",
+    "depths": [1],
+    "seeds": [0, 1, 2],
+    "steps": 2000,
+    "batch": 128,
+    "lr": 0.0003,
+    "beta2": 0.999,
+    "clip": 0,
+    "mix": "j~U{1..7} 课程混合(同前)",
+    "runner": "scripts/launch_p0c.sh(P0C_TASK=bubble_trace P0C_DIFFICULTY=7 P0C_N_VALUES=16 P0C_STACK=1 P0C_DS=1 P0C_DEPTHS=1 P0C_TAG=p0c_sort_ds_d1 P0C_SKIP_TRANSFORMER=1)",
+    "launch_pattern": "3 seeds 分三次发射(AMM-017),每 seed 单臂 d1,受管后台通道;d1+ds 标定 wall≈24s/200 步 ⇒ S=2000 单臂约 4-6min≤30",
+    "exec_tier": "T1 (MPS, Apple Silicon 本地)"
+  },
+  "metrics": {
+    "primary": "M(1,s)_ds = mean_{j∈{1..7}} acc_j(1,s);对照=在盘 M(8)_ds 行 [0.1423,0.1254,0.1070] mean 0.1249",
+    "paired_gain": "gain_s = M(8)_ds(在盘同 seed 行) − M(1,s)_ds;mean_gain;σ_paired(ddof=1) — 深度方向按 seed 配对"
+  },
+  "h_supported_criteria": {
+    "verdict_rule": "h_supported = true ⇔ A ∧ B ∧ C 全部成立(深度信号正向:ds 平面上 d8 优于 d1)",
+    "A_depth_direction": "mean_gain ≥ 0.02(d8+ds 优于 d1+ds)",
+    "B_noise": "mean_gain ≥ 2·σ_paired",
+    "C_consistency": "3/3 seeds gain_s > 0",
+    "else": "h_supported = false, 按 negative_diagnoses 三选一",
+    "no_posthoc_move": "本文件落盘后判据不可修改; verdict 由 tag=p0c_sort_ds_d1 新行+在盘 tag=p0c_sort_stack_ds 行以本口径计算"
+  },
+  "negative_diagnoses": {
+    "depth_hurts": "mean_gain < −0.02 且 3/3 seeds gain_s < 0 → ds 平面上深度单调伤(d1 学满 d8 受阻于预算/量级):深度命题在探针级预算内的终局负形态;处置=升级预算愿望登记,探针级深度链条收官",
+    "ds_depth_flat": "|mean_gain| ≤ 0.02 → 两臂持平(深度无关);处置=同上收官或 S5 任务族另立预注册",
+    "direction_but_underpowered": "0 < mean_gain < 0.02 或符号分裂 → 深度弱正但 3 seeds 不可裁;处置=升级 seeds 愿望登记"
+  },
+  "honest_prediction_note": "续向蒸馏预判(轮 358 DISTILL):d1+ds 预计≈0.64(core d1 同水平,ds 在深度 1 近似恒等)≫ d8+ds 0.125——阶段 2 大概率判 depth_hurts;预注册不因预期负面而跳过:ds 无害性(d1+ds 是否保持 d1 水平)与 d8 量级天花板两个结论都依赖本臂",
+  "conclusion_grade": "[B] 本机实测 (T1 MPS, 3 seeds 探针级; 终局声明须 ≥5 seeds 跨机 → [C])",
+  "verdict_file": "benchmarks/verdicts/p0c_sort_ds_depth.json",
+  "raw_data": "benchmarks/results/reasoning_depth.jsonl (tag=p0c_sort_ds_d1 新行; 对照=tag=p0c_sort_stack_ds)",
+  "scope_note": "阶段 2=第十轮 direction_but_underpowered 的明文处置;30k 步级终判/升级预算=愿望登记(AMM-017);parity 线不混"
+}

@@ -1,0 +1,41 @@
+{
+  "id": "p0c-latency",
+  "title": "端侧延迟轴-纯液体核延迟平坦性探针(零训练,纯推理 T 扫描)",
+  "kind": "preregistration",
+  "round": 364,
+  "created_at": "2026-10-04T00:50:00+08:00",
+  "hypothesis": {
+    "statement": "纯液体核 MT-LNN(attention_layers=(),O(1) 状态)的前向延迟随 T 线性增长(16× token → ~16× 延迟),显著低于 transformer 的二次增长(→ ~256× 或 OOM)⇒ 长流斜率分离;'O(1) 端侧'主张在液体子层独立成立(混合架构的注意力层超线性已被轮 362/363 描述性数据自证,本探针剥离该混淆)",
+    "h_origin": "docs/loop/GOALS.md 队列(轮 363 换轴推导); ROADMAP §4.5 第十三/十四轮延迟描述性证据(同宽 mtlnn 慢 8×,长度比 15.4×/16.4× 均超线性); ROADMAP §3 端侧延迟轴"
+  },
+  "protocol": {
+    "configs": ["pure_liquid(attention_layers=())", "hybrid(默认注意力)", "transformer"],
+    "model": "同宽 d_model=104(与深度/流式探针同族);max_seq_len=T 逐点构建",
+    "sweep": "T∈{512, 2048, 8192, 16384},batch=1(端侧单请求);每点预热 1+测 3 取中位;MPS",
+    "runner": ".venv/bin/python -m benchmarks.latency_probe --lengths 512 2048 8192 16384 --device mps --tag p0c_latency_r2(benchmarks/latency_probe.py,轮 364 新增,自测;amendment 1 数据前:首扫 pure_liquid 16384 OOM 崩因=use_global_coherence 默认开[global_coherence topk T×T 4GB]——'纯液体核'配置须显式关闭,修复后单点验证 0.43s/272MB,重跑 tag=p0c_latency_r2,首扫行留账本作废记录)",
+    "seeds_note": "零训练纯推理,无训练随机性:单次扫描+每点 median-of-3(模型固定 seed 0);3-seed 纪律不适用于无训练探针,如实声明",
+    "exec_tier": "T1 (MPS, Apple Silicon 本地);全程预计 <10min"
+  },
+  "metrics": {
+    "primary": "G_config = L(16384)/L(512)(延迟增长比;16× token 下线性理想值≈16,二次≈256)",
+    "descriptive": "alloc_mb(已分配内存,描述性);transformer OOM=记录结局(端侧内存墙)"
+  },
+  "h_supported_criteria": {
+    "verdict_rule": "h_supported = true ⇔ A ∧ B ∧ C 全部成立(O(1) 主张在液体子层独立成立)",
+    "A_completion": "pure_liquid 完成 {512,2048,8192,16384} 全部点无 OOM",
+    "B_slope": "G_pure ≤ 0.5 × G_transformer(transformer 在某 T OOM 时,G_transformer 取其最大完成长度(≥2048)的比)",
+    "C_linear": "G_pure ≤ 32(线性理想 16 的 2× 内;钉'线性'而非仅'比 transformer 好')",
+    "else": "h_supported = false, 按 negative_diagnoses 三选一",
+    "no_posthoc_move": "本文件落盘后判据不可修改; verdict 由 tag=p0c_latency 原始 jsonl 行以本口径计算"
+  },
+  "negative_diagnoses": {
+    "pure_superlinear": "C 失败(G_pure > 32)→ 液体子层自身超线性(逐 token 循环的实现开销或隐藏二次项),对 O(1) 主张不利;处置=如实登记,profiling 另立预注册",
+    "no_separation": "B 失败(transformer 在本宽度下也近线性——小 d_model 下注意力未成为瓶颈)→ 分离需更长 T 或更大 d_model;处置=16k+ 愿望登记",
+    "infra_oom": "A 失败(纯液体核 OOM)→ 探针基础设施问题;处置=修 harness 重跑(非研究结论)"
+  },
+  "honest_prediction_note": "B 强先验(纯液体核逐 token 常数计算=线性是架构事实);C 中等先验(MPS kernel 启动开销可能使小 T 段偏高,16× 理想值在噪声内);transformer 16384 大概率 OOM(4.3GB 级激活)——OOM 本身是端侧内存墙证据,如实记录",
+  "conclusion_grade": "[B] 本机实测 (T1 MPS, 单扫描 median-of-3, 纯推理无训练随机性; 终局声明须跨机 → [C])",
+  "verdict_file": "benchmarks/verdicts/p0c_latency.json",
+  "raw_data": "benchmarks/results/latency_probe.jsonl (tag=p0c_latency)",
+  "scope_note": "端侧延迟轴首探针;两模型能力对比不在此探针范围(流式轴已收官=预算墙愿望登记);hybrid 列=与轮 362/363 描述性数据的交叉验证"
+}

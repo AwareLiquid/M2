@@ -1,0 +1,53 @@
+{
+ "id": "p0c-sort-ds-depth",
+ "kind": "verdict",
+ "prereg": "benchmarks/verdicts/p0c_sort_ds_depth.prereg.json",
+ "h_supported": false,
+ "criteria_eval": {
+  "A_depth_direction": {
+   "rule": "mean_gain = mean[M(8)_ds - M(1)_ds] >= 0.02(深度信号正向)",
+   "observed": -0.5172,
+   "pass": false
+  },
+  "B_noise": {
+   "rule": "mean_gain >= 2*sigma_paired(ddof=1)",
+   "observed": "-0.5172 < 2*0.0229=0.0458(方向为深度强负)",
+   "pass": false
+  },
+  "C_consistency": {
+   "rule": "3/3 seeds gain_s > 0",
+   "observed": "0/3 seeds gain_s > 0(−0.491/−0.530/−0.531 全负)",
+   "pass": false
+  },
+  "verdict_rule": "h_supported = A ∧ B ∧ C ⇒ false(三判据全败,深度方向强负)"
+ },
+ "M_table": {
+  "M(1)_ds_per_seed": {"0": 0.6332, "1": 0.6557, "2": 0.6375},
+  "M(1)_ds_mean": 0.6421,
+  "M(8)_ds_per_seed_in_disk": {"0": 0.1423, "1": 0.1254, "2": 0.107},
+  "M(8)_ds_mean": 0.1249,
+  "gain_per_seed": {"0": -0.4908, "1": -0.5303, "2": -0.5305},
+  "mean_gain": -0.5172,
+  "sigma_paired": 0.0229,
+  "口径": "mean over j∈{1..7}(与前五轮同口径);d1 新行+在盘 d8 行按 seed 配对"
+ },
+ "ds_harmlessness_check": {
+  "note": "prereg honest_prediction_note 的两结论之一:d1+ds(0.6421)与 d1 无 ds(core 旋钮三 seed 0.6568-0.6738,stack 口径)同水平——deep_supervision 在深度 1 近似恒等,无害性成立;ds 探针链的对照有效性由此锚定"
+ },
+ "data_refs": {
+  "rows_new": "benchmarks/results/reasoning_depth.jsonl tag=p0c_sort_ds_d1 seeds={0,1,2} steps=2000 单 d1 臂 (wall 193.3/185.8/185.3s,均≤30min)",
+  "control": "benchmarks/results/reasoning_depth.jsonl tag=p0c_sort_stack_ds(在盘 d8+ds 行,verdicts/p0c_sort_stack_ds.json)",
+  "prereg_commit": "3f88b4a (轮 359 中程提交,判据先于 canonical 数据)"
+ },
+ "negative_diagnosis": "depth_hurts",
+ "negative_diagnosis_note": "prereg negative_diagnoses.depth_hurts 字面兑现:mean_gain=−0.5172 < −0.02 且 3/3 seeds gain_s < 0——ds 平面上深度单调伤:d1+ds 学到 0.64(d1 无 ds 同水平),d8+ds 仅 0.1249;深度信号在本探针预算内不但不存在而且方向为负。honest_prediction(轮 358 DISTILL 预判 depth_hurts)如实兑现,预注册未因预期负面跳过",
+ "caveats": [
+  "探针级 [B]:3 seeds × 2000 步本机 MPS;终局声明须 ≥5 seeds 跨机 → [C]",
+  "深度命题探针级链条至此五连负(§4.5 第七-十一轮):budget_wall/flat_iterations/deep_stack_untrainable/partial_rescue/depth_hurts——本机 30min 探针预算内深度增益全路径未显形;升级预算(30k/10^5 步级)=愿望登记挂账,不虚报终局",
+  "S5 词问题(NC¹ 完全分离,looped 文献正先验)=深度链条唯一剩余的正先验角落,可推导性待四栏蒸馏裁决"
+ ],
+ "decided_at": "2026-10-03T20:36:00+08:00",
+ "round": 359,
+ "exec_tier": "T1",
+ "seeds": 3
+}

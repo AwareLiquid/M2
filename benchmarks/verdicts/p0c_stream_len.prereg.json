@@ -1,0 +1,46 @@
+{
+  "id": "p0c-stream-len",
+  "title": "长流式记忆轴-长度外推探针(流式 KV 回忆,短训长测)— 换轴后首探针",
+  "kind": "preregistration",
+  "round": 362,
+  "created_at": "2026-10-03T22:00:00+08:00",
+  "hypothesis": {
+    "statement": "32 条 (key→value) 事实埋进含噪流(T 由填充密度变化),短训 T=256 长测 T∈{1024,4096}:MT-LNN(液体核)凭 O(1) 递归状态在更长流上保持回忆准确率(外推保持),保持率显著优于 transformer(O(T²) 注意力+RoPE 外推劣势);同时透明报告各长度前向墙钟(延迟平坦性,描述性)",
+    "h_origin": "docs/loop/GOALS.md 队列 p0c-stream-len(轮 361 换轴四栏推导); ROADMAP §3 长流式记忆轴(O(1) 状态为端侧 thesis 核心主张); 深度链六连负收官后的换轴(§4.5 第七-十二轮)"
+  },
+  "task_spec": {
+    "name": "streaming_kv_recall(benchmarks/streaming_recall.py, 轮 362 新增, 自测黄金回放)",
+    "definition": "32 条键互异 (K k)(V v) 事实 + 噪声填充 + 流末 [Q k_q];答案位预测 v_q(chance=1/16=0.0625)。流长只变填充密度(事实数固定⇒无歧义);T=256 间隔≈6 / T=1024 间隔≈30 / T=4096 间隔≈127——长流=回忆距离变长",
+    "models": "MT-LNN(2 层 d=104 core_iterations=2)vs ModernCausalTransformer(同宽);max_seq_len=4096 同配置(RoPE 无作弊不对称)",
+    "vocab": "4 specials+32 keys+16 vals+8 noise=60"
+  },
+  "protocol": {
+    "training": "steps=2000, batch=16, lr=3e-4, train_len=256;两模型同预算同协议(标定:mtlnn≈8.8min/腿,transformer≈3min/腿,均≤30min)",
+    "seeds": [0, 1, 2],
+    "eval": "T∈{256(训练内), 1024, 4096(外推)},每长度 4×16 样本;latency=每长度前向墙钟(描述性,不入判据)",
+    "runner": ".venv/bin/python -m benchmarks.streaming_recall --model {mtlnn|transformer} --seeds S --steps 2000 --eval_lens 256 1024 4096 --device mps --tag p0c_stream_len(受管后台通道,分次发射)",
+    "exec_tier": "T1 (MPS, Apple Silicon 本地)"
+  },
+  "metrics": {
+    "primary": "acc_m(T,s);保持率 R_m = acc_m(1024)/max(acc_m(256), 0.01)(按 seed 配对后取均值)",
+    "descriptive": "fwd_s_by_len(延迟曲线,透明报告,不入判据)"
+  },
+  "h_supported_criteria": {
+    "verdict_rule": "h_supported = true ⇔ A ∧ B ∧ C 全部成立(液体核外推保持优于 transformer)",
+    "A_learn": "两模型 3-seed 均值 acc(256) 均 ≥ 0.8(任务可达性门)",
+    "B_retention": "R_mtlnn ≥ R_transformer + 0.10(保持率分离)",
+    "C_abs": "3-seed 均值 acc_mtlnn(1024) ≥ 0.5(外推后仍有实用记忆)",
+    "else": "h_supported = false, 按 negative_diagnoses 三选一",
+    "no_posthoc_move": "本文件落盘后判据不可修改; verdict 由 tag=p0c_stream_len 原始 jsonl 行以本口径计算"
+  },
+  "negative_diagnoses": {
+    "task_unreachable": "A 失败(任一模型 acc(256) < 0.8)→ 任务在 2000 步预算不可学;处置=加步数愿望登记或换任务参数另立预注册",
+    "no_separation": "A 过但 B 失败(两模型保持率同好/同坏)→ O(1) 外推主张在此探针无分离;处置=更长流(8k+)愿望登记或换任务族",
+    "liquid_collapse": "A 过但 C 失败且 R_mtlnn < R_transformer → 液体状态在长流上丢记忆(负分化,对架构主张不利);处置=如实登记+EPISODIC/记忆机制候选另立预注册"
+  },
+  "honest_prediction_note": "无强先验:MT-LNN 的注意力层仍是 O(T²)(外推延迟不平坦是预期),O(1) 主张只覆盖液体子层;B 判据(保持率分离)的真实方向未知——这正是探针要测的",
+  "conclusion_grade": "[B] 本机实测 (T1 MPS, 3 seeds 探针级; 终局声明须 ≥5 seeds 跨机 → [C])",
+  "verdict_file": "benchmarks/verdicts/p0c_stream_len.json",
+  "raw_data": "benchmarks/results/streaming_recall.jsonl (tag=p0c_stream_len)",
+  "scope_note": "换轴后首探针(长流式记忆轴);延迟平坦性=描述性报告(端侧延迟轴的后续探针),本判据只裁记忆保持"
+}

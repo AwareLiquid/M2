@@ -162,8 +162,9 @@ loss 仅在答案位;MT-LNN 训练时每步随机采样深度 1..8,评估深度 
 **P0-C 结论**:
 1. "只循环液体核心 = 思考"被证伪——组合查找的计算在注意力里
 2. 真正的产出是**架构原则 #1(全局头配额)**,一行配置的修复,恢复推理满血
-3. 思考深度命题需要在"注意力已修复"的模型上重新检验(P0-C′,待做):
+3. 思考深度命题需要在"注意力已修复"的模型上重新检验(P0-C′,已做,见下第七轮判决):
    修好注意力后,更难的任务(更多跳数/更大图)上迭代深度是否开始起作用
+   → **判决 h_supported=false(2026-10-02,详见 §4.5 第七轮)**
 
 ### 2026-08-01 · 第六轮:复现危机 — 固定难度探针在 grokking 掷硬币区,单 seed 结论全体作废
 
@@ -182,6 +183,135 @@ loss 仅在答案位;MT-LNN 训练时每步随机采样深度 1..8,评估深度 
 grok 到 loss=0)+ 每配置 ≥3 seeds + per-k 评估。首批:Kaggle kernel
 `m1-gqa-quota-replication-g0`(g0×3 seeds)+ 本地 g2。方法论教训入档:
 **双峰任务上必须报告 grok 率(n seeds 中解出几个),禁止报告单 seed 准确率**。
+
+### 2026-10-02 · 第七轮:P0-C′ 思考深度复测判决(γ+MHA 修复后,pointer_chase d16 fixed-depth)——**判负,诊断 budget_wall**
+
+预注册 `benchmarks/verdicts/p0c_prime.prereg.v2.json`(v2 判据逐字沿用 v1,no_posthoc_move);判决文件 `benchmarks/verdicts/p0c_prime.json`(h_supported=false)。
+
+| 读数(口径=mean over k∈{1..15},排 k=16 复制捷径桶) | M | grok(≥0.90) |
+|---|---|---|
+| d=1(seed 0,18:31 冻结 partial 判例) | 0.0660 = chance | 0/1 |
+| d=8(seed 0,40268 复核臂 30000 步 rc=0) | **0.0656 = chance** | 0/1 |
+| gain_s0 | **−0.0004**(判据 A 需 ≥0.02) | — |
+| transformer 对照(30k 步) | 0.0632 = chance | 0/1 |
+
+mid_eval 三读数一致 chance:mid@10000=0.0632 / mid@20000=0.0658 / final=0.0656。
+
+**判决**:h_supported=false(A 失败;B 单 seed 结构性不可裁决;C 无 grok 可言)。**诊断 budget_wall**(prereg negative_diagnoses 双条件兑现:grok_rate(8)=0 ∧ 对照 grok 率=0)——pointer_chase d16/n16 在 30k 步预算对 MT-LNN(γ 配额 K=2+full_mha 修复后)与 transformer 对照均不可达,深度效应免谈;**非 thesis 反证**。约束:单 seed 探针级([B] 本机实测;grok_rate 分母 3 不满足,双峰任务纪律=n/1 透明计数)。
+
+**后续分叉(另立预注册,不得现场改判据;待人裁)**:①加预算——T1 MPS 实测 0.67 step/s:10^5 步≈2 天/臂、10^6 步≈17 天/臂(RSI-HORIZON #3 sizing:grokking 视界文献先验 10^5-10^6 步,当前预算低一个量级以下);②换任务——排序类(轮 15 检索候选);③2b-120k-leg 三选另案。
+
+### 2026-10-03 · 第八轮:p0c-sort 排序类深度探针判决(γ+MHA 修复后,bubble_trace fixed-depth d=1 vs d=8)——**判负,诊断 flat_iterations_ignored**
+
+预注册 `benchmarks/verdicts/p0c_sort.prereg.json`(AMM-017 预算版:本机 ≤30min/发射,S=2200 等步数配对,3 seeds 分次发射;判据先行中程提交 0c7fbf1,no_posthoc_move);判决文件 `benchmarks/verdicts/p0c_sort.json`(h_supported=false)。
+
+任务 bubble_trace(轮 350 新增,`gen_bubble_trace`):k=16 值从 {0..31} 池无放回抽取按随机排列呈现,执行 j~U{1..7} 轮左→右相邻比较交换(升序)后读争议区位置 p 的值;池化标签把占据者秩偏斜(海龟/兔子,实测 max mass 0.23)卷进超几何弥散——per-j best-constant floor 0.035..0.083(mean 0.055)实测钉死,边际捷径被设计杀死;秩→标签查找=O(1) 注意力(深度平坦),不混淆深度对照。
+
+| 读数(口径=mean over j∈{1..7} per-j 桶,每桶 8×256) | M(1) | M(8) | gain |
+|---|---|---|---|
+| seed 0 / 1 / 2 | 0.6568 / 0.6652 / 0.6738 | 0.6512 / 0.6835 / 0.6469 | −0.0056 / +0.0183 / −0.0269 |
+| **3-seed 均值** | **0.6653** | **0.6605** | **mean_gain=−0.0047**(σ_paired=0.0226) |
+
+**判决**:h_supported=false(A/B/C 三判据全败:A mean_gain=−0.0047<0.02;B −0.0047<2σ=0.0452;C highj_gain=−0.0035<0)。**诊断 flat_iterations_ignored**(prereg negative_diagnoses 双条件兑现:M(1)、M(8) 均≫chance 线 0.09 且 |mean_gain|<0.02)——任务在该预算**可学**(双臂 0.66-0.75)但**迭代被无视**:2 层电路(每层注意力+core+FFN)满预算下即可逼近 j≤7 比较链动力学,与预注册 calibration_disclosure 的定 j 形态探索(d1≈d8≈0.82)机制一致;**非 thesis 反证亦非 budget_wall**。约束:[B] 本机实测 3 seeds 探针级;30k 步级终判=愿望登记挂账。
+
+**后续分叉(另立预注册,愿望登记不停车,AMM-017)**:①升级 j/k 预算(更深比较链/更长数组,深度信号在"可学 j 前沿"之外找;30k 步级=愿望登记既有挂账);②换任务族(S5 词问题=NC¹ 完全分离任务已在代码库,理论shortcut最硬;looped 文献配方);③设计教训入档:定 j 配置的深度敏感性论证会输给万能逼近,深度信号要靠难度轴+课程混合显形,且标定必须镜像判读协议等步数双臂跑满 S(轮 350 截断 d1 预算假信号教训)。
+
+### 2026-10-03 · 第九轮:p0c-sort-stack 深度旋钮对照判决(整块迭代含注意力 vs core,stack fixed-depth d=1 vs d=8)——**判负,诊断 budget_wall(深堆叠优化失败)**
+
+预注册 `benchmarks/verdicts/p0c_sort_stack.prereg.json`(单变量=深度旋钮 core→stack,余逐字沿用第八轮;S=2000,3 seeds 分次发射;判据先行 fefc67b);判决文件 `benchmarks/verdicts/p0c_sort_stack.json`(h_supported=false)。
+
+机制假设(第八轮判负的归因):core 迭代只重复 LNN 递归子层不重复注意力,而比较链子步=跨位置交换需注意力;stack 整块迭代 d=8 提供 8 次注意力深度 ≥ j=7 链所需子步数,若旋钮错配是唯一障碍,stack 应显形深度信号。
+
+| 读数(口径同第八轮:mean over j∈{1..7}) | M(1) | M(8) | gain |
+|---|---|---|---|
+| seed 0 / 1 / 2 | 0.6327 / 0.6535 / 0.6396 | 0.0887 / 0.0584 / 0.0984 | −0.544 / −0.595 / −0.541 |
+| **3-seed 均值** | **0.6419(可学)** | **0.0818(chance 带)** | **−0.5601**(σ=0.0304) |
+
+**判决**:h_supported=false(A/B/C 全败)。**诊断 budget_wall(深堆叠优化失败)**:stack d8 在 S=2000 内完全不训练(loss 平台 ~3.2),同任务 stack d1 与 core 双臂均 0.64-0.75——「深核可训练、深堆叠不可训练」的不对称。判据字面偏离如实登记:seed 2 M(8)=0.0984 超出 budget_wall 条款 0.09 线 0.0084(判据未动,no_posthoc_move 遵守;诊断按实质登记,任何读法结论相同)。
+
+**深度命题的探针级总结论(第七+八+九轮合成)**:γ+MHA 修复后,深度信号在本机 30min 探针预算内三个方向均未显形——①pointer_chase d16:预算墙(任务不可达);②bubble_trace core 旋钮:迭代被无视(任务可学,机制=core 不重复注意力);③bubble_trace stack 旋钮:深堆叠不训练(可训练性墙)。**非 thesis 反证**:三判负各自排除了一条路径,深度-能力命题收敛为「深度旋钮参数化与任务结构/预算的三重错配」;升级路径(30k 步级终判/深监督变体/S5 任务族)=愿望登记或另立预注册,不虚报不硬凑。
+
+**后续分叉(愿望登记不停车,AMM-017)**:①深监督变体探针(HRM 式逐迭代 CE,库内 train_model 已有机制,直接攻"深堆叠不训练",≤30min 可推导);②30k 步级终判预算(愿望登记既有挂账);③S5 词问题任务族(NC¹ 分离,理论 shortcut 最硬)。
+
+### 2026-10-03 · 第十轮:p0c-sort-stack-ds 深监督变体判决(stack d8+逐迭代 CE,阶段 1 可达性门)——**h_supported=false,诊断 direction_but_underpowered(部分救活)**
+
+预注册 `benchmarks/verdicts/p0c_sort_stack_ds.prereg.json`(单变量=deep_supervision 开;对照臂复用在盘第九轮 d8 行不新发腿;仅 d8 单臂 S=2000;判据先行 9d897be);判决文件 `benchmarks/verdicts/p0c_sort_stack_ds.json`。
+
+机制假设(第九轮判负归因):深堆叠缺可学习梯度通路;deep_supervision(HRM 式逐迭代 CE)给每个 stack 迭代直接监督。
+
+| 读数(口径同前:mean over j∈{1..7}) | M(8)+ds(per seed) | 对照 M(8) 无 ds |
+|---|---|---|
+| seed 0 / 1 / 2 | 0.1423 / 0.1254 / 0.1070(逐 j 单调爬升,j7=0.15-0.24) | 0.0887 / 0.0584 / 0.0984(chance 带,loss 平台) |
+| **3-seed 均值** | **0.1249**(3/3 > chance 线 0.09) | **0.0818** |
+
+**判决**:h_supported=false(A 失败:0.1249<0.30;B/C 过:效应量 +0.0431≥0.02 且 3/3 seed 一致超 chance)。**诊断 direction_but_underpowered**(prereg 明文)——deep_supervision 使深堆叠从**完全不训练**变为**稳定部分训练**(梯度通路假设方向性兑现),但 S=2000 内量级远低于 d1 可学水平 0.64;剩余差距=预算/量级问题而非有无问题。
+
+**阶段 2(另立预注册)**:深度对照 d1+ds vs d8+ds(对照臂复用本轮在盘行,只发 d1+ds 3 腿,短腿)——在"ds 都起飞"的新平面上裁决深度信号方向。
+
+### 2026-10-03 · 第十一轮:p0c-sort-ds-depth 阶段 2 深度对照判决(d1+ds vs d8+ds)——**h_supported=false,诊断 depth_hurts(深度单调伤)**
+
+预注册 `benchmarks/verdicts/p0c_sort_ds_depth.prereg.json`(单变量=深度 d8→d1,两臂均 ds 开;对照臂复用第十轮 d8+ds 在盘行;新发 d1+ds 3 短腿 S=2000;判据先行 3f88b4a);判决文件 `benchmarks/verdicts/p0c_sort_ds_depth.json`。
+
+| 读数(口径同前:mean over j∈{1..7}) | M(1)+ds(per seed) | M(8)+ds(在盘) | gain(per seed) |
+|---|---|---|---|
+| seed 0 / 1 / 2 | 0.6332 / 0.6557 / 0.6375 | 0.1423 / 0.1254 / 0.1070 | −0.491 / −0.530 / −0.531 |
+| **3-seed 均值** | **0.6421** | **0.1249** | **−0.5172**(σ=0.0229,3/3 全负) |
+
+**判决**:h_supported=false(A/B/C 全败)。**诊断 depth_hurts**(prereg 明文)——ds 平面上深度单调伤:d1+ds 学到 0.6421(与 d1 无 ds 同水平=**ds 无害性成立**,预注册 honest_prediction 两结论之一),d8+ds 仅 0.1249;深度信号在本探针预算内不但不存在而且方向为负。honest_prediction(轮 358 预判)如实兑现。
+
+**深度命题探针级链条收官(§4.5 第七-十一轮,五连负全路径)**:①pointer_chase d16(core)=budget_wall;②bubble_trace(core)=flat_iterations_ignored;③bubble_trace(stack)=深堆叠不训练;④stack+ds 阶段 1=direction_but_underpowered(部分救活);⑤ds 深度对照阶段 2=depth_hurts。**本机 30min 探针预算内深度增益全路径未显形且方向为负;非 thesis 终局反证**(升级预算 30k/10^5 步级=愿望登记挂账;S5 词问题 NC¹ 完全分离+looped 文献正先验=唯一剩余正先验角落,可推导性待四栏蒸馏裁决)。
+
+### 2026-10-03 · 第十二轮:p0c-s5-depth S5 词问题深度探针判决(NC¹ 正先验角落)——**h_supported=false,诊断 budget_wall_s5(深度链全路径收官)**
+
+预注册 `benchmarks/verdicts/p0c_s5_depth.prereg.json`(唯一变量=深度,stack+ds d={1,8} 同腿配对 ×3 seeds,S=2000,判据先行 5dd6e2f);判决文件 `benchmarks/verdicts/p0c_s5_depth.json`。
+
+| 读数(chance=1/120≈0.0083,线 0.02) | M(1) per seed | M(8) per seed |
+|---|---|---|
+| seed 0 / 1 / 2 | 0.0076 / 0.0090 / 0.0072 | 0.0076 / 0.0080 / 0.0070 |
+| **3-seed 均值** | **0.0079 = chance** | **0.0076 = chance** |
+
+**判决**:h_supported=false(A/B/C 全败,mean_gain=−0.0004≈0)。**诊断 budget_wall_s5**(prereg 明文,honest_prediction 如实兑现)——NC¹ 完全分离任务在探针预算不可达:文献 looped 正先验的配方域(长训练+特定课程)远超本机 30min 预算。事故留痕:首发两腿 rc=1 崩=轮 350 make_generator vocab 回归(数据前修复 a618425+自测 vocab 覆盖守卫,canonical 零污染)。
+
+**深度命题探针级总结论(§4.5 第七-十二轮,六连负全路径)**:pointer_chase 预算墙 → bubble_trace core 迭代无视 → stack 深堆叠不训练 → ds 部分救活 → ds 平面深度单调伤 → S5 正先验角落预算墙。**本机 30min 探针预算内,思考深度→能力命题在全部可推导路径(2 任务族×2 旋钮×2 监督制+理论最强任务)上均为负;非 thesis 终局反证**——探针预算(2k 步)与文献配方域(30k-10^5+ 步)差 1-2 个量级,升级预算=愿望登记挂账(30k 步级排序腿+10^5 步级 S5,凭证/资源到位由用户点火改指)。
+
+### 2026-10-03 · 第十三轮:p0c-stream-len 长流式记忆长度外推探针判决(换轴后首探针)——**h_supported=false,诊断 task_unreachable**
+
+预注册 `benchmarks/verdicts/p0c_stream_len.prereg.json`(换轴四栏推导落地:32 条键互异 KV 事实流式回忆,流长由填充密度变化[间隔 6/30/127],短训 T=256 长测 T∈{1024,4096};MT-LNN vs transformer 同 max_seq_len;判据先行 a4f4847);判决文件 `benchmarks/verdicts/p0c_stream_len.json`。
+
+**判决**:h_supported=false(A 失败:**任务本身在 2000 步预算不可学**——两模型训练长度 acc:mtlnn 0.0625=chance / transformer 0.1563<0.8 门,外推问题未触及)。**诊断 task_unreachable**(prereg 明文)——与 ROADMAP 第一轮"连 k=1 纯查表 6000 步都学不会"同现象族:in-context 查表类任务在本架构规模需要更长训练。处置=换任务参数另立预注册(N_FACTS=8 易变体:保留回忆距离测试)或加步数愿望登记。
+
+**事故留痕**:mtlnn 三腿 T=4096 评估 MPS OOM(global_coherence 稀疏分数 4GB 峰值)——自适应 batch(长 T 减至 4)+长度间清缓存修复,seed 0/1 重发 rc=0,canonical 零污染。延迟描述性报告:两模型延迟均超线性(mtlnn 4096/256 比 15.3,transformer 16.4)——**MT-LNN 的 O(1) 主张只覆盖液体子层,混合架构的注意力层仍是 O(T²)**(架构诚实边界再次自证)。
+
+**长流式记忆轴现状**:探针基础设施已建(streaming_recall.py+自测黄金回放),任务参数量级是当前瓶颈(32 事实×2000 步太难);易变体(N_FACTS=8)已入队。
+
+### 2026-10-04 · 第十四轮:p0c-stream-len-e8 易变体判决(N_FACTS=8)——**h_supported=false,诊断 still_unreachable(流式轴探针级预算墙,收官)**
+
+预注册 `benchmarks/verdicts/p0c_stream_len_e8.prereg.json`(单变量=事实数 32→8,余逐字沿用;判据先行 2ac2ff1);判决文件 `benchmarks/verdicts/p0c_stream_len_e8.json`。
+
+| 读数(chance=0.0625) | M(1) per seed | acc(256) 3-seed 均值 | R(1024/256 保持率) |
+|---|---|---|---|
+| mtlnn | 0.141 / 0.25 / 0.281 | **0.2239**(< 0.8 门) | 0.313 |
+| transformer | 0.312 / 0.344 / 0.359 | **0.3386**(< 0.8 门) | 0.671 |
+
+**判决**:h_supported=false(A 再次失败)。**诊断 still_unreachable**(prereg 明文)——8 事实(容量降 4×)在 2000 步仍不可学,与第一轮(k=1 查表 6000 步)+第十三轮(32 事实)构成三连证据:**in-context 查表类任务在本架构/本预算下学习速度是数量级级瓶颈,流式轴探针级预算墙成立**。加步数(8000 步 mtlnn 腿≈35min 超红线)=愿望登记挂账;流式轴段内同族迭代已达上限 2(32/8),进一步降事实数不再推导。
+
+**端侧延迟描述性证据(两轮一致)**:同宽下 mtlnn 绝对延迟比 transformer 慢 ~8×,延迟长度比均超线性(mtlnn 15.4×/transformer 16.4×)——**MT-LNN 的 O(1) 主张只覆盖液体子层,混合架构含注意力层**;端侧延迟轴候选探针=纯液体核(attention_layers=())延迟平坦性,可推导。
+
+### 2026-10-04 · 第十五轮:p0c-latency 端侧延迟探针判决(纯液体核 vs hybrid vs transformer,零训练 T 扫描)——**h_supported=true(循环首个正判决:O(1) 主张在液体子层独立成立)**
+
+预注册 `benchmarks/verdicts/p0c_latency.prereg.json`(换轴第三轴首探针;零训练纯推理,单扫描 median-of-3 无训练随机性如实声明;判据先行 3f65436,amendment 1 数据前 113d81b);判决文件 `benchmarks/verdicts/p0c_latency.json`。
+
+| 前向延迟 batch=1(s) | T=512 | T=2048 | T=8192 | T=16384 | G=L(16384)/L(512) |
+|---|---|---|---|---|---|
+| **纯液体核**(关注意力+关 global_coherence) | 0.0170 | 0.0457 | 0.1840 | **0.4314** | **25.4×(≈线性)** |
+| hybrid(默认注意力) | 0.0223 | 0.1015 | 1.0169 | **OOM** | — |
+| transformer | 0.0064 | 0.0133 | 0.2025 | 6.7345 | **1052.9×(二次)** |
+
+**判决**:h_supported=**true**(A/B/C 全过:pure 4/4 点完成;25.4 ≤ 0.5×1052.9;25.4 ≤ 32 线性带)。**O(1) 端侧主张在液体子层独立成立**——16384 长流 0.43s/请求、272MB 状态;transformer 同扫描 1053× 增长已入二次段。事故留痕:首扫 pure_liquid 16384 OOM=use_global_coherence 默认开(global_coherence topk T×T 4GB)——infra_oom 预注册诊断兑现,数据前修复(113d81b)重跑,行留账本。
+
+**架构诚实边界(三轴探针链的共同产出)**:①O(1) 只覆盖液体子层——hybrid/transformer 的注意力与 global_coherence 均为 T×T 二次,端侧部署须限制注意力层或换稀疏/线性注意力;②小 T 段纯液体核绝对延迟慢于 transformer ~3×(逐 token 循环开销),O(1) 优势只在长流兑现;③流式记忆轴的学习瓶颈(第十四轮)与延迟轴的正判决相互独立——能力与延迟是两个待分别论证的主张。
+
+
 
 ## 5. 评测纪律 / Evaluation Discipline
 

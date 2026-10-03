@@ -1,0 +1,52 @@
+{
+ "id": "p0c-prime-depth-retest",
+ "kind": "verdict",
+ "prereg": "benchmarks/verdicts/p0c_prime.prereg.v2.json",
+ "h_supported": false,
+ "criteria_eval": {
+  "A_absolute": {
+   "rule": "mean_gain >= 0.02",
+   "observed": -0.0004,
+   "pass": false
+  },
+  "B_noise": {
+   "rule": "mean_gain >= 2*sigma_paired(ddof=1)",
+   "observed": "sigma_paired 不可计算(seeds=1<2),判据结构性不可裁决",
+   "pass": false
+  },
+  "C_grok_monotone": {
+   "rule": "grok_rate(8) >= grok_rate(1)",
+   "observed": "0/1 >= 0/1 平凡真但分母 3 不满足;M(8,0)=0.0656<0.90 无 grok",
+   "pass": null
+  },
+  "verdict_rule": "h_supported = A ∧ B ∧ C 全部成立 ⇒ false(A 失败)"
+ },
+ "M_table": {
+  "M(1,0)_frozen": 0.066,
+  "M(8,0)_final": 0.0656,
+  "gain_s0": -0.0004,
+  "口径": "mean over k∈{1..15},排 k=16 复制捷径桶(prereg k16_exclusion);k=16 桶透明报告=1.0"
+ },
+ "grok_rates": {
+  "note": "双峰任务纪律:分母 3 不满足(单 seed 探针级),按 seed 计数透明报告 n/1",
+  "grok_1": "0/1",
+  "grok_8": "0/1",
+  "grok_control": "0/1"
+ },
+ "data_refs": {
+  "d1": "benchmarks/results/reasoning_depth.partial.jsonl depth_run_partial ts=2026-10-01T18:31:47(轮 13 冻结 partial 判例)",
+  "d8": "benchmarks/results/reasoning_depth.jsonl tag=p0c_prime_v2_recheck mtlnn_acc_by_depth['8'] ts=2026-10-02T10:00:22(rc=0 完成)",
+  "control": "benchmarks/results/reasoning_depth.jsonl tag=p0c_prime_v2_control transformer_acc ts=2026-10-01T16:18:00"
+ },
+ "negative_diagnosis": "budget_wall",
+ "negative_diagnosis_note": "prereg negative_diagnoses.budget_wall 双条件兑现:grok_rate(8)=0(seed 0 计数)∧ transformer 对照 grok 率=0(终评 acc=0.0632=chance)⇒ 任务在 30k 步预算对 MT-LNN(d=1 与 d=8 同 chance 平台)与对照均不可达,深度效应免谈;非 thesis 反证;新方向(换任务/加预算)另立预注册",
+ "caveats": [
+  "单 seed 探针级(grok_rate 分母 3 不满足,σ_paired 不可算,B 判据结构性不可裁决)",
+  "40268 复核臂(同 tag 同配置重发腿,2026-10-01 21:30 幂等重发,rc=0 完成)",
+  "mid_eval 三读数一致 chance 链:mid@10000=0.0632/mid@20000=0.0658/final=0.0656"
+ ],
+ "decided_at": "2026-10-02T10:03:41",
+ "round": 339,
+ "exec_tier": "T1",
+ "seeds": 1
+}

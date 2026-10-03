@@ -1,0 +1,49 @@
+{
+ "id": "p0c-sort-stack-ds",
+ "kind": "verdict",
+ "prereg": "benchmarks/verdicts/p0c_sort_stack_ds.prereg.json",
+ "h_supported": false,
+ "criteria_eval": {
+  "A_reach": {
+   "rule": "mean M(8)_ds >= 0.30",
+   "observed": 0.1249,
+   "pass": false
+  },
+  "B_consistency": {
+   "rule": "3 seeds 中 >=2 个 M(8)_ds > 0.09(chance 线)",
+   "observed": "3/3 seeds > 0.09 (0.1423/0.1254/0.1070)",
+   "pass": true
+  },
+  "C_effect_vs_control": {
+   "rule": "mean M(8)_ds - mean M(8)_stack >= 0.02(对照=在盘 tag=p0c_sort_stack d8 行 mean 0.0818)",
+   "observed": "+0.0431",
+   "pass": true
+  },
+  "verdict_rule": "h_supported = A ∧ B ∧ C ⇒ false(A 失败:ds 起飞但量级不足)"
+ },
+ "M_table": {
+  "M(8)_ds_per_seed": {"0": 0.1423, "1": 0.1254, "2": 0.107},
+  "M(8)_ds_mean": 0.1249,
+  "control_M8_nods_mean": 0.0818,
+  "effect_vs_control": 0.0431,
+  "highj_per_seed": {"0": 0.2008, "1": 0.1916, "2": 0.1504},
+  "per_j_seed0": {"1": 0.099, "2": 0.129, "3": 0.146, "4": 0.162, "5": 0.163, "6": 0.2, "7": 0.239},
+  "口径": "mean over j∈{1..7}(与 p0c_sort/p0c_sort_stack 同口径);逐 j 单调爬升三 seed 复现"
+ },
+ "data_refs": {
+  "rows": "benchmarks/results/reasoning_depth.jsonl tag=p0c_sort_stack_ds seeds={0,1,2} steps=2000 单 d8 臂 (wall 1344.5/1310.6/1353.9s 均≤30min)",
+  "control": "benchmarks/results/reasoning_depth.jsonl tag=p0c_sort_stack seeds={0,1,2}(同协议同预算,ds 关,verdicts/p0c_sort_stack.json)",
+  "prereg_commit": "9d897be (轮 356 中程提交,判据先于 canonical 数据)"
+ },
+ "negative_diagnosis": "direction_but_underpowered",
+ "negative_diagnosis_note": "prereg negative_diagnoses.direction_but_underpowered 字面兑现:mean M(8)_ds=0.1249 ∈ (0.09, 0.30) 且 3 seeds 一致 > 0.09——deep_supervision 使深堆叠从完全不训练(对照 0.0818 chance 带,loss 平台 3.2)变为稳定部分训练(+0.0431 效应量,逐 j 单调爬升),但 S=2000 内量级不足以过 A 线 0.30(远低于 d1 可学水平 0.64)。梯度通路假设方向性兑现:ds 确实给了深堆叠可学习梯度,剩余差距=预算/量级问题而非有无问题。预注册明文处置=阶段 2 深度对照可推导(同预算 d1+ds vs d8+ds,另立预注册)",
+ "caveats": [
+  "探针级 [B]:3 seeds × 2000 步本机 MPS;终局声明须 ≥5 seeds 跨机 → [C]",
+  "阶段 1=可达性门:只回答'ds 能否救活 d8'(答案=部分救活);深度信号有无=阶段 2 深度对照(d1+ds),本判决不裁决",
+  "30k 步级终判/加预算=愿望登记挂账(AMM-017)"
+ ],
+ "decided_at": "2026-10-03T20:20:00+08:00",
+ "round": 358,
+ "exec_tier": "T1",
+ "seeds": 3
+}

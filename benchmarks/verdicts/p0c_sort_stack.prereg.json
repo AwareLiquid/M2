@@ -1,0 +1,63 @@
+{
+  "id": "p0c-sort-stack-depth",
+  "title": "p0c-sort stack 旋钮探针(整块迭代含注意力 vs core 迭代)— 轮 352 flat_iterations_ignored 机制解释的直接检验",
+  "kind": "preregistration",
+  "round": 353,
+  "created_at": "2026-10-03T09:30:00+08:00",
+  "hypothesis": {
+    "statement": "bubble_trace 比较链的子步=跨位置信息交换(注意力操作),而 core 迭代只重复 LNN 递归子层不重复注意力 — 轮 352 判负(flat_iterations_ignored)的机制解释为旋钮错配;stack 迭代重复整块(注意力+core+FFN ×d),fixed-depth d=8 提供 8 次注意力深度(≥ j=7 链所需子步数),故 stack 旋钮下 d=8 应显著优于 d=1(深度信号显形)",
+    "h_origin": "docs/ROADMAP_M2.md §4.5 第八轮判决(flat_iterations_ignored)的机制归因; benchmarks/verdicts/p0c_sort.json negative_diagnosis_note; 续向蒸馏四栏推导(轮 352 DISTILL)"
+  },
+  "single_variable_declaration": "本探针相对 p0c_sort.prereg.json(轮 350)的唯一变化=深度旋钮 core→stack(depth_setter);任务/课程/标签池/基线/判据形状/hygiene 逐字沿用 — 单变量声明(AMM-005 蒸馏门,组合变量禁止);深监督(--deep_supervision)明确排除在外,留作独立后续探针",
+  "task_spec": {
+    "name": "bubble_trace(逐字沿用 benchmarks/verdicts/p0c_sort.prereg.json task_spec)",
+    "definition": "k=16 值从 {0..31} 池无放回抽取随机排列呈现;j~U{1..7} 课程混合;j 轮左→右相邻比较交换(升序)后读争议区位置 p 的值",
+    "baseline_pinned": "per-j floor {1:0.0354,2:0.0392,3:0.0448,4:0.0529,5:0.0621,6:0.0704,7:0.0826}, mean 0.0554, chance 线 M≤0.09 — 沿用轮 350 实测,不重测"
+  },
+  "protocol": {
+    "model": "MT-LNN n_layers=2 d_model=104, n_heads=4, n_global_heads=2 (γ 配额 K=2), full_mha=true — 同 p0c_prime/p0c_sort 修复配置",
+    "mode": "fixed(每个 d 全新模型,训练与评估在同一 d)",
+    "depth_knob": "stack_iterations(--stack,整块迭代:注意力随深度重复) — 与轮 352 判负的 core_iterations(LNN 子层迭代,注意力不重复)对照",
+    "depths": [1, 8],
+    "seeds": [0, 1, 2],
+    "steps": 2000,
+    "batch": 128,
+    "lr": 0.0003,
+    "beta2": 0.999,
+    "clip": 0,
+    "deep_supervision": false,
+    "mix": "j~U{1..7} 课程混合(同 p0c_sort)",
+    "runner": "scripts/launch_p0c.sh(P0C_TASK=bubble_trace P0C_DIFFICULTY=7 P0C_N_VALUES=16 P0C_STACK=1 P0C_TAG=p0c_sort_stack P0C_SKIP_TRANSFORMER=1; P0C_STACK 旋钮=轮 353 新增)",
+    "launch_pattern": "3 seeds 分三次发射(AMM-017),每 seed 单进程串行先 d=1 后 d=8,每次发射墙钟 ≤30min",
+    "exec_tier": "T1 (MPS, Apple Silicon 本地)"
+  },
+  "budget_backcompute": {
+    "measured_rates": "轮 353 标定(tag=cal_stack_* 沙箱行,不入判据):r1=0.088 s/step, r8=0.631 s/step(T=23, batch=128, MPS, stack 模式; 线性拟合 100/300 步扣评估常开销)",
+    "formula": "S = (1800s - 120s) / (r1 + r8) ≈ 2336 → 钉 S=2000(预计单 seed 墙钟 ≈26.0min ≤ 30min)",
+    "pairing_note": "两臂等步数配对(同 p0c_sort 口径);墙钟约束=发射整体"
+  },
+  "metrics": {
+    "primary": "M(d,s) = mean_{j∈{1..7}} acc_j(d,s) — 同 p0c_sort.prereg.json metrics",
+    "paired_gain": "gain_s = M(8,s) − M(1,s); mean_gain; σ_paired(ddof=1)",
+    "highj_gain": "highj_gain = mean_s mean_{j∈{5,6,7}} [acc_j(8,s) − acc_j(1,s)]"
+  },
+  "h_supported_criteria": {
+    "verdict_rule": "h_supported = true ⇔ A ∧ B ∧ C 全部成立",
+    "A_absolute": "mean_gain ≥ 0.02",
+    "B_noise": "mean_gain ≥ 2·σ_paired",
+    "C_highj_direction": "highj_gain ≥ 0",
+    "else": "h_supported = false, 按 negative_diagnoses 四选一",
+    "no_posthoc_move": "本文件落盘后判据不可修改; verdict 由 tag=p0c_sort_stack 原始 jsonl 行以本口径计算"
+  },
+  "negative_diagnoses": {
+    "budget_wall": "3 seeds 的 M(8,s) 全部 ≤ 0.09 → stack 变体在该等步预算不可达(标定已示 stack d8@300 步全桶 chance,起飞慢于 core d8 一个量级 — 见 calibration_disclosure);处置=深监督变体或加预算另立预注册(愿望登记不停车)",
+    "flat_iterations_ignored": "M(1) 与 M(8) 均 ≫ chance 且 |mean_gain| < 0.02 → stack 旋钮下迭代仍被无视:深度信号在两个旋钮变体下均无,轮 352 机制假设(注意力深度错配)被驳;处置=升级预算/S5 任务族另立预注册(愿望登记)",
+    "bimodal_grokking_zone": "存在 seed 增益高但 σ_paired > mean_gain → 掷硬币区,升级 seeds=愿望登记",
+    "direction_but_underpowered": "mean_gain > 0 但 B 失败且非 bimodal → 方向存在但 3 seeds 不可裁决;升级 seeds=愿望登记"
+  },
+  "calibration_disclosure": "预注册前设计空间标定(轮 353, tag=cal_stack_* 沙箱行):stack d8 @300 步全桶 chance(0.036-0.067),显著慢于 core d8 @300 步(M=0.523,轮 350 标定)——stack d8 在 S=2000 内的起飞存在真实风险,budget_wall 为合法诊断结局;stack d1 @300 步 j=7 桶 0.185 上升中。canonical 判据只消费 tag=p0c_sort_stack 行。",
+  "conclusion_grade": "[B] 本机实测 (T1 MPS, 3 seeds 探针级; 终局声明须 ≥5 seeds 跨机 → [C])",
+  "verdict_file": "benchmarks/verdicts/p0c_sort_stack.json",
+  "raw_data": "benchmarks/results/reasoning_depth.jsonl (tag=p0c_sort_stack)",
+  "scope_note": "与 p0c_sort.prereg.json 共享任务/基线/判据形状,唯一差异=深度旋钮(single_variable_declaration);parity 线仍归 LNN 参数化线不混;t3-kaggle-launcher/30k 步级终判=愿望登记(AMM-017)"
+}

@@ -1,0 +1,57 @@
+{
+  "id": "p0c-prime-depth-retest",
+  "title": "P0-C\u2032 思考深度命题复测 \u2014 \u03b3 全局头配额 + full MHA 修复注意力后的 fixed-depth sweep",
+  "kind": "preregistration",
+  "preregistered_at": "2026-09-27T07:45:00+08:00",
+  "round": 3,
+  "hypothesis": {
+    "statement": "注意力修复(\u67b6\u6784\u539f\u5219#1: \u6bcf\u5c42\u914d\u989d K=2 \u4e2a\u5168\u5c40\u5934 + full MHA)\u540e\u7684 MT-LNN, \u5728\u6df1\u5ea6\u654f\u611f\u4efb\u52a1\u4e0a fixed-depth sweep \u7684\u51c6\u786e\u7387\u968f core \u8fed\u4ee3\u6df1\u5ea6 d \u5355\u8c03\u4e0a\u5347 \u2014 \u5373 P0-C \u7ed3\u8bba 3 \u5f85\u9a8c\u7684 '\u4fee\u597d\u6ce8\u610f\u529b\u540e, \u66f4\u96be\u4efb\u52a1\u4e0a\u8fed\u4ee3\u6df1\u5ea6\u5f00\u59cb\u8d77\u4f5c\u7528'",
+    "h_origin": "docs/ROADMAP_M2.md \u00a74.5 \u8f6e 5 P0-C \u7ed3\u8bba 3; \u961f\u5217 docs/loop/GOALS.md p0c-prime-depth-retest"
+  },
+  "protocol": {
+    "task": "pointer_chase \u5355\u73af(n-cycle \u6377\u5f84\u5df2\u5c01, benchmarks/reasoning_tasks.py \u9ed8\u8ba4) + mix \u8bfe\u7a0b k~U{1..16}",
+    "difficulty": 16,
+    "n_values": 16,
+    "seq_len_note": "T=54 (BOS + 16*(u ARROW v) + START s k THINK + ANS)",
+    "model": "MT-LNN n_layers=2 d_model=104 (203K \u91cf\u7ea7), n_heads=4, n_global_heads=2, full_mha=true",
+    "depth_knob": "core_iterations (fixed: \u6bcf\u4e2a d \u8bad\u4e00\u4e2a\u5168\u65b0\u6a21\u578b, \u8bad\u7ec3\u4e0e\u8bc4\u4f30\u5728\u540c\u4e00 d)",
+    "depths": [1, 2, 4, 8],
+    "seeds": [0, 1, 2],
+    "steps": 30000,
+    "batch": 128,
+    "lr": 0.0003,
+    "beta2": 0.999,
+    "clip": 0,
+    "hygiene_rationale": "beta2=0.999 + clip=0 \u4e3a grokking \u536b\u751f\u914d\u65b9(2026-08-05 \u4e8c\u5206: \u4e24\u8005\u5404\u81ea\u72ec\u7acb\u963b\u65ad parity \u7a81\u7834; train_model docstring)",
+    "control": "ModernCausalTransformer \u540c\u6570\u636e\u540c\u9884\u7b97(\u4efb\u52a1\u53ef\u8fbe\u6027\u4ed5\u8d34), \u4e0d\u5165\u5224\u636e",
+    "runner": "benchmarks/reasoning_depth.py --mode fixed --mix --device mps --tag p0c_prime (\u6309 seed \u5206\u6bb5\u843d\u76d8, \u6bcf seed \u4e00\u6b21\u8c03\u7528)",
+    "exec_tier": "T1 (MPS, Apple Silicon \u672c\u5730)",
+    "eta_h": 69,
+    "budget_wall_precommit": "\u82e5 3 seeds \u5168\u90e8 d8 \u4ecd chance \u4e14 transformer \u5bf9\u7167\u4ea6 chance \u2192 \u8bca\u65ad budget_wall, \u5904\u7f6e=\u52a0 steps/\u6362\u4efb\u52a1\u53e6\u7acb\u9884\u6ce8\u518c, \u5224\u636e\u4e0d\u4e8b\u540e\u79fb\u52a8"
+  },
+  "metrics": {
+    "primary": "M(d,s) = mean_{k\u2208{1..15}} acc_k(d,s) \u2014 mix \u5b66\u5386\u7684 per-k \u8bc4\u4f30\u5747\u503c",
+    "k16_exclusion": "k=16 \u6876\u9000\u5316(f^16(s)=s \u56e0 n=16 \u5355\u73af, \u7b54\u6848=\u8d77\u70b9, k \u7279\u5f81\u4f4d=k%n=0) \u2192 \u6392\u9664\u51fa\u4e3b\u6307\u6807, \u4ec5\u900f\u660e\u62a5\u544a",
+    "grok_definition": "seed s \u5728\u6df1\u5ea6 d grok \u21d4 M(d,s) \u2265 0.90",
+    "grok_rate": "grok_rate(d) = #{s: M(d,s)\u22650.90} / 3 \u2014 \u53cc\u5cf0\u4efb\u52a1\u7eaa\u5f8b: \u62a5 grok \u7387, \u7981\u5355 seed \u58f0\u660e (ROADMAP \u00a76 \u8f6e 6 \u65b0\u534f\u8bae)",
+    "paired_gain": "gain_s = M(8,s) \u2212 M(1,s); mean_gain = mean_s gain_s; \u03c3_paired = std_s(gain_s, ddof=1)"
+  },
+  "h_supported_criteria": {
+    "verdict_rule": "h_supported = true \u21d4 A \u2227 B \u2227 C \u5168\u90e8\u6210\u7acb",
+    "A_absolute": "mean_gain \u2265 0.02",
+    "B_noise": "mean_gain \u2265 2\u00b7\u03c3_paired (\u8d85\u51fa\u914d\u5bf9\u566a\u58f0; \u540c P0-C \u539f\u5224\u51b8\u53e3\u5f84)",
+    "C_grok_monotone": "grok_rate(8) \u2265 grok_rate(1)",
+    "else": "h_supported = false, \u4e14\u6309 negative_diagnoses \u56db\u9009\u4e00\u8bb0\u5f55\u8bca\u65ad",
+    "no_posthoc_move": "\u672c\u6587\u4ef6\u63d0\u4ea4\u540e\u5224\u636e\u4e0d\u53ef\u4fee\u6539; verdict \u7531 tag=p0c_prime \u539f\u59cb jsonl \u884c\u4ee5\u672c\u53e3\u5f84\u8ba1\u7b97"
+  },
+  "negative_diagnoses": {
+    "budget_wall": "grok_rate(8)=0 \u4e14 transformer \u5bf9\u7167 grok \u7387=0 \u2192 \u4efb\u52a1\u5728\u8be5\u9884\u7b97\u4e0d\u53ef\u8fbe, \u6df1\u5ea6\u6548\u5e94\u514d\u8c08; \u975e thesis \u53cd\u8bc1",
+    "bimodal_grokking_zone": "\u5b58\u5728 grok seed \u4f46 B \u5931\u8d25\u4e14\u566a\u58f0\u4e3b\u5bfc(\u03c3_paired > mean_gain) \u2192 \u5904\u4e8e grokking \u63b7\u786c\u5e01\u533a, \u9700\u66f4\u591a seeds",
+    "flat_iterations_ignored": "\u6240\u6709\u6df1\u5ea6 grok_rate=1 \u4e14 mean_gain < 0.02 \u2192 \u4efb\u52a1\u53ef\u8fbe\u4f46\u8fed\u4ee3\u88ab\u65e0\u89c6, \u540c \u00a74.5 \u8f6e 1 \u4efb\u610f\u6df1\u5ea6\u9000\u5316\u5728 fixed \u53e3\u5f84\u4e0b\u7684\u590d\u73b0",
+    "direction_but_underpowered": "mean_gain > 0 \u4f46 B \u5931\u8d25\u4e14\u975e bimodal \u2192 \u65b9\u5411\u5b58\u5728\u4f46 3 seeds \u4e0d\u53ef\u88c1\u51b3(\u914d\u5bf9\u7b26\u53f7\u68c0\u9a8c n=3 \u6700\u5c0f p=0.25); \u5347\u7ea7 6 seeds \u9700 T2/T3 \u6388\u6743 = BLOCKED-HUMAN"
+  },
+  "conclusion_grade": "[B] \u672c\u673a\u5b9e\u6d4b (T1 MPS, 3 seeds \u63a2\u9488\u7ea7; \u5bf9\u5916\u7ec8\u5c40\u58f0\u660e\u9700 \u22655 seeds \u8de8\u673a\u590d\u73b0\u2192[C])",
+  "verdict_file": "benchmarks/verdicts/p0c_prime.json",
+  "raw_data": "benchmarks/results/reasoning_depth.jsonl (tag=p0c_prime)",
+  "scope_note": "parity \u7ebf\u4e0d\u5728\u672c\u9884\u6ce8\u518c\u5185: parity \u662f LNN \u53c2\u6570\u5316\u7ebf(signed/selective decay)\u7684\u88c1\u51b3\u5bf9\u8c61, \u4e14 fixed-core \u6df1\u5ea6\u5bf9 parity \u7684\u5148\u9a8c\u4e3a\u5e73(2026-08-05); \u82e5\u672c\u63a2\u9488\u5224\u8d1f\u4e14\u8bca\u65ad\u6307\u5411\u4efb\u52a1\u9009\u62e9, \u53e6\u7acb\u9884\u6ce8\u518c"
+}

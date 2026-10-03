@@ -1,0 +1,54 @@
+{
+ "id": "p0c-s5-depth",
+ "kind": "verdict",
+ "prereg": "benchmarks/verdicts/p0c_s5_depth.prereg.json",
+ "h_supported": false,
+ "criteria_eval": {
+  "A_depth_direction": {
+   "rule": "mean_gain >= 0.02",
+   "observed": -0.0004,
+   "pass": false
+  },
+  "B_noise": {
+   "rule": "mean_gain >= 2*sigma_paired(ddof=1)",
+   "observed": "-0.0004 < 2*0.0005=0.001(两臂同 chance 平台)",
+   "pass": false
+  },
+  "C_consistency": {
+   "rule": "3/3 seeds gain_s > 0",
+   "observed": "1/3(gain=[0.0000,-0.0010,-0.0002] 噪声内零增益)",
+   "pass": false
+  },
+  "verdict_rule": "h_supported = A ∧ B ∧ C ⇒ false(三判据全败,两臂 chance)"
+ },
+ "M_table": {
+  "M(1)_per_seed": {"0": 0.0076, "1": 0.009, "2": 0.0072},
+  "M(8)_per_seed": {"0": 0.0076, "1": 0.008, "2": 0.007},
+  "M(1)_mean": 0.0079,
+  "M(8)_mean": 0.0076,
+  "gain_per_seed": {"0": 0.0, "1": -0.001, "2": -0.0002},
+  "mean_gain": -0.0004,
+  "sigma_paired": 0.0005,
+  "口径": "s5 无 mix,答案位直接评估;chance=1/120≈0.0083,判读线 0.02"
+ },
+ "chance_baseline": {
+  "chance": 0.0083,
+  "both_arms_chance": "两臂 3 seeds 全部 ≤ 0.02 线(0.0070-0.0090):S5 词问题在 S=2000 探针预算不可达"
+ },
+ "data_refs": {
+  "rows": "benchmarks/results/reasoning_depth.jsonl tag=p0c_s5_depth seeds={0,1,2} steps=2000 stack+ds d={1,8} 同腿配对 (wall 871.2/872.9/869.9s 均≤30min)",
+  "prereg_commit": "5dd6e2f (轮 360 中程提交,判据先于 canonical 数据;amendment 1 数据前修订 runner 行)",
+  "incident": "首发两腿 rc=1 崩=轮 350 make_generator vocab 回归(数据前修复 a618425,零 canonical 污染,自测新增 vocab 覆盖守卫)"
+ },
+ "negative_diagnosis": "budget_wall_s5",
+ "negative_diagnosis_note": "prereg negative_diagnoses.budget_wall_s5 字面兑现:两臂 3 seeds M 全部 ≤ 0.02——NC¹ 完全分离任务(S5 词问题)在探针预算不可达,与 prereg honest_prediction(文献配方训练量远超探针预算)一致;非 thesis 反证;looped 文献正先验的配方域(长训练+特定课程)在本机 30min 预算外=愿望登记升级路径",
+ "caveats": [
+  "探针级 [B]:3 seeds × 2000 步本机 MPS;终局声明须 ≥5 seeds 跨机 → [C]",
+  "深度命题探针级链条至此六连负(§4.5 第七-十二轮):budget_wall(pointer)/flat_iterations(core)/深堆叠不训练(stack)/部分救活(ds)/depth_hurts(ds 对照)/budget_wall_s5(S5 正先验角落)——本机 30min 探针预算内深度增益全路径未显形;升级预算(30k/10^5 步级)=愿望登记挂账",
+  "首发两腿崩溃事故(轮 350 回归)数据前修复,canonical 零污染"
+ ],
+ "decided_at": "2026-10-03T21:31:00+08:00",
+ "round": 360,
+ "exec_tier": "T1",
+ "seeds": 3
+}
