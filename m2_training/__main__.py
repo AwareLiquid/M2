@@ -14,7 +14,7 @@ def main() -> None:
     parser.add_argument("--save-every", type=int, default=10)
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
     parser.add_argument("--experiment", choices=TRAINABLE_EXPERIMENTS)
-    parser.add_argument("--task", choices=("pointer_chase", "mod_chain", "text", "sft"))
+    parser.add_argument("--task", choices=("pointer_chase", "mod_chain", "text"))
     parser.add_argument("--seed", type=int)
     parser.add_argument("--corpus", type=Path)
     parser.add_argument("--size", choices=("probe", "medium", "2b"))
@@ -44,11 +44,13 @@ def main() -> None:
         ), args.device)
     else:
         if any(value is not None for value in (
-            args.task, args.experiment, args.seed, args.corpus, args.size,
+            args.task, args.experiment, args.seed, args.size,
             args.sequence_length, args.batch, args.grad_accum,
         )):
-            parser.error("Resume/evaluate use the checkpoint recipe; do not override it")
-        run = TrainingRun.restore(args.checkpoint, args.device)
+            parser.error("Resume/evaluate use the checkpoint recipe; only --corpus may be overridden on resume")
+        if args.action != "resume" and args.corpus is not None:
+            parser.error("--corpus override is only valid for resume")
+        run = TrainingRun.restore(args.checkpoint, args.device, corpus=args.corpus)
     if args.action != "evaluate":
         if args.steps < run.step:
             parser.error("Target steps precede the checkpoint")
@@ -56,7 +58,7 @@ def main() -> None:
             loss = run.train_until(min(args.steps, run.step + args.save_every))
             run.save(args.checkpoint)
             print(json.dumps({"step": run.step, "loss": loss}), flush=True)
-    metric = "validation_ppl" if run.recipe.task in ("text", "sft") else "accuracy"
+    metric = "validation_ppl" if run.recipe.task == "text" else "accuracy"
     print(json.dumps({"step": run.step, metric: run.evaluate(), "task": run.recipe.task,
                       "experiment": run.recipe.experiment}), flush=True)
 

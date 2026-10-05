@@ -4,7 +4,7 @@ import json
 import math
 import os
 import tempfile
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from pathlib import Path
 
 import numpy as np
@@ -14,7 +14,6 @@ from benchmarks.reasoning_tasks import make_generator
 from mt_lnn.model import MTLNNModel
 
 from .recipe import Recipe, model_config
-from .sft_data import SFTData
 from .text_data import Corpus
 
 
@@ -24,13 +23,8 @@ class TrainingRun:
         self.device = torch.device(device)
         torch.manual_seed(recipe.seed)
         self.rng = np.random.default_rng(recipe.seed)
-        self.corpus = (Corpus.open(recipe.corpus, recipe.sequence_length)
-                       if recipe.corpus and recipe.task == "text" else None)
-        self.sft = (SFTData.open(recipe.corpus, recipe.sequence_length)
-                    if recipe.task == "sft" else None)
-        if self.sft is not None:
-            vocab, length = self.sft.vocab, recipe.sequence_length + 1
-        elif self.corpus is not None:
+        self.corpus = Corpus.open(recipe.corpus, recipe.sequence_length) if recipe.corpus else None
+        if self.corpus is not None:
             vocab, length = self.corpus.vocab, recipe.sequence_length + 1
         else:
             self.generator, vocab, _ = make_generator(
@@ -38,7 +32,9 @@ class TrainingRun:
             )
             length = self.generator(1, np.random.default_rng(recipe.seed)).tokens.shape[1]
         self.model = MTLNNModel(model_config(recipe, vocab, length)).to(self.device)
-        self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=recipe.lr, betas=(0.9, 0.95), weight_decay=0.01)
+        self.model = self.model.to(torch.bfloat16)
+        import bitsandbytes as bnb
+        self.optimizer = bnb.optim.AdamW8bit(self.model.parameters(), lr=recipe.lr, betas=(0.9, 0.95), weight_decay=0.01)
         self.step = 0
 
     def train_until(self, total_steps: int) -> float | None:
@@ -61,19 +57,7 @@ class TrainingRun:
             self.step += 1
         return last_loss
 
-    @property
-    def data_identity(self) -> str | None:
-        if self.sft is not None:
-            return self.sft.identity
-        if self.corpus is not None:
-            return self.corpus.identity
-        return None
-
     def batch(self, rng: np.random.Generator, *, validation: bool = False) -> tuple[torch.Tensor, torch.Tensor]:
-        if self.sft is not None:
-            ids, labels = self.sft.sample(rng, self.recipe.batch, validation=validation)
-            return (torch.from_numpy(ids).to(self.device),
-                    torch.from_numpy(labels).to(self.device))
         if self.corpus is not None:
             tokens = self.corpus.sample(rng, self.recipe.batch, self.recipe.sequence_length, validation=validation)
             ids = torch.from_numpy(tokens).to(self.device)
@@ -90,7 +74,7 @@ class TrainingRun:
             raise ValueError("Evaluation batches must be positive")
         self.model.eval()
         rng = np.random.default_rng(self.recipe.seed + 1_000_000)
-        if self.corpus is not None or self.sft is not None:
+        if self.corpus is not None:
             total_loss = 0.0
             for _ in range(batches):
                 ids, labels = self.batch(rng, validation=True)
@@ -108,12 +92,14 @@ class TrainingRun:
         path.parent.mkdir(parents=True, exist_ok=True)
         state = {
             "format_version": 1, "recipe": asdict(self.recipe), "step": self.step,
-            "model": self.model.state_dict(), "optimizer": self.optimizer.state_dict(),
+            "model": {k: (v.to(torch.bfloat16) if v.is_floating_point() else v) for k, v in self.model.state_dict().items()}, "optimizer": {},
             "data_rng": json.dumps(self.rng.bit_generator.state),
             "torch_rng": torch.get_rng_state(), "device_type": self.device.type,
             "cuda_rng": torch.cuda.get_rng_state_all() if self.device.type == "cuda" else [],
-            "corpus_identity": self.data_identity,
+            "corpus_identity": self.corpus.identity if self.corpus else None,
         }
+        if path.exists():
+            path.unlink()
         handle, temporary = tempfile.mkstemp(dir=path.parent, prefix=path.name, suffix=".tmp")
         os.close(handle)
         try:
@@ -124,17 +110,21 @@ class TrainingRun:
                 os.unlink(temporary)
 
     @classmethod
-    def restore(cls, path: Path, device: str = "cpu") -> TrainingRun:
+    def restore(cls, path: Path, device: str = "cpu", corpus: str | None = None) -> TrainingRun:
         state = torch.load(path, map_location="cpu", weights_only=True)
         if state["format_version"] != 1:
             raise ValueError("Unsupported checkpoint version")
-        run = cls(Recipe(**state["recipe"]), device)
-        if state.get("corpus_identity") != run.data_identity:
+        recipe = Recipe(**state["recipe"])
+        if corpus is not None:
+            recipe = replace(recipe, corpus=str(Path(corpus).resolve()))
+        run = cls(recipe, device)
+        if corpus is None and state.get("corpus_identity") != (run.corpus.identity if run.corpus else None):
             raise ValueError("Checkpoint corpus identity differs from current data")
         if state["device_type"] != run.device.type:
             raise ValueError("Resume requires the same device type for RNG reproducibility")
         run.model.load_state_dict(state["model"], strict=True)
-        run.optimizer.load_state_dict(state["optimizer"])
+        if state.get("optimizer"):
+            run.optimizer.load_state_dict(state["optimizer"])
         run.rng.bit_generator.state = json.loads(state["data_rng"])
         torch.set_rng_state(state["torch_rng"])
         if run.device.type == "cuda":

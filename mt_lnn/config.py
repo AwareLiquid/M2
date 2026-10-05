@@ -33,6 +33,8 @@ class MTLNNConfig:
     # Vocabulary and sequence
     vocab_size: int = 50257          # GPT-2 BPE default
     max_seq_len: int = 1024
+    rope_scale: float = 1.0  # NTK-aware RoPE length scaling (YaRN-style); 1.0 = unchanged
+
     pad_token_id: int = 0
 
     # Model dimensions

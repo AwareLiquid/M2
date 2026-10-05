@@ -7,14 +7,27 @@ from .config import MTLNNConfig
 class RotaryEmbedding(nn.Module):
     """Rotary Position Embedding (RoPE). Pre-computes sin/cos tables."""
 
-    def __init__(self, d_head: int, max_seq_len: int):
+    def __init__(self, d_head: int, max_seq_len: int, scale: float = 1.0):
         super().__init__()
         assert d_head % 2 == 0
         self.d_head = d_head
+        self.scale = float(scale)
         # θ_i = 1 / 10000^(2i / d_head)  (kept to lazily extend the tables)
-        inv_freq = 1.0 / (10000 ** (torch.arange(0, d_head, 2).float() / d_head))
+        inv_freq = self._scaled_inv_freq()
         self.register_buffer("inv_freq", inv_freq, persistent=False)
         self._build_tables(max_seq_len)
+
+    def _scaled_inv_freq(self) -> torch.Tensor:
+        """NTK-aware (YaRN-style) inverse frequencies: base / scale.
+
+        Dividing every wavelength by ``scale`` lets a model trained at
+        ``max_seq_len`` attend at ``scale * max_seq_len`` positions.
+        ``scale=1.0`` is bit-identical to the unscaled table.
+        """
+        device = self.inv_freq.device if hasattr(self, "inv_freq") else None
+        base = 1.0 / (10000 ** (torch.arange(
+            0, self.d_head, 2, device=device).float() / self.d_head))
+        return base / self.scale
 
     def _build_tables(self, seq_len: int) -> None:
         t = torch.arange(seq_len, device=self.inv_freq.device).float()
@@ -40,8 +53,7 @@ class RotaryEmbedding(nn.Module):
         ``original_inv_freq`` 的模块，我们不在其列。
         ``MTLNNForCausalLM._init_weights`` 会回调本方法把表填回来。
         """
-        inv_freq = 1.0 / (10000 ** (torch.arange(
-            0, self.d_head, 2, device=self.inv_freq.device).float() / self.d_head))
+        inv_freq = self._scaled_inv_freq()
         self.inv_freq.copy_(inv_freq)
         self._build_tables(self._table_len)
 
@@ -72,7 +84,8 @@ class MTLNNEmbedding(nn.Module):
         super().__init__()
         self.config = config
         self.token_embed = nn.Embedding(config.vocab_size, config.d_model)
-        self.rope = RotaryEmbedding(config.d_head, config.max_seq_len)
+        self.rope = RotaryEmbedding(config.d_head, config.max_seq_len,
+                                    scale=getattr(config, "rope_scale", 1.0))
         self.dropout = nn.Dropout(config.dropout)
 
     def forward(self, input_ids: torch.Tensor) -> torch.Tensor:
