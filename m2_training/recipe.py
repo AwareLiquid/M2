@@ -27,7 +27,7 @@ class Recipe:
     grad_accum: int = 1
 
     def __post_init__(self) -> None:
-        if self.task not in ("pointer_chase", "mod_chain", "text"):
+        if self.task not in ("pointer_chase", "mod_chain", "text", "sft"):
             raise ValueError(f"Unsupported task: {self.task}")
         if self.experiment not in TRAINABLE_EXPERIMENTS:
             raise ValueError(f"Experiment has no verified training wiring: {self.experiment}")
@@ -35,14 +35,14 @@ class Recipe:
             raise ValueError("Batch/difficulty/lr must be positive; n_values >= 2")
         if self.task == "pointer_chase" and self.difficulty >= self.n_values:
             raise ValueError("Single-cycle pointer difficulty must be below n_values")
-        if (self.task == "text") != (self.corpus is not None):
-            raise ValueError("A corpus manifest is required only for text training")
+        if (self.task in ("text", "sft")) != (self.corpus is not None):
+            raise ValueError("A corpus manifest is required only for text/sft training")
         if self.sequence_length < 2 or self.grad_accum < 1:
             raise ValueError("sequence_length >= 2 and grad_accum >= 1 are required")
         if self.size not in ("probe", "medium", "2b"):
             raise ValueError("Unknown model size")
-        if self.task == "text" and self.experiment not in ("baseline", "selective_state"):
-            raise ValueError("Text training supports baseline/selective_state only; causal loop paths need separate validation")
+        if self.task in ("text", "sft") and self.experiment not in ("baseline", "selective_state"):
+            raise ValueError("Text/sft training supports baseline/selective_state only; causal loop paths need separate validation")
 
 
 def model_config(recipe: Recipe, vocab: int, length: int) -> MTLNNConfig:

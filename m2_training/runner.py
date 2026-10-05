@@ -14,6 +14,7 @@ from benchmarks.reasoning_tasks import make_generator
 from mt_lnn.model import MTLNNModel
 
 from .recipe import Recipe, model_config
+from .sft_data import SFTData
 from .text_data import Corpus
 
 
@@ -23,8 +24,13 @@ class TrainingRun:
         self.device = torch.device(device)
         torch.manual_seed(recipe.seed)
         self.rng = np.random.default_rng(recipe.seed)
-        self.corpus = Corpus.open(recipe.corpus, recipe.sequence_length) if recipe.corpus else None
-        if self.corpus is not None:
+        self.corpus = (Corpus.open(recipe.corpus, recipe.sequence_length)
+                       if recipe.corpus and recipe.task == "text" else None)
+        self.sft = (SFTData.open(recipe.corpus, recipe.sequence_length)
+                    if recipe.task == "sft" else None)
+        if self.sft is not None:
+            vocab, length = self.sft.vocab, recipe.sequence_length + 1
+        elif self.corpus is not None:
             vocab, length = self.corpus.vocab, recipe.sequence_length + 1
         else:
             self.generator, vocab, _ = make_generator(
@@ -55,7 +61,19 @@ class TrainingRun:
             self.step += 1
         return last_loss
 
+    @property
+    def data_identity(self) -> str | None:
+        if self.sft is not None:
+            return self.sft.identity
+        if self.corpus is not None:
+            return self.corpus.identity
+        return None
+
     def batch(self, rng: np.random.Generator, *, validation: bool = False) -> tuple[torch.Tensor, torch.Tensor]:
+        if self.sft is not None:
+            ids, labels = self.sft.sample(rng, self.recipe.batch, validation=validation)
+            return (torch.from_numpy(ids).to(self.device),
+                    torch.from_numpy(labels).to(self.device))
         if self.corpus is not None:
             tokens = self.corpus.sample(rng, self.recipe.batch, self.recipe.sequence_length, validation=validation)
             ids = torch.from_numpy(tokens).to(self.device)
@@ -72,7 +90,7 @@ class TrainingRun:
             raise ValueError("Evaluation batches must be positive")
         self.model.eval()
         rng = np.random.default_rng(self.recipe.seed + 1_000_000)
-        if self.corpus is not None:
+        if self.corpus is not None or self.sft is not None:
             total_loss = 0.0
             for _ in range(batches):
                 ids, labels = self.batch(rng, validation=True)
@@ -94,7 +112,7 @@ class TrainingRun:
             "data_rng": json.dumps(self.rng.bit_generator.state),
             "torch_rng": torch.get_rng_state(), "device_type": self.device.type,
             "cuda_rng": torch.cuda.get_rng_state_all() if self.device.type == "cuda" else [],
-            "corpus_identity": self.corpus.identity if self.corpus else None,
+            "corpus_identity": self.data_identity,
         }
         handle, temporary = tempfile.mkstemp(dir=path.parent, prefix=path.name, suffix=".tmp")
         os.close(handle)
@@ -111,7 +129,7 @@ class TrainingRun:
         if state["format_version"] != 1:
             raise ValueError("Unsupported checkpoint version")
         run = cls(Recipe(**state["recipe"]), device)
-        if state.get("corpus_identity") != (run.corpus.identity if run.corpus else None):
+        if state.get("corpus_identity") != run.data_identity:
             raise ValueError("Checkpoint corpus identity differs from current data")
         if state["device_type"] != run.device.type:
             raise ValueError("Resume requires the same device type for RNG reproducibility")
