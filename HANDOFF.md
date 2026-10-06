@@ -47,3 +47,14 @@ from this migration. M1 compatibility code remains in its source repository.
 (分线匹配表/情节流格式/反模式清单)。核心结论: 世界模型线与类脑评估线改用
 情节流(观测-动作-时间戳), 语言主线语料不动。
 
+2026-10-06：**2B 后训练管线打通（SFT Run 1）**。`m2_training` 新增 SFT 任务
+（JSONL→byte 级记录 + 响应掩码 + sha256 校验/恢复语义, 7+1 tests）；resume 支持
+`--task/--corpus` 覆盖（text 基座 → SFT 后训练入口）。README 级结论见
+[docs/SFT_RUN1.md](docs/SFT_RUN1.md)：held-out 生成 **0/8 → 4/8 正确、格式
+8/8**（指令跟随质变）；train loss 0.02 = 5.4k 条 3 epoch 过拟合；val PPL
+2.53→3.95 为指标错配。Run 2 准备：19.6k 条 seq-512 语料（corpus512）+ lr 2e-5
++ `--sequence-length/--rope-scale` 覆盖（待加）。
+**同批抢救**：训练机上仅存未入库的 2B 基建（bf16+bitsandbytes AdamW8bit、
+rope_scale/YaRN 频表、resume corpus 覆盖）已入库 → 分支 `feat/2b-sft`
+（设备条件化：CUDA=bf16+8bit / CPU=fp32+AdamW, 193 tests 全绿）。
+
