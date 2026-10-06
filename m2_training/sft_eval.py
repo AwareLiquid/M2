@@ -1,10 +1,11 @@
 """Post-SFT eval — held-out instruction generations, base vs SFT side by side.
 
-    python -m m2_training.sft_eval <sft_ckpt> [corpus_manifest] [base_ckpt]
+    python -m m2_training.sft_eval <sft_ckpt> [sft_corpus] [base_ckpt] [base_corpus]
 
-加载 base 与 SFT 两个检查点，对同一批 held-out 短指令做贪心解码对照
-（byte 级, eos=换行）。服务器口径见 docs/SFT_RUN1.md。
+每个检查点按其语料的 sequence_length 装载（manifest 自带），所有模型走
+SFT 数据路径（同一任务口径）。byte 级贪心解码（eos=换行）。
 """
+import json
 import sys
 from pathlib import Path
 
@@ -13,8 +14,9 @@ import torch
 
 from .runner import TrainingRun
 
-DEFAULT_CORPUS = "/root/M2/sft_data/corpus128/manifest.json"
+DEFAULT_SFT_CORPUS = "/root/M2/sft_data/corpus512/manifest.json"
 DEFAULT_BASE = "/root/M2/runs/t2b_30k.pt"
+DEFAULT_BASE_CORPUS = "/root/M2/sft_data/corpus128/manifest.json"
 
 PROMPTS = [
     "Compute the sum of 9 and 5.",
@@ -28,9 +30,14 @@ PROMPTS = [
 ]
 
 
+def corpus_seq(corpus: str) -> int:
+    meta = json.loads(Path(corpus).read_text(encoding="utf-8"))
+    return int(meta["sequence_length"])
+
+
 def load(path: str, corpus: str) -> TrainingRun:
     run = TrainingRun.restore(Path(path), device="cuda", corpus=corpus,
-                              task="sft")
+                              task="sft", sequence_length=corpus_seq(corpus))
     run.model.eval()
     return run
 
@@ -48,14 +55,15 @@ def respond(run: TrainingRun, prompt: str, max_new: int = 40) -> str:
 
 
 def main() -> None:
-    sft_ckpt = sys.argv[1] if len(sys.argv) > 1 else "/dev/shm/t2b_sft_v1.pt"
-    corpus = sys.argv[2] if len(sys.argv) > 2 else DEFAULT_CORPUS
+    sft_ckpt = sys.argv[1] if len(sys.argv) > 1 else "/dev/shm/t2b_sft_v2.pt"
+    sft_corpus = sys.argv[2] if len(sys.argv) > 2 else DEFAULT_SFT_CORPUS
     base_ckpt = sys.argv[3] if len(sys.argv) > 3 else DEFAULT_BASE
+    base_corpus = sys.argv[4] if len(sys.argv) > 4 else DEFAULT_BASE_CORPUS
 
     print("loading base ...", flush=True)
-    base = load(base_ckpt, corpus)
+    base = load(base_ckpt, base_corpus)
     print("loading sft ...", flush=True)
-    sft = load(sft_ckpt, corpus)
+    sft = load(sft_ckpt, sft_corpus)
 
     print("\n=== held-out generations (greedy) ===", flush=True)
     for p in PROMPTS:
