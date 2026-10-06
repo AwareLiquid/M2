@@ -44,13 +44,17 @@ def main() -> None:
         ), args.device)
     else:
         if any(value is not None for value in (
-            args.task, args.experiment, args.seed, args.size,
+            args.experiment, args.seed, args.size,
             args.sequence_length, args.batch, args.grad_accum,
         )):
-            parser.error("Resume/evaluate use the checkpoint recipe; only --corpus may be overridden on resume")
-        if args.action != "resume" and args.corpus is not None:
-            parser.error("--corpus override is only valid for resume")
-        run = TrainingRun.restore(args.checkpoint, args.device, corpus=args.corpus)
+            parser.error("Resume/evaluate use the checkpoint recipe; only "
+                         "--task/--corpus may be overridden on resume")
+        if args.action != "resume" and (args.task is not None or args.corpus is not None):
+            parser.error("--task/--corpus overrides are only valid for resume")
+        if args.task is not None and args.corpus is None:
+            parser.error("--task override requires --corpus (the new data path)")
+        run = TrainingRun.restore(args.checkpoint, args.device,
+                                  corpus=args.corpus, task=args.task)
     if args.action != "evaluate":
         if args.steps < run.step:
             parser.error("Target steps precede the checkpoint")

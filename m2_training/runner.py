@@ -147,13 +147,18 @@ class TrainingRun:
                 os.unlink(temporary)
 
     @classmethod
-    def restore(cls, path: Path, device: str = "cpu", corpus: str | None = None) -> TrainingRun:
+    def restore(cls, path: Path, device: str = "cpu", corpus: str | None = None,
+                task: str | None = None) -> TrainingRun:
         state = torch.load(path, map_location="cpu", weights_only=True)
         if state["format_version"] != 1:
             raise ValueError("Unsupported checkpoint version")
         recipe = Recipe(**state["recipe"])
         if corpus is not None:
             recipe = replace(recipe, corpus=str(Path(corpus).resolve()))
+        if task is not None:
+            # 后训练入口：基座以 task="text" 训成，SFT 只是数据管线/损失掩码
+            # 不同（同模型）；任务切换必须同时给新 corpus（由 CLI 校验）。
+            recipe = replace(recipe, task=task)
         run = cls(recipe, device)
         if corpus is None and state.get("corpus_identity") != run.data_identity:
             raise ValueError("Checkpoint corpus identity differs from current data")
