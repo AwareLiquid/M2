@@ -114,6 +114,46 @@ def test_resume_can_switch_task_to_sft_with_corpus_override(tmp_path: Path) -> N
     assert restored.batch(np.random.default_rng(0))[0].shape[0] == 2
 
 
+def test_resume_accepts_post_training_overrides(tmp_path: Path) -> None:
+    """--lr/--sequence-length/--rope-scale 覆盖 = 后训练档位（Run 2 口径）。"""
+    from m2_training.prepare import prepare as prepare_text
+    text_in = tmp_path / "base.txt"
+    val_in = tmp_path / "val.txt"
+    text_in.write_text("base corpus text " * 40, encoding="utf-8")
+    val_in.write_text("held out base text " * 40, encoding="utf-8")
+    text_manifest = prepare_text(text_in, val_in, tmp_path / "text_corpus")
+
+    lines = [json.dumps({"prompt": f"question {i}?", "response": f"reply {i}."})
+             for i in range(8)]
+    source = tmp_path / "sft.jsonl"
+    source.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    sft_manifest = prepare(source, tmp_path / "sft_corpus", sequence_length=32)
+
+    ckpt = tmp_path / "base.pt"
+    run = TrainingRun(Recipe(task="text", corpus=str(text_manifest),
+                             sequence_length=16, batch=2))
+    run.train_until(2)
+    run.save(ckpt)
+
+    restored = TrainingRun.restore(
+        ckpt, corpus=str(sft_manifest), task="sft", lr=2e-5,
+        sequence_length=32, rope_scale=4.0)
+    assert restored.recipe.task == "sft"
+    assert restored.recipe.lr == 2e-5
+    assert restored.recipe.sequence_length == 32
+    assert restored.recipe.rope_scale == 4.0
+    ids, labels = restored.batch(np.random.default_rng(0))
+    assert ids.shape[1] == 32
+    assert (labels != -100).any()
+    restored.train_until(3)
+    assert restored.step == 3
+
+
+def test_rope_scale_below_one_is_rejected() -> None:
+    with pytest.raises(ValueError, match="rope_scale"):
+        Recipe(task="sft", corpus="x.json", rope_scale=0.5)
+
+
 def test_sft_cli_trains_resumes_and_evaluates(tmp_path: Path) -> None:
     source = tmp_path / "sft.jsonl"
     source.write_text("\n".join(

@@ -25,6 +25,9 @@ class Recipe:
     sequence_length: int = 128
     size: str = "probe"
     grad_accum: int = 1
+    # NTK/YaRN RoPE 长度缩放（1.0 = 原表；>1 让在短序列上训练的模型可在
+    # scale×长度处工作——后训练扩上下文的实验旋钮）。
+    rope_scale: float = 1.0
 
     def __post_init__(self) -> None:
         if self.task not in ("pointer_chase", "mod_chain", "text", "sft"):
@@ -39,6 +42,8 @@ class Recipe:
             raise ValueError("A corpus manifest is required only for text/sft training")
         if self.sequence_length < 2 or self.grad_accum < 1:
             raise ValueError("sequence_length >= 2 and grad_accum >= 1 are required")
+        if self.rope_scale < 1.0:
+            raise ValueError("rope_scale >= 1.0 is required (1.0 = unscaled)")
         if self.size not in ("probe", "medium", "2b"):
             raise ValueError("Unknown model size")
         if self.task in ("text", "sft") and self.experiment not in ("baseline", "selective_state"):
@@ -59,4 +64,5 @@ def model_config(recipe: Recipe, vocab: int, length: int) -> MTLNNConfig:
         n_heads=heads, n_kv_heads=kv, d_head=width // heads, gwtb_n_heads=1,
         n_global_heads=max(2, heads // 2),
         dropout=0.0, attention_dropout=0.0,
+        rope_scale=recipe.rope_scale,
     )
