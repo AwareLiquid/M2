@@ -46,23 +46,24 @@ def main() -> None:
         ), args.device)
     else:
         if any(value is not None for value in (
-            args.experiment, args.seed, args.size, args.batch, args.grad_accum,
+            args.experiment, args.seed, args.size,
         )):
             parser.error("Resume/evaluate use the checkpoint recipe; overridable "
                          "on resume: --task/--corpus/--lr/--sequence-length/"
-                         "--rope-scale")
+                         "--rope-scale/--batch/--grad-accum")
         if args.action != "resume" and any(value is not None for value in (
             args.task, args.corpus, args.lr, args.sequence_length,
-            args.rope_scale,
+            args.rope_scale, args.batch, args.grad_accum,
         )):
-            parser.error("task/corpus/lr/sequence-length/rope-scale overrides "
-                         "are only valid for resume")
+            parser.error("task/corpus/lr/sequence-length/rope-scale/batch/"
+                         "grad-accum overrides are only valid for resume")
         if args.task is not None and args.corpus is None:
             parser.error("--task override requires --corpus (the new data path)")
-        run = TrainingRun.restore(args.checkpoint, args.device,
-                                  corpus=args.corpus, task=args.task, lr=args.lr,
-                                  sequence_length=args.sequence_length,
-                                  rope_scale=args.rope_scale)
+        run = TrainingRun.restore(
+            args.checkpoint, args.device, corpus=args.corpus, task=args.task,
+            lr=args.lr, sequence_length=args.sequence_length,
+            rope_scale=args.rope_scale, batch=args.batch,
+            grad_accum=args.grad_accum)
     if args.action != "evaluate":
         if args.steps < run.step:
             parser.error("Target steps precede the checkpoint")

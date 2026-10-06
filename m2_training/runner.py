@@ -150,7 +150,8 @@ class TrainingRun:
     def restore(cls, path: Path, device: str = "cpu", corpus: str | None = None,
                 task: str | None = None, lr: float | None = None,
                 sequence_length: int | None = None,
-                rope_scale: float | None = None) -> TrainingRun:
+                rope_scale: float | None = None, batch: int | None = None,
+                grad_accum: int | None = None) -> TrainingRun:
         state = torch.load(path, map_location="cpu", weights_only=True)
         if state["format_version"] != 1:
             raise ValueError("Unsupported checkpoint version")
@@ -167,6 +168,10 @@ class TrainingRun:
             recipe = replace(recipe, sequence_length=sequence_length)
         if rope_scale is not None:
             recipe = replace(recipe, rope_scale=rope_scale)
+        if batch is not None:
+            recipe = replace(recipe, batch=batch)
+        if grad_accum is not None:
+            recipe = replace(recipe, grad_accum=grad_accum)
         run = cls(recipe, device)
         if corpus is None and state.get("corpus_identity") != run.data_identity:
             raise ValueError("Checkpoint corpus identity differs from current data")
