@@ -14,6 +14,7 @@ from benchmarks.reasoning_tasks import make_generator
 from mt_lnn.model import MTLNNModel
 
 from .recipe import Recipe, model_config
+from .sft_data import SFTData
 from .text_data import Corpus
 
 
@@ -23,8 +24,13 @@ class TrainingRun:
         self.device = torch.device(device)
         torch.manual_seed(recipe.seed)
         self.rng = np.random.default_rng(recipe.seed)
-        self.corpus = Corpus.open(recipe.corpus, recipe.sequence_length) if recipe.corpus else None
-        if self.corpus is not None:
+        self.corpus = (Corpus.open(recipe.corpus, recipe.sequence_length)
+                       if recipe.corpus and recipe.task == "text" else None)
+        self.sft = (SFTData.open(recipe.corpus, recipe.sequence_length)
+                    if recipe.task == "sft" else None)
+        if self.sft is not None:
+            vocab, length = self.sft.vocab, recipe.sequence_length + 1
+        elif self.corpus is not None:
             vocab, length = self.corpus.vocab, recipe.sequence_length + 1
         else:
             self.generator, vocab, _ = make_generator(
@@ -32,9 +38,18 @@ class TrainingRun:
             )
             length = self.generator(1, np.random.default_rng(recipe.seed)).tokens.shape[1]
         self.model = MTLNNModel(model_config(recipe, vocab, length)).to(self.device)
-        self.model = self.model.to(torch.bfloat16)
-        import bitsandbytes as bnb
-        self.optimizer = bnb.optim.AdamW8bit(self.model.parameters(), lr=recipe.lr, betas=(0.9, 0.95), weight_decay=0.01)
+        # 2B 实配（训练机验证）：CUDA 下 bf16 + bitsandbytes AdamW8bit 让
+        # 2B 装进 40G 卡；CPU/CI 保持原 fp32 + AdamW（位等价、测试口径不变）。
+        if self.device.type == "cuda":
+            self.model = self.model.to(torch.bfloat16)
+            import bitsandbytes as bnb
+            self.optimizer = bnb.optim.AdamW8bit(
+                self.model.parameters(), lr=recipe.lr, betas=(0.9, 0.95),
+                weight_decay=0.01)
+        else:
+            self.optimizer = torch.optim.AdamW(
+                self.model.parameters(), lr=recipe.lr, betas=(0.9, 0.95),
+                weight_decay=0.01)
         self.step = 0
 
     def train_until(self, total_steps: int) -> float | None:
@@ -57,7 +72,19 @@ class TrainingRun:
             self.step += 1
         return last_loss
 
+    @property
+    def data_identity(self) -> str | None:
+        if self.sft is not None:
+            return self.sft.identity
+        if self.corpus is not None:
+            return self.corpus.identity
+        return None
+
     def batch(self, rng: np.random.Generator, *, validation: bool = False) -> tuple[torch.Tensor, torch.Tensor]:
+        if self.sft is not None:
+            ids, labels = self.sft.sample(rng, self.recipe.batch, validation=validation)
+            return (torch.from_numpy(ids).to(self.device),
+                    torch.from_numpy(labels).to(self.device))
         if self.corpus is not None:
             tokens = self.corpus.sample(rng, self.recipe.batch, self.recipe.sequence_length, validation=validation)
             ids = torch.from_numpy(tokens).to(self.device)
@@ -74,7 +101,7 @@ class TrainingRun:
             raise ValueError("Evaluation batches must be positive")
         self.model.eval()
         rng = np.random.default_rng(self.recipe.seed + 1_000_000)
-        if self.corpus is not None:
+        if self.corpus is not None or self.sft is not None:
             total_loss = 0.0
             for _ in range(batches):
                 ids, labels = self.batch(rng, validation=True)
@@ -90,13 +117,23 @@ class TrainingRun:
 
     def save(self, path: Path) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
+        if self.device.type == "cuda":
+            # 2B 实配（训练机）：bf16 权重落盘；bnb8bit 状态不序列化
+            # （2B 检查点 3.9G 已很大，优化器态随 resume 重新累积）。
+            model_state = {k: (v.to(torch.bfloat16) if v.is_floating_point() else v)
+                           for k, v in self.model.state_dict().items()}
+            optimizer_state: dict = {}
+        else:
+            # CPU/CI：完整状态，分段训练与连续训练位等价（测试口径）
+            model_state = self.model.state_dict()
+            optimizer_state = self.optimizer.state_dict()
         state = {
             "format_version": 1, "recipe": asdict(self.recipe), "step": self.step,
-            "model": {k: (v.to(torch.bfloat16) if v.is_floating_point() else v) for k, v in self.model.state_dict().items()}, "optimizer": {},
+            "model": model_state, "optimizer": optimizer_state,
             "data_rng": json.dumps(self.rng.bit_generator.state),
             "torch_rng": torch.get_rng_state(), "device_type": self.device.type,
             "cuda_rng": torch.cuda.get_rng_state_all() if self.device.type == "cuda" else [],
-            "corpus_identity": self.corpus.identity if self.corpus else None,
+            "corpus_identity": self.data_identity,
         }
         if path.exists():
             path.unlink()
@@ -118,7 +155,7 @@ class TrainingRun:
         if corpus is not None:
             recipe = replace(recipe, corpus=str(Path(corpus).resolve()))
         run = cls(recipe, device)
-        if corpus is None and state.get("corpus_identity") != (run.corpus.identity if run.corpus else None):
+        if corpus is None and state.get("corpus_identity") != run.data_identity:
             raise ValueError("Checkpoint corpus identity differs from current data")
         if state["device_type"] != run.device.type:
             raise ValueError("Resume requires the same device type for RNG reproducibility")

@@ -14,7 +14,7 @@ def main() -> None:
     parser.add_argument("--save-every", type=int, default=10)
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
     parser.add_argument("--experiment", choices=TRAINABLE_EXPERIMENTS)
-    parser.add_argument("--task", choices=("pointer_chase", "mod_chain", "text"))
+    parser.add_argument("--task", choices=("pointer_chase", "mod_chain", "text", "sft"))
     parser.add_argument("--seed", type=int)
     parser.add_argument("--corpus", type=Path)
     parser.add_argument("--size", choices=("probe", "medium", "2b"))
@@ -58,7 +58,7 @@ def main() -> None:
             loss = run.train_until(min(args.steps, run.step + args.save_every))
             run.save(args.checkpoint)
             print(json.dumps({"step": run.step, "loss": loss}), flush=True)
-    metric = "validation_ppl" if run.recipe.task == "text" else "accuracy"
+    metric = "validation_ppl" if run.recipe.task in ("text", "sft") else "accuracy"
     print(json.dumps({"step": run.step, metric: run.evaluate(), "task": run.recipe.task,
                       "experiment": run.recipe.experiment}), flush=True)
 
