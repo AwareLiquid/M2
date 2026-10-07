@@ -70,3 +70,9 @@ rope_scale/YaRN 频表、resume corpus 覆盖）已入库 → 分支 `feat/2b-sf
   官方 easy 39.6% / orig 34.7%、**ECE 0.20**（同批最优）、p50 0.168s；
   自家语料 val 0.50（从零训平台 0.41）。2B 表征对决策显著优于 4.5M 从零。
 
+2026-10-07 运维：**训练机（被墙）可经 hf-mirror 直传 HuggingFace**——
+`HF_ENDPOINT=https://hf-mirror.com` + huggingface_hub ≥1.x（`/root/M2/.venv`
+已装），上传 `t2b_sft_v2.pt` 成功（~1.6MB/s）。直连 huggingface.co 不可达
+（000），hf-mirror.com 200/0.24s。基座 `t2b_30k.pt` 与 HF `t2b_200k.pt`
+sha256 逐字节一致（e10af131…），无需重复传。
+
