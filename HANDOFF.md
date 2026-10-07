@@ -66,4 +66,7 @@ rope_scale/YaRN 频表、resume corpus 覆盖）已入库 → 分支 `feat/2b-sf
   决策题（分布不同）；
 - 结论：速度/成本轴已到顶（O1-Flash 决策头 16-21ms），准确率是开放问题。
   产物：`docs/JEVBENCH_RUN1.md`（M2）+ O1-Flash 仓 `docs/JEVBENCH_RESULTS.md`。
+- **2B 冻结核 + 决策头**（`m2_training/decision_2b.py`，final_norm hook + readout）：
+  官方 easy 39.6% / orig 34.7%、**ECE 0.20**（同批最优）、p50 0.168s；
+  自家语料 val 0.50（从零训平台 0.41）。2B 表征对决策显著优于 4.5M 从零。
 
