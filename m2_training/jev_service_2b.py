@@ -6,6 +6,7 @@
     /root/M2/.venv/bin/python jev_service_2b.py <head_ckpt> [port]
 """
 import json
+import os
 import sys
 import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -22,7 +23,7 @@ from m2_training.decision_2b import (  # noqa: E402
 
 HEAD_CKPT = sys.argv[1] if len(sys.argv) > 1 else "/root/decision/decision_head_2b.pt"
 PORT = int(sys.argv[2]) if len(sys.argv) > 2 else 8299
-CORE_CKPT = "/root/M2/runs/t2b_30k.pt"
+CORE_CKPT = os.environ.get("CORE_CKPT", "/root/M2/runs/t2b_30k.pt")
 MODEL_NAME = Path(HEAD_CKPT).stem
 
 print(f"loading head spec {HEAD_CKPT} ...", flush=True)
