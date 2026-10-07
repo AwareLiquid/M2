@@ -58,3 +58,12 @@ from this migration. M1 compatibility code remains in its source repository.
 rope_scale/YaRN 频表、resume corpus 覆盖）已入库 → 分支 `feat/2b-sft`
 （设备条件化：CUDA=bf16+8bit / CPU=fp32+AdamW, 193 tests 全绿）。
 
+2026-10-07：**JevBench 官方基准首测（M2 模型两枚）**。经由官方 harness
+（fstandhartinger/jevbench）+ 原生 /v1/systemone 服务：
+- M2-2B SFT v2（2 万步）：public tiers raw **35.8%**（48 易 + 72 原题），
+  ECE 0.34-0.50，p50 0.71-0.92s，schema 100%；
+- 续训版 v2b（+5k 步，val PPL 3.20）：raw **31.3%**——指令数据多训不提升
+  决策题（分布不同）；
+- 结论：速度/成本轴已到顶（O1-Flash 决策头 16-21ms），准确率是开放问题。
+  产物：`docs/JEVBENCH_RUN1.md`（M2）+ O1-Flash 仓 `docs/JEVBENCH_RESULTS.md`。
+
