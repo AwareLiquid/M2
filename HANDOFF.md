@@ -70,9 +70,13 @@ rope_scale/YaRN 频表、resume corpus 覆盖）已入库 → 分支 `feat/2b-sf
   官方 easy 39.6% / orig 34.7%、**ECE 0.20**（同批最优）、p50 0.168s；
   自家语料 val 0.50（从零训平台 0.41）。2B 表征对决策显著优于 4.5M 从零。
 
-2026-10-07 运维：**训练机（被墙）可经 hf-mirror 直传 HuggingFace**——
-`HF_ENDPOINT=https://hf-mirror.com` + huggingface_hub ≥1.x（`/root/M2/.venv`
+2026-10-07 运维：**训练机（被墙）可经 hf-mirror 直传 HuggingFace**——`HF_ENDPOINT=https://hf-mirror.com` + huggingface_hub ≥1.x（`/root/M2/.venv`
 已装），上传 `t2b_sft_v2.pt` 成功（~1.6MB/s）。直连 huggingface.co 不可达
 （000），hf-mirror.com 200/0.24s。基座 `t2b_30k.pt` 与 HF `t2b_200k.pt`
-sha256 逐字节一致（e10af131…），无需重复传。
-
+sha256 逐字节一致（e10af131…），无需重复传。\n
+2026-10-07 晚：**决策线双训练在跑**（服务器 A100）——A) 2B+头长效
+（warm-start 8k 头 +20k 步, lr 5e-4, \decision_head_2b_v2.pt\）；B) v2b(SFT)
+核 A/B（fresh 头 8k 步, \decision_head_v2b_core.pt\）。工具已入库
+（\decision_2b.py\/\it_temp_2b.py\/\jev_service_2b.py\）。队列待排：
+决策语料 v2（CLINC150/FinancialPhraseBank/ContractNLI 真实族）、O1-Sound 数据
+经镜像解锁、readout 变体、SFT v3。
