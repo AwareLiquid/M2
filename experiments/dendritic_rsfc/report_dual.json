@@ -1,0 +1,113 @@
+{
+ "config": {
+  "steps": 300,
+  "seeds": 3,
+  "batch": 64,
+  "T": 240,
+  "lr": 0.003
+ },
+ "rows": [
+  {
+   "seed": 0,
+   "model": "dendritic",
+   "params": 2406,
+   "cat_overall": 0.8134766221046448,
+   "cat_post": 0.5098702907562256,
+   "cat_steady": 0.8741872906684875,
+   "sens_overall": 0.9947917461395264,
+   "sens_post": 0.9971799850463867,
+   "sens_steady": 0.9943426251411438
+  },
+  {
+   "seed": 0,
+   "model": "single_ltc",
+   "params": 2692,
+   "cat_overall": 0.8819010853767395,
+   "cat_post": 0.4760293662548065,
+   "cat_steady": 0.9425820708274841,
+   "sens_overall": 0.9875000715255737,
+   "sens_post": 0.9870277047157288,
+   "sens_steady": 0.9892763495445251
+  },
+  {
+   "seed": 1,
+   "model": "dendritic",
+   "params": 2406,
+   "cat_overall": 0.7948567867279053,
+   "cat_post": 0.5390581488609314,
+   "cat_steady": 0.8463168740272522,
+   "sens_overall": 0.9949870109558105,
+   "sens_post": 0.9966759085655212,
+   "sens_steady": 0.9944901466369629
+  },
+  {
+   "seed": 1,
+   "model": "single_ltc",
+   "params": 2692,
+   "cat_overall": 0.8987630605697632,
+   "cat_post": 0.5601108074188232,
+   "cat_steady": 0.9478681087493896,
+   "sens_overall": 0.9885417222976685,
+   "sens_post": 0.9833794832229614,
+   "sens_steady": 0.9894040822982788
+  },
+  {
+   "seed": 2,
+   "model": "dendritic",
+   "params": 2406,
+   "cat_overall": 0.8018880486488342,
+   "cat_post": 0.44904816150665283,
+   "cat_steady": 0.8763836026191711,
+   "sens_overall": 0.9966797232627869,
+   "sens_post": 0.9983202815055847,
+   "sens_steady": 0.9962822198867798
+  },
+  {
+   "seed": 2,
+   "model": "single_ltc",
+   "params": 2692,
+   "cat_overall": 0.90813809633255,
+   "cat_post": 0.5565509796142578,
+   "cat_steady": 0.9580059051513672,
+   "sens_overall": 0.9908203482627869,
+   "sens_post": 0.986562192440033,
+   "sens_steady": 0.9911280274391174
+  }
+ ],
+ "summary": {
+  "dendritic": {
+   "cat_overall": 0.8034071524937948,
+   "cat_post": 0.4993255337079366,
+   "cat_steady": 0.865629255771637,
+   "sens_overall": 0.9954861601193746,
+   "sens_post": 0.9973920583724976,
+   "sens_steady": 0.9950383305549622
+  },
+  "single_ltc": {
+   "cat_overall": 0.8962674140930176,
+   "cat_post": 0.5308970510959625,
+   "cat_steady": 0.9494853615760803,
+   "sens_overall": 0.9889540473620096,
+   "sens_post": 0.9856564601262411,
+   "sens_steady": 0.9899361530939738
+  }
+ },
+ "per_seed": [
+  {
+   "seed": 0,
+   "sens_post_delta_pts": 1.015228033065796,
+   "cat_post_delta_pts": 3.3840924501419067
+  },
+  {
+   "seed": 1,
+   "sens_post_delta_pts": 1.3296425342559814,
+   "cat_post_delta_pts": -2.1052658557891846
+  },
+  {
+   "seed": 2,
+   "sens_post_delta_pts": 1.1758089065551758,
+   "cat_post_delta_pts": -10.750281810760498
+  }
+ ],
+ "pass": false
+}

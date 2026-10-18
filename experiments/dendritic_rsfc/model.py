@@ -31,6 +31,9 @@ class DendriticRSFC(nn.Module):
         # readouts
         self.w_out = nn.Linear(d_soma, 2)          # rule-gated sensory
         self.w_out_a = nn.Linear(d_apical, 2)      # apical-only control
+        # dual-task v2: rule-INVARIANT sensory head (reads the soma only — the
+        # paper's sensory compartment; must stay stable across rule switches)
+        self.w_out_sens = nn.Linear(d_soma, 2)
 
     def forward_states(self, x: torch.Tensor, labels: torch.Tensor
                        ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
@@ -95,6 +98,30 @@ class DendriticRSFC(nn.Module):
         return torch.stack(out, dim=1)
 
 
+    def forward_dual(self, x: torch.Tensor, labels: torch.Tensor
+                     ) -> tuple[torch.Tensor, torch.Tensor]:
+        """Dual task v2: (category logits, rule-invariant sensory logits).
+        The sensory head reads the SOMA only — the paper's sensory
+        compartment — so it should stay stable across rule switches."""
+        b, T = x.shape
+        s = torch.zeros(b, self.d_s, device=x.device)
+        a = torch.zeros(b, self.d_a, device=x.device)
+        rew = torch.zeros(b, device=x.device)
+        cat_out, sens_out = [], []
+        for t in range(T):
+            s = self.decay_s * s + (1 - self.decay_s) * torch.tanh(
+                self.w_in_s(x[:, t:t+1]) + self.u_s(s))
+            a = self.decay_a * a + (1 - self.decay_a) * torch.tanh(
+                self.w_in_a(torch.stack([x[:, t], rew], dim=-1)) + self.u_a(a))
+            cat_out.append(self.w_out(s * torch.tanh(a)))
+            sens_out.append(self.w_out_sens(s))
+            pred = cat_out[-1].argmax(-1)
+            rew = torch.where(pred == labels[:, t],
+                              torch.ones_like(pred, dtype=torch.float32),
+                              -torch.ones_like(pred, dtype=torch.float32))
+        return torch.stack(cat_out, 1), torch.stack(sens_out, 1)
+
+
 class SingleLTC(nn.Module):
     """Point-neuron baseline: ONE liquid state, same inputs."""
 
@@ -105,6 +132,7 @@ class SingleLTC(nn.Module):
         self.w_in = nn.Linear(2, d)
         self.u = nn.Linear(d, d, bias=False)
         self.w_out = nn.Linear(d, 2)
+        self.w_out_sens = nn.Linear(d, 2)
 
     def forward(self, x: torch.Tensor, labels: torch.Tensor,
                 mode: str = "full", teacher_reward: bool = True) -> torch.Tensor:
@@ -123,6 +151,25 @@ class SingleLTC(nn.Module):
                               torch.ones_like(pred, dtype=torch.float32),
                               -torch.ones_like(pred, dtype=torch.float32))
         return torch.stack(out, dim=1)
+
+
+    def forward_dual(self, x: torch.Tensor, labels: torch.Tensor
+                     ) -> tuple[torch.Tensor, torch.Tensor]:
+        b, T = x.shape
+        decay = torch.exp(-1.0 / torch.nn.functional.softplus(self.log_tau))
+        h = torch.zeros(b, self.d, device=x.device)
+        rew = torch.zeros(b, device=x.device)
+        cat_out, sens_out = [], []
+        for t in range(T):
+            inp = torch.stack([x[:, t], rew], dim=-1)
+            h = decay * h + (1 - decay) * torch.tanh(self.w_in(inp) + self.u(h))
+            cat_out.append(self.w_out(h))
+            sens_out.append(self.w_out_sens(h))
+            pred = cat_out[-1].argmax(-1)
+            rew = torch.where(pred == labels[:, t],
+                              torch.ones_like(pred, dtype=torch.float32),
+                              -torch.ones_like(pred, dtype=torch.float32))
+        return torch.stack(cat_out, 1), torch.stack(sens_out, 1)
 
 
 class GRURSFC(nn.Module):
