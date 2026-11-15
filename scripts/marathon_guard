@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+"""marathon_guard — 马拉松启动锁检查(v1,移植自 AwareLiquid-Physic)
+
+语义(Physic 轮 404 硬化版):
+  无 .loop-lock 或锁已自过期(锁龄 ≥100min) → exit 0,可启动新马拉松
+  锁新鲜(锁龄 <100min,说明有活马拉松在心跳) → exit 1 BUSY,确认状态即结束
+  诊断:锁龄 ≥1800s 且锁创建后零提交 → STALE-HINT(疑似死锁残留而非活马拉松,
+  供人工证据链接管,退出码语义不变=AMM-005 不动)
+
+退出码: 0=畅通 1=BUSY 2=异常(无法检查)
+"""
+import os
+import subprocess
+import sys
+import time
+
+LOCK_MAX_AGE_S = 100 * 60
+STALE_HINT_S = 1800
+
+
+def repo_root():
+    root = os.environ.get("M2_LOOP_ROOT")
+    if root:
+        return os.path.abspath(root)
+    return os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+
+
+def last_commit_epoch(root):
+    try:
+        out = subprocess.run(
+            ["git", "log", "-1", "--format=%ct"], cwd=root,
+            capture_output=True, text=True, timeout=10,
+        )
+        return int(out.stdout.strip())
+    except (ValueError, subprocess.SubprocessError):
+        return None
+
+
+def main():
+    root = repo_root()
+    lock = os.path.join(root, ".loop-lock")
+    if not os.path.exists(lock):
+        print("marathon_guard: 无锁,畅通(exit 0)")
+        return 0
+    try:
+        age = time.time() - os.path.getmtime(lock)
+    except OSError:
+        print("marathon_guard: 锁不可读,异常(exit 2)")
+        return 2
+    if age >= LOCK_MAX_AGE_S:
+        print(f"marathon_guard: 锁自过期(锁龄 {int(age)}s ≥ {LOCK_MAX_AGE_S}s),畅通(exit 0)")
+        return 0
+    print(f"marathon_guard: BUSY — 有活马拉松(锁龄 {int(age)}s < {LOCK_MAX_AGE_S}s),确认状态即结束,勿双开(exit 1)")
+    commit_epoch = last_commit_epoch(root)
+    if commit_epoch and age >= STALE_HINT_S:
+        lock_epoch = time.time() - age
+        if lock_epoch > commit_epoch:
+            print(
+                f"marathon_guard: STALE-HINT — 锁创建后零提交(锁 mtime epoch {int(lock_epoch)}"
+                f" > 最后提交 epoch {commit_epoch}),疑似死锁残留而非活马拉松;"
+                f"人工证据链(锁 mtime==最后提交 mtime+此后零活动)确认后可接管删除 .loop-lock"
+            )
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

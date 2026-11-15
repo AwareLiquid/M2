@@ -1,0 +1,54 @@
+{
+ "id": "p0c-latency",
+ "kind": "verdict",
+ "prereg": "benchmarks/verdicts/p0c_latency.prereg.json",
+ "h_supported": true,
+ "criteria_eval": {
+  "A_completion": {
+   "rule": "pure_liquid 完成 {512,2048,8192,16384} 全部点无 OOM",
+   "observed": "4/4 点完成(0.0170/0.0457/0.1840/0.4314s)",
+   "pass": true
+  },
+  "B_slope": {
+   "rule": "G_pure <= 0.5 * G_transformer(G=L(16384)/L(512))",
+   "observed": "G_pure=25.4 <= 0.5*1052.9=526.5",
+   "pass": true
+  },
+  "C_linear": {
+   "rule": "G_pure <= 32(线性理想 16 的 2× 内)",
+   "observed": 25.4,
+   "pass": true
+  },
+  "verdict_rule": "h_supported = A ∧ B ∧ C ⇒ true(三判据全过,循环首个正判决)"
+ },
+ "latency_table": {
+  "fwd_s_median": {
+   "pure_liquid": {"512": 0.017, "2048": 0.0457, "8192": 0.184, "16384": 0.4314},
+   "hybrid": {"512": 0.0223, "2048": 0.1015, "8192": 1.0169, "16384": "OOM"},
+   "transformer": {"512": 0.0064, "2048": 0.0133, "8192": 0.2025, "16384": 6.7345}
+  },
+  "G_16384_512": {"pure_liquid": 25.4, "hybrid": "OOM", "transformer": 1052.9},
+  "G_8192_512": {"pure_liquid": 10.8, "hybrid": 45.6, "transformer": 31.6},
+  "alloc_note": "pure_liquid 16384 状态 272MB(≈O(T) 中间量+常数量级状态);hybrid/transformer 的二次激活是 OOM 主因",
+  "口径": "batch=1,预热 1+median-of-3;G=16× token 的延迟增长比(线性理想≈16,二次≈256+)"
+ },
+ "interpretation": {
+  "o1_claim": "液体子层独立(关注意力+关 global_coherence)延迟线性增长(25.4×/16× token≈1.6× 线性系数),16384 长流 0.43s/请求、272MB——'O(1) 端侧'主张在液体子层独立成立(架构原则级正面证据,循环首个 h_supported=true)",
+  "hybrid_honesty": "混合架构(hybrid)16384 OOM:注意力层+global_coherence 的 T×T 激活是二次墙——端侧部署必须限制注意力层或换稀疏/线性注意力(与轮 362/363 描述性证据一致)",
+  "transformer": "transformer 在 16384 完成(6.73s,1053×):本宽度下 MPS 尚可容纳,但增长已进入二次段(8192→16384 单段 33×)"
+ },
+ "data_refs": {
+  "rows": "benchmarks/results/latency_probe.jsonl tag=p0c_latency_r2 (首扫 tag=p0c_latency 因 pure_liquid use_global_coherence 默认开 OOM 作废,infra_oom 预注册诊断兑现=修 harness 重跑,行留账本)",
+  "prereg_commit": "3f65436 (轮 364 中程提交,判据先于数据;amendment 1 数据前 113d81b)"
+ },
+ "negative_diagnosis": null,
+ "caveats": [
+  "探针级 [B]:单扫描 median-of-3(零训练纯推理无随机性,3-seed 纪律不适用,prereg 如实声明);终局声明须跨机 → [C]",
+  "纯液体核=关注意力+关 global_coherence 的消融配置,非部署形态;混合架构的端侧路径=限制注意力层或稀疏/线性注意力(后续推导候选)",
+  "绝对延迟:小 T 段 pure_liquid(0.017s)慢于 transformer(0.0064s)~3×(液体核逐 token 循环开销)——O(1) 优势只在长流兑现,如实报告"
+ ],
+ "decided_at": "2026-10-04T01:30:00+08:00",
+ "round": 364,
+ "exec_tier": "T1",
+ "seeds": 1
+}

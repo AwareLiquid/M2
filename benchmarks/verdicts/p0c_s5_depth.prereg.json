@@ -1,0 +1,50 @@
+{
+  "id": "p0c-s5-depth",
+  "title": "S5 词问题深度探针(NC¹ 完全分离,深度链最后一条可推导路径)— stack+ds d={1,8} 同腿配对",
+  "kind": "preregistration",
+  "round": 360,
+  "created_at": "2026-10-03T20:45:00+08:00",
+  "hypothesis": {
+    "statement": "S5 词问题=NC¹ 完全分离任务(Barrington:固定浅层电路必败;Merrill et al.:对角输入无关转移 O(1) 深度不可解,Θ(log n) 权重共享迭代深度可解)且 looped 文献正先验(HORIZON #3:权重共享循环=有效计算深度,8 层循环模型 256-bit 输入保 100%)——若深度命题在任何任务上成立,必在此任务;假设:stack+ds 下 d=8 显著优于 d=1(深度信号在正先验角落显形)",
+    "h_origin": "docs/ROADMAP_M2.md §4.5 第十一轮(深度链五连负收官,唯一剩余正先验角落); benchmarks/verdicts/p0c_sort_ds_depth.json caveats; RSI-HORIZON #3(looped 正先验+Merrill NC¹ 分离); gen_s5_word 代码注释(2026-08-03 立项理由)"
+  },
+  "single_variable_declaration": "唯一变量=深度 d(1 vs 8,stack+ds 同开,同腿配对);任务 s5_word k=8 固定(无 mix——s5 不在 mix 支持列表,定 k 训练);S=2000/batch/lr/hygiene 沿用;与排序类五判负的关系=换任务族(群论词问题),变量仍是 p0c-depth 思考深度→能力",
+  "protocol": {
+    "model": "MT-LNN n_layers=2 d_model=104, n_heads=4, n_global_heads=2, full_mha=true — 同前六轮修复配置",
+    "mode": "fixed, depth_knob=stack_iterations, deep_supervision=true(第九/十轮实证:无 ds 深堆叠不训练,ds 为深堆叠可训练的前提配置)",
+    "task": "s5_word k=8(T=11: BOS+8 元素+THINK+ANS;vocab=132;答案=8 个 S5 群元素的左→右乘积,chance=1/120≈0.0083)",
+    "depths": [1, 8],
+    "seeds": [0, 1, 2],
+    "steps": 2000,
+    "batch": 128,
+    "lr": 0.0003,
+    "beta2": 0.999,
+    "clip": 0,
+    "runner": "scripts/launch_p0c.sh(P0C_TASK=s5_word P0C_DIFFICULTY=8 P0C_MIX=0 P0C_STACK=1 P0C_DS=1 P0C_DEPTHS='1 8' P0C_TAG=p0c_s5_depth P0C_SKIP_TRANSFORMER=1;无 --mix——s5 不在 mix 支持列表;amendment 1 数据前:首发两腿 rc=1 崩因=轮 350 make_generator 重构回归(voc 先于分支重赋值计算,显式 n_values=16 时 s5 vocab=26<答案 token),修复=return 时点计算+自测 vocab 覆盖守卫,判据未动)",
+    "launch_pattern": "3 seeds 分三次发射(AMM-017),每 seed 同腿先 d1 后 d8,受管后台通道;标定(S=2000):d8 臂≈11.6min+d1 臂≈2min ⇒ 单 seed≈14min≤30",
+    "exec_tier": "T1 (MPS, Apple Silicon 本地)"
+  },
+  "metrics": {
+    "primary": "M(d,s) = 全序列答案位准确率(s5 无 mix,直接 evaluate;T=11 每 eval 20×256 样本)",
+    "paired_gain": "gain_s = M(8,s) − M(1,s)(同腿配对);mean_gain;σ_paired(ddof=1)",
+    "chance_line": "1/120≈0.0083;M ≤ 0.02 视为 chance"
+  },
+  "h_supported_criteria": {
+    "verdict_rule": "h_supported = true ⇔ A ∧ B ∧ C 全部成立(深度信号在正先验角落显形)",
+    "A_depth_direction": "mean_gain ≥ 0.02",
+    "B_noise": "mean_gain ≥ 2·σ_paired",
+    "C_consistency": "3/3 seeds gain_s > 0",
+    "else": "h_supported = false, 按 negative_diagnoses 三选一",
+    "no_posthoc_move": "本文件落盘后判据不可修改; verdict 由 tag=p0c_s5_depth 原始 jsonl 行以本口径计算"
+  },
+  "negative_diagnoses": {
+    "budget_wall_s5": "两臂 3 seeds M 全部 ≤ 0.02(chance)→ S5 在 S=2000 不可达(NC¹ 任务需要的学习量超出探针预算,文献配方训练量远大于此);处置=深度链探针级全路径收官,升级预算愿望登记,换轴推导或单目标达成候选",
+    "depth_hurts_s5": "mean_gain < −0.02 且 3/3 seeds gain_s < 0(两臂均脱离 chance)→ 正先验角落亦深度单调伤;处置=同上收官",
+    "bimodal_s5": "部分 seed 脱离 chance 部分 chance → grokking 掷硬币区;处置=报 grok 率,升级 seeds 愿望登记"
+  },
+  "honest_prediction_note": "续向蒸馏预判:文献正先验的配方可训练量(长训练+特定课程)远超 S=2000,本探针最可能结局=budget_wall_s5(NC¹ 任务在探针预算不可达);预注册的价值=把'最后一条正先验路径'以负结果或正信号两种方式都变成链上证据,不因预判负面跳过",
+  "conclusion_grade": "[B] 本机实测 (T1 MPS, 3 seeds 探针级; 终局声明须 ≥5 seeds 跨机 → [C])",
+  "verdict_file": "benchmarks/verdicts/p0c_s5_depth.json",
+  "raw_data": "benchmarks/results/reasoning_depth.jsonl (tag=p0c_s5_depth)",
+  "scope_note": "深度链最后一条可推导路径(§4.5 第七-十一轮五连负后);30k/10^5 步级终判=愿望登记挂账(AMM-017);parity 线不混"
+}

@@ -2,6 +2,30 @@
 
 Owner: Everest.
 
+2026-09-27（轮 2）：[循环体系](docs/loop/GOAL-PROMPT-M2.md) 瘦身
+canonical 化（AMM-002，参照 Physic AMM-037 先例）——v2 精简版（~20 行
+指针+铁律）升为唯一点火源，v1 全文降级 `GOAL-PROMPT-M2-v1-ARCHIVED.md`
+（废止横幅）；承重铁律机械门禁 `tests/test_goal_prompt_invariants.py`
+（17 条，每条对应一次真实事故）；细则（状态机/阶梯/算力四档/结论分级）
+下沉 GOALS.md 细则区；阶梯④新增 RSI 夜账到期检查（防断喂）；高危词
+扫描修掉"两因结束 vs PARKED 结束会话"矛盾（改显式三因）。全仓
+207+20=227 passed。
+
+2026-09-27：新增 [循环体系](docs/loop/GOAL-PROMPT-M2.md) —— 移植
+AwareLiquid-Physic 循环体系（GOAL-PROMPT-v8/AMM-035 语义）：`GOALS.md`
+=程序计数器+goal_queue（4 条初始队列：P0-C′ 深度复测/2B 120K 腿/情节流/
+RL 接线），`scripts/goal_check`=轮次路由器（每轮全队列达成检测/深位
+弹出/current_variable 锚点回显，`--audit` 数数锚），`scripts/marathon_guard`
+=锁检，`scripts/direction_gate`=提交前判单门（四轴耦合声明），驱动=用户
+Desktop Go 拉式点火（AMM-003+AMM-010：点火一次=一个单目标连续循环，goal
+校验驱动轮次直至队列清空或 BLOCKED-HUMAN；禁 cron/定时，ignite.sh 已于轮 11 归档），
+同步=PR 流（AMM-004：fork 分支+PR，禁直推远端 main）。账本三件：
+`RSI-INDEX.md`=定量指数+十轮节拍唯一定义处，`DISTILL.md`=四栏经验账本
+（AMM-005 蒸馏门），`RSI-HORIZON.md`=外部对标+社区蒸馏门协议（AMM-008
+问表）。训练腿跨轮（>30min 训练=status doing，轮次=判读落盘）。机制改动只走
+[AMENDMENTS](docs/loop/AMENDMENTS.md) 提案（AMM-001 已采纳）。马拉松重启
+=粘贴 GOAL-PROMPT-M2.md 的 text 围栏。全仓测试 206 passed（185+21）。
+
 2026-09-09：新增 `mt_lnn/research/rl/dpo_grpo.py` —— DPO / GRPO 对齐损失参考实现
 （标准公式，数学经 8 个合成测试验证；**未在真实训练验证**，仅供未来 2B 线 RL
 阶段使用，默认不接入任何训练路径）。全仓测试 185 passed（177+8），无回归。

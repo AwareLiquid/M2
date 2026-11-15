@@ -1,0 +1,55 @@
+{
+ "id": "p0c-stream-len-e8",
+ "kind": "verdict",
+ "prereg": "benchmarks/verdicts/p0c_stream_len_e8.prereg.json",
+ "h_supported": false,
+ "criteria_eval": {
+  "A_learn": {
+   "rule": "两模型 3-seed 均值 acc(256) 均 >= 0.8",
+   "observed": "mtlnn=0.2239 transformer=0.3386(高于 chance 0.0625 但均 < 0.8)",
+   "pass": false
+  },
+  "B_retention": {
+   "rule": "R_mtlnn >= R_transformer + 0.10",
+   "observed": "R_mtlnn=0.313 < R_transformer=0.671(两臂均未达可学门,保持率again无裁决力)",
+   "pass": false
+  },
+  "C_abs": {
+   "rule": "3-seed 均值 acc_mtlnn(1024) >= 0.5",
+   "observed": 0.0625,
+   "pass": false
+  },
+  "verdict_rule": "h_supported = A ∧ B ∧ C ⇒ false(A 再次失败:8 事实仍不可达)"
+ },
+ "M_table": {
+  "acc_by_len": {
+   "mtlnn": {"256": 0.2239, "1024": 0.0625, "4096": 0.0833},
+   "transformer": {"256": 0.3386, "1024": 0.2292, "4096": 0.1458}
+  },
+  "per_seed_mtlnn_256": [0.141, 0.25, 0.281],
+  "per_seed_transformer_256": [0.312, 0.344, 0.359],
+  "chance": 0.0625,
+  "口径": "mean over 3 seeds;n_facts=8(--n_facts 接线轮 363)"
+ },
+ "latency_descriptive": {
+  "fwd_s": {"mtlnn": {"256": 0.108, "1024": 0.55, "4096": 1.664},
+            "transformer": {"256": 0.013, "1024": 0.078, "4096": 0.211}},
+  "ratio_4096_256": {"mtlnn": 15.4, "transformer": 16.4},
+  "note": "与第十三轮一致:混合架构延迟同超线性;同宽下 mtlnn 绝对延迟比 transformer 慢 ~8×(液体子层开销)——端侧延迟轴的已有描述性证据"
+ },
+ "data_refs": {
+  "rows": "benchmarks/results/streaming_recall.jsonl tag=p0c_stream_len_e8 seeds={0,1,2} × models={mtlnn,transformer} steps=2000 n_facts=8 (legs rc=0 全)",
+  "prereg_commit": "2ac2ff1 (轮 363 中程提交,判据先于 canonical 数据)"
+ },
+ "negative_diagnosis": "still_unreachable",
+ "negative_diagnosis_note": "prereg negative_diagnoses.still_unreachable 字面兑现:8 事实(容量降 4×)在 2000 步仍不可学(两模型 acc(256) 0.22/0.34,离 0.8 门远)——与 ROADMAP 第一轮(k=1 查表 6000 步)和第十三轮(32 事实)构成三连证据:in-context 查表类任务在本架构/本预算下学习速度是数量级级瓶颈,流式轴探针级预算墙成立;honest_prediction(可达性先验中等)偏乐观的一侧如实兑现;处置=加步数愿望登记(8000 步 mtlnn 腿≈35min 超红线),流式轴探针级收官",
+ "caveats": [
+  "探针级 [B]:3 seeds × 2000 步本机 MPS;终局声明须 ≥5 seeds 跨机 → [C]",
+  "流式轴段内同族迭代已达上限 2(32/8 两变体,阶梯①'段内同族 ≤2'规则)——进一步降事实数(4/2)不再推导,加步数=愿望登记挂账",
+  "同宽延迟差 8×(mtlnn 慢)为两轮一致的描述性证据,端侧延迟轴候选探针=纯液体核(attention_layers=())延迟平坦性,可推导"
+ ],
+ "decided_at": "2026-10-04T00:30:00+08:00",
+ "round": 363,
+ "exec_tier": "T1",
+ "seeds": 3
+}
