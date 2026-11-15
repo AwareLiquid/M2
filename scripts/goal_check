@@ -1,0 +1,265 @@
+#!/usr/bin/env python3
+"""goal_check — M2 循环轮次路由器(v2,AMM-005 蒸馏门;v1 移植自 AwareLiquid-Physic wave-10 轮 49/292)
+
+每轮 Go 轮次第一步:
+  1. 读 docs/loop/GOALS.md goal_queue → 对**全部**条目执行 check_cmd
+     (cwd=仓库根;AMM-005 全队列达成检测——达成即当场弹出,含深位,
+      不再等条目慢慢冒到队首;判定只信 check_cmd 退出码,零定时任务监听):
+     队首达成 → VERDICT: ACHIEVED(弹出+深位达成一并弹出,晋升下一位) exit 0
+     队首未达 → VERDICT: NOT-Achieved(对队首迭代一步;深位达成仍弹出) exit 1
+     队列空   → VERDICT: QUEUE-EMPTY(按 GOALS.md 细则区阶梯取活)     exit 2
+     余条目均人门控 → VERDICT: ALL-BLOCKED(阶梯取活+报告待授权;
+      阶梯全空 ⇒ 置 BLOCKED-HUMAN)                                 exit 6
+     (AMM-011:status=blocked-human 条目=人门控——不计数为有活、路由
+      跳过;其 check_cmd 达成弹出的语义不变。触发谓词=「无可执行项」,
+      非「队列字面为空」——防人门控腿滞留队列期间阶梯成死代码)
+  2. 蒸馏锚点回显: 打印 GOALS.md 的 current_variable(单变量收敛纪律,
+     例外轮须在 docs/loop/DISTILL.md 显式记账)。
+  3. mode: OFF ⇒ 不动作                                           exit 5
+  --audit: 队列完整性审计,只读不路由——数数锚(id 数=check_cmd 数)+
+  空/折叠 check_cmd+重复 id+current_variable 缺失+条目回显。
+  每轮提交前必跑。                                                0=健康 1=问题
+
+退出码: 0=ACHIEVED 1=NOT-Achieved(或 audit 问题) 2=QUEUE-EMPTY
+        5=MODE-OFF 6=ALL-BLOCKED(无可执行项,余条目均人门控,AMM-011)
+
+轮内互斥信号: 每次运行 touch .loop-lock(供 marathon_guard 新鲜度检查)。
+恢复永远=读盘:本脚本不依赖任何会话记忆,GOALS.md 是唯一输入。
+"""
+import os
+import re
+import subprocess
+import sys
+import tempfile
+import time
+
+EXIT_ACHIEVED = 0
+EXIT_NOT_ACHIEVED = 1
+EXIT_QUEUE_EMPTY = 2
+EXIT_MODE_OFF = 5
+EXIT_ALL_BLOCKED = 6
+
+ALLOWED_STATUS = {"todo", "doing", "blocked-human"}
+
+
+def repo_root():
+    root = os.environ.get("M2_LOOP_ROOT")
+    if root:
+        return os.path.abspath(root)
+    return os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+
+
+def read_goals(root):
+    path = os.path.join(root, "docs", "loop", "GOALS.md")
+    with open(path, encoding="utf-8") as f:
+        return path, f.read()
+
+
+def queue_block(src):
+    """返回 (block 全文, block 起止 span)。只匹配以 goal_queue: 开头的 yaml 围栏。"""
+    m = re.search(r"```yaml\ngoal_queue:\n(.*?)```", src, re.S)
+    if not m:
+        return None, None
+    return m.group(1), (m.start(1), m.end(1))
+
+
+def parse_entries(block):
+    entries = []
+    cur = None
+    for line in block.splitlines():
+        m = re.match(r"\s*- id: (\S+)", line)
+        if m:
+            cur = {"id": m.group(1), "check_cmd": "", "status": ""}
+            entries.append(cur)
+            continue
+        if cur is not None:
+            mm = re.match(r"\s*check_cmd: (.+?)\s*$", line)
+            if mm:
+                cur["check_cmd"] = mm.group(1)
+                continue
+            ms = re.match(r"\s*status: (.+?)\s*$", line)
+            if ms:
+                cur["status"] = ms.group(1)
+    return entries
+
+
+def current_variable(src):
+    """蒸馏门锚点:GOALS.md meta 区的 current_variable 字段(单行标量)。"""
+    m = re.search(r"(?m)^current_variable:[ \t]*(\S.*?)\s*$", src)
+    return m.group(1) if m else None
+
+
+def audit(src):
+    problems = []
+    block, _ = queue_block(src)
+    if block is None:
+        print("AUDIT: 未找到 goal_queue YAML 块")
+        return 1
+    if not current_variable(src):
+        problems.append("current_variable 缺失/空(蒸馏门锚点,AMM-005;GOALS.md meta 区单行)")
+    entries = parse_entries(block)
+    ids = [e["id"] for e in entries]
+    cmds = [e["check_cmd"] for e in entries]
+    if len(ids) != len(cmds) or len(ids) != len(entries):
+        problems.append("数数锚失衡: id 数 != check_cmd 数")
+    seen = set()
+    for e in entries:
+        if e["id"] in seen:
+            problems.append(f"重复条目 id: {e['id']}")
+        seen.add(e["id"])
+        if not e["check_cmd"]:
+            problems.append(f"[{e['id']}] check_cmd 缺失/空(吞行或折叠:先 git log 取原文)")
+        elif e["check_cmd"][0] in ">|":
+            problems.append(f"[{e['id']}] check_cmd 为折叠标量,不可执行")
+        if not e["status"]:
+            problems.append(f"[{e['id']}] status 缺失")
+        elif e["status"] not in ALLOWED_STATUS:
+            problems.append(
+                f"[{e['id']}] 未知 status: {e['status']!r}"
+                f"(合法={sorted(ALLOWED_STATUS)},AMM-011 人门控语义)"
+            )
+    if problems:
+        for p in problems:
+            print(f"AUDIT: {p}")
+        print(f"AUDIT: {len(entries)} 条目 — FAIL")
+        return 1
+    print(f"AUDIT: {len(entries)} 条目全部健康(数数锚 {len(ids)}={len(cmds)})")
+    for e in entries:
+        print(f"  - {e['id']} [{e['status']}]")
+    if ids:
+        print(f"  尾条 id: {ids[-1]}")
+    else:
+        print("  尾条 id: (空队列——relay_tree 续填,AMM-013)")
+    return 0
+
+
+def pop_ids(src, span, ids):
+    """从队列块中摘除 id 集合内的条目(各条目从其 `- id:` 行到下一
+    条目行之前),其余字节保持不变(pop_first 隔条删除 bug 的推广版,
+    逐条目 span 删除,不做跨条目偏移)。"""
+    block = src[span[0]:span[1]]
+    matches = list(re.finditer(r"(?m)^\s*- id: (\S+)", block))
+    drop_spans = []
+    for i, m in enumerate(matches):
+        if m.group(1) in ids:
+            start = m.start()
+            end = matches[i + 1].start() if i + 1 < len(matches) else len(block)
+            drop_spans.append((start, end))
+    for start, end in reversed(drop_spans):
+        block = block[:start] + block[end:]
+    return src[:span[0]] + block + src[span[1]:]
+
+
+def write_atomic(path, content):
+    d = os.path.dirname(path)
+    fd, tmp = tempfile.mkstemp(dir=d, suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(content)
+        os.replace(tmp, path)
+    except BaseException:
+        if os.path.exists(tmp):
+            os.unlink(tmp)
+        raise
+
+
+def run_check_cmd(cmd, root):
+    r = subprocess.run(cmd, shell=True, cwd=root, capture_output=True, text=True)
+    if r.returncode != 0:
+        tail = next((l for l in reversed((r.stderr or r.stdout).strip().splitlines()) if l.strip()), "")
+        if tail:
+            print(f"check_cmd 尾行: {tail}")
+    return r.returncode
+
+
+def main():
+    root = repo_root()
+    try:
+        path, src = read_goals(root)
+    except FileNotFoundError:
+        print(f"goal_check: 找不到 {path}")
+        return 1
+
+    if re.search(r"(?m)^mode: OFF\s*$", src):
+        print("VERDICT: MODE-OFF(循环总开关关闭,不动作;./scripts/iteration 语义见 GOAL-PROMPT-M2)")
+        return EXIT_MODE_OFF
+
+    # 心跳存活信号(供 marathon_guard 新鲜度检查)
+    lock = os.path.join(root, ".loop-lock")
+    try:
+        with open(lock, "w") as f:
+            f.write(str(int(time.time())))
+    except OSError:
+        pass
+
+    if len(sys.argv) > 1 and sys.argv[1] == "--audit":
+        return audit(src)
+
+    block, span = queue_block(src)
+    if block is None:
+        print("goal_check: GOALS.md 无 goal_queue YAML 块(格式畸变,人工检查)")
+        return 1
+    entries = parse_entries(block)
+    if not entries:
+        cv = current_variable(src)
+        if cv:
+            print(f"蒸馏锚点 current_variable: {cv}")
+        print("VERDICT: QUEUE-EMPTY — 按 GOALS.md 细则区阶梯取活(①判读后续池→②停车场→③写作→④硬化→⑤全空=空审计)")
+        return EXIT_QUEUE_EMPTY
+
+    for e in entries:
+        if not e["check_cmd"]:
+            print(f"goal_check: [{e['id']}] check_cmd 为空 — 先跑 --audit 并修复(禁路由)")
+            return 1
+
+    # AMM-005 蒸馏门·达成检测: 每轮对全队列跑 check_cmd, 达成即当场弹出
+    # (含深位——已完成的条目不再滞留队列排队首)。判定只信退出码,零监听。
+    achieved = []
+    rcs = {}
+    for e in entries:
+        rc = run_check_cmd(e["check_cmd"], root)
+        rcs[e["id"]] = rc
+        if rc == 0:
+            achieved.append(e["id"])
+    if achieved:
+        write_atomic(path, pop_ids(src, span, set(achieved)))
+
+    cv = current_variable(src)
+    if cv:
+        print(f"蒸馏锚点 current_variable: {cv}(本轮工作映射到该变量,或在 DISTILL.md 记例外轮)")
+
+    achieved_set = set(achieved)
+    remaining_entries = [e for e in entries if e["id"] not in achieved_set]
+    blocked = [e for e in remaining_entries if e["status"] == "blocked-human"]
+    executable = [e for e in remaining_entries if e["status"] != "blocked-human"]
+    if blocked:
+        print(f"人门控条目(AMM-011:不计数为有活,路由跳过): {', '.join(e['id'] for e in blocked)}")
+
+    head = entries[0]["id"]
+    deep = [i for i in achieved if i != head]
+    if deep:
+        print(f"深位达成同轮弹出: {', '.join(deep)}(AMM-005 全队列达成检测)")
+    if head in achieved_set:
+        if executable:
+            nxt = executable[0]["id"]
+        elif blocked:
+            nxt = "(无可执行项:余条目均人门控 ⇒ ALL-BLOCKED 阶梯)"
+        else:
+            nxt = "(空,QUEUE-EMPTY 阶梯)"
+        print(f"VERDICT: ACHIEVED — [{head}] 达成弹出,晋升: {nxt}")
+        return EXIT_ACHIEVED
+    if not executable:
+        if not remaining_entries:
+            print("VERDICT: QUEUE-EMPTY — 按 GOALS.md 细则区阶梯取活(①判读后续池→②停车场→③写作→④硬化→⑤全空=空审计)")
+            return EXIT_QUEUE_EMPTY
+        print("VERDICT: ALL-BLOCKED — 无可执行项(余条目均人门控,AMM-011)")
+        print("  行动: 按 GOALS.md 细则区阶梯取活 + 当轮向用户报告待授权项;")
+        print("  阶梯全空 ⇒ 置 state: BLOCKED-HUMAN 待人裁(不走 PARKED)")
+        return EXIT_ALL_BLOCKED
+    route_head = executable[0]["id"]
+    print(f"VERDICT: NOT-Achieved — [{route_head}] (check_cmd 退出码 {rcs.get(route_head)}),对当前目标迭代一步")
+    return EXIT_NOT_ACHIEVED
+
+
+if __name__ == "__main__":
+    sys.exit(main())

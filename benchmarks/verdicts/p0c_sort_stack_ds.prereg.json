@@ -1,0 +1,55 @@
+{
+  "id": "p0c-sort-stack-ds",
+  "title": "p0c-sort stack 深监督变体探针(逐迭代 CE 攻'深堆叠不训练')— 第九轮 budget_wall 机制解释的直接检验,阶段 1(d8 可达性门)",
+  "kind": "preregistration",
+  "round": 356,
+  "created_at": "2026-10-03T19:05:00+08:00",
+  "hypothesis": {
+    "statement": "stack d8 判负(第九轮 budget_wall)的机制=深堆叠缺可学习梯度通路(终输出监督对 8 块堆叠的前置块无直接梯度);deep_supervision(HRM 式逐迭代 CE,train_model 既有机制)给每个 stack 迭代的输出直接监督 ⇒ stack d8 + ds 在 S=2000 内起飞(M(8)_ds 显著超过无 ds 的 chance 带)",
+    "h_origin": "docs/ROADMAP_M2.md §4.5 第九轮判决(budget_wall=深堆叠优化失败)的机制归因; benchmarks/verdicts/p0c_sort_stack.json negative_diagnosis_note; 续向蒸馏四栏推导(轮 355 DISTILL)"
+  },
+  "single_variable_declaration": "本探针相对 p0c_sort_stack.prereg.json(轮 353)的唯一变化=deep_supervision 开(d8 臂);任务/课程/标签池/stack 旋钮/S=2000/batch/lr/hygiene 逐字沿用 — 单变量声明(AMM-005);对照臂=在盘 canonical 行 tag=p0c_sort_stack d8(3 seeds,ds 关,同协议同预算),不新发对照腿",
+  "staging_note": "阶段 1=可达性门(本预注册):只回答'ds 能否救活深堆叠训练';若通过,阶段 2 另立预注册跑 d1+ds 做深度对照(深度信号是否显形)——每阶段单变量,不并案",
+  "protocol": {
+    "model": "MT-LNN n_layers=2 d_model=104, n_heads=4, n_global_heads=2 (γ 配额 K=2), full_mha=true — 同 p0c_prime/p0c_sort/p0c_sort_stack 修复配置",
+    "mode": "fixed, depth_knob=stack_iterations(--stack), deep_supervision=true(--deep_supervision,逐迭代 CE,终迭代权重×2,train_model 既有实现)",
+    "depths": [8],
+    "seeds": [0, 1, 2],
+    "steps": 2000,
+    "batch": 128,
+    "lr": 0.0003,
+    "beta2": 0.999,
+    "clip": 0,
+    "mix": "j~U{1..7} 课程混合(同 p0c_sort/p0c_sort_stack)",
+    "runner": "scripts/launch_p0c.sh(P0C_TASK=bubble_trace P0C_DIFFICULTY=7 P0C_N_VALUES=16 P0C_STACK=1 P0C_DS=1 P0C_DEPTHS=8 P0C_TAG=p0c_sort_stack_ds P0C_SKIP_TRANSFORMER=1; P0C_DS 旋钮=轮 356 新增;run_fixed_sweep deep_supervision 接线=轮 356,canonical 行带 deep_supervision 字段)",
+    "launch_pattern": "3 seeds 分三次发射(AMM-017),每 seed 单臂 d8,受管后台通道(轮 354 发射纪律)",
+    "exec_tier": "T1 (MPS, Apple Silicon 本地)"
+  },
+  "budget_backcompute": {
+    "measured_rates": "轮 356 标定(tag=cal_stackds_d8_s200 沙箱行):r8_ds=0.6275 s/step — 与无 ds 的 stack d8(0.631)持平,逐迭代 CE 开销可忽略",
+    "formula": "单臂 d8:2000×0.6275/60 + 评估 ≈ 23min ≤ 30min ✓(墙钟热节流余量按轮 353 教训以隔段发射承担)",
+    "equal_steps_note": "S=2000 与对照臂(tag=p0c_sort_stack)严格同预算——对照可比性的前提"
+  },
+  "metrics": {
+    "primary": "M(8,s)_ds = mean_{j∈{1..7}} acc_j(8,s) — 口径与 p0c_sort/p0c_sort_stack 一致",
+    "control": "M(8)_stack 对照=在盘 canonical 行 tag=p0c_sort_stack seeds{0,1,2} 的 M(8)(0.0887/0.0584/0.0984,mean 0.0818)"
+  },
+  "h_supported_criteria": {
+    "verdict_rule": "h_supported = true ⇔ A ∧ B ∧ C 全部成立(ds 使深堆叠起飞)",
+    "A_reach": "mean M(8)_ds ≥ 0.30(显著脱离 chance 带 0.09;量级锚=d1 可学水平 0.64 的约半程,部分训练证据)",
+    "B_consistency": "3 seeds 中 ≥2 个 M(8)_ds > 0.09(chance 线)",
+    "C_effect_vs_control": "mean M(8)_ds − mean M(8)_stack ≥ 0.02(对照=在盘 d8 无 ds 行)",
+    "else": "h_supported = false, 按 negative_diagnoses 三选一",
+    "no_posthoc_move": "本文件落盘后判据不可修改; verdict 由 tag=p0c_sort_stack_ds 原始 jsonl 行+在盘 p0c_sort_stack 行以本口径计算"
+  },
+  "negative_diagnoses": {
+    "ds_rescue_failed": "3 seeds 的 M(8)_ds 全部 ≤ 0.09 → 逐迭代 CE 不足以救深堆叠(梯度通路假设被驳,优化失败另有原因);处置=深度命题探针级穷尽评估(升级预算=愿望登记既有挂账,S5 任务族另立预注册或单目标达成候选)",
+    "bimodal_rescue": "部分 seed 起飞部分 chance(A/B 失败因分裂)→ ds 救活但 seed 依赖,双峰纪律=报 grok 率,升级 seeds=愿望登记",
+    "direction_but_underpowered": "mean M(8)_ds ∈ (0.09, 0.30) 且 3 seeds 一致 > 0.09 → ds 起飞但量级不足以过 A(部分训练):阶段 2 深度对照可推导(同预算下 d8+ds vs d1+ds),另立预注册"
+  },
+  "calibration_disclosure": "预注册前标定(轮 356, tag=cal_stackds_d8_s200 沙箱行):ds 开销可忽略(0.6275 vs 0.631 s/step);@200 步全桶 chance 与无 ds 一致(起飞判读必须看 S=2000 终评)。canonical 判据只消费 tag=p0c_sort_stack_ds 行+在盘 p0c_sort_stack 行。",
+  "conclusion_grade": "[B] 本机实测 (T1 MPS, 3 seeds 探针级; 终局声明须 ≥5 seeds 跨机 → [C])",
+  "verdict_file": "benchmarks/verdicts/p0c_sort_stack_ds.json",
+  "raw_data": "benchmarks/results/reasoning_depth.jsonl (tag=p0c_sort_stack_ds; 对照=tag=p0c_sort_stack)",
+  "scope_note": "深监督变体=第九轮 budget_wall 的机制检验,不是新方向(同变量 p0c-sort-depth 续作,轮 355 DISTILL 四栏留痕);30k 步级终判/升级预算=愿望登记(AMM-017);parity 线不混"
+}

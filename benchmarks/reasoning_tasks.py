@@ -288,14 +288,89 @@ def _cot_hop_marks(k_hops: int, granularity: int) -> list:
     return marks
 
 
+# ── Task 5: bubble-sort trace query (sort-family depth probe, p0c-sort) ──────
+#
+# Layout: [BOS] x0 x1 ... x_{k-1} [START] j [SEP] p [THINK] [ANS]
+# x = k values drawn WITHOUT replacement from {0..POOL-1} (POOL=32), shown in
+# presentation order. Question: run j rounds of left-to-right adjacent
+# compare-and-swap (ascending: min goes left), then read the value now at
+# position p. Answer = that value (one token).
+#
+# Why pool-drawn labels (pinned at prereg time, benchmarks/verdicts/
+# p0c_sort.prereg.json): the bubble dynamics depend only on the RELATIVE
+# order pattern of the values, and the occupant of position p after j passes
+# has a strongly NON-uniform rank distribution (turtles/rabbits — measured
+# max mass 0.23 at k=8,j=2). With contiguous labels 0..k-1 the answer
+# marginal inherits that skew (best-constant guesser ≈ 0.3-0.4), and any
+# marginal/turtle shortcut inflates accuracy without simulating the chain.
+# Drawing labels as a uniform random k-subset of a 32-pool convolves the
+# rank skew with the hypergeometric label spread: max_m P(answer=m | p)
+# ≈ 0.05 (measured, pinned in the prereg) — a marginal guesser is dead by
+# construction. The rank→label lookup is O(1) attention counting
+# (depth-flat), so it does not confound the d=1 vs d=8 contrast; only
+# simulating j comparison passes does.
+#
+# Depth structure: each bubble pass composes the whole row's local swaps;
+# values move at most one position LEFT per pass while the running-max carry
+# moves right, so the occupant of contested position p depends on the
+# interleaved swap dynamics, not on any single order statistic. After j
+# passes the suffix k-j..k-1 holds the j largest sorted and small p can
+# collapse to a window-min on special inputs — queries sample p from the
+# CONTESTED ZONE p ∈ {j..k-1-j} only.
+
+_POOL = 32
+
+
+def gen_bubble_trace(
+    batch: int,
+    k: int,
+    j_passes: int,
+    rng: np.random.Generator,
+) -> Batch:
+    if k < 2 * j_passes + 1:
+        raise ValueError(
+            f"empty contested zone: need k >= 2*j+1, got k={k}, j={j_passes}")
+    if _POOL < k:
+        raise ValueError(f"label pool {_POOL} < array length {k}")
+    T = 7 + k  # BOS + k values + START j SEP p THINK + ANS
+    toks = np.full((batch, T), PAD, dtype=np.int64)
+    toks[:, 0] = BOS
+    toks[:, 1 + k] = START
+    toks[:, 2 + k] = val_tok(j_passes)
+    toks[:, 3 + k] = SEP
+    toks[:, 5 + k] = THINK
+    toks[:, 6 + k] = ANS
+
+    idx = np.argsort(rng.random((batch, _POOL)), axis=1)[:, :k]
+    idx.sort(axis=1)  # labels[:, r] = r-th smallest of the drawn k-subset
+    labels = idx
+    perm = np.argsort(rng.random((batch, k)), axis=1).astype(np.int64)
+    x = labels[np.arange(batch)[:, None], perm]  # labels in presentation order
+    toks[:, 1:1 + k] = VALUE_BASE + x
+    a = perm
+    for _ in range(j_passes):
+        for i in range(k - 1):
+            lo = np.minimum(a[:, i], a[:, i + 1])
+            hi = np.maximum(a[:, i], a[:, i + 1])
+            a[:, i], a[:, i + 1] = lo, hi
+    p = rng.integers(j_passes, k - j_passes, size=batch)  # contested zone
+    toks[:, 4 + k] = VALUE_BASE + p
+    ans = labels[np.arange(batch), a[np.arange(batch), p]]
+    return Batch(tokens=toks, answer=(VALUE_BASE + ans).astype(np.int64),
+                 ans_pos=T - 1)
+
+
 # ── Convenience: unified generator ───────────────────────────────────────────
 
 def make_generator(task: str, difficulty: int, n_values: int, seed: int):
     """Returns (gen_fn(batch, rng) -> Batch, vocab, n_values).
 
-    difficulty = k_hops for pointer_chase, k_terms for mod_chain.
-    n_values   = n_nodes  for pointer_chase, modulus for mod_chain.
+    difficulty = k_hops for pointer_chase, k_terms for mod_chain,
+    j_passes   for bubble_trace.
+    n_values   = n_nodes  for pointer_chase, modulus for mod_chain,
+    k (array length) for bubble_trace.
     """
+    voc = vocab_size(n_values)
     if task == "pointer_chase":
         def gen(batch: int, rng: np.random.Generator) -> Batch:
             return gen_pointer_chase(batch, n_values, difficulty, rng)
@@ -310,8 +385,17 @@ def make_generator(task: str, difficulty: int, n_values: int, seed: int):
         n_values = S5_ORDER  # difficulty = k_terms
         def gen(batch: int, rng: np.random.Generator) -> Batch:
             return gen_s5_word(batch, difficulty, rng)
+    elif task == "bubble_trace":
+        # difficulty = j_passes (bubble rounds), n_values = k (array length);
+        # labels span the 32-pool, so vocab covers the pool, not just k
+        voc = vocab_size(_POOL)
+        def gen(batch: int, rng: np.random.Generator) -> Batch:
+            return gen_bubble_trace(batch, n_values, difficulty, rng)
     else:
         raise ValueError(f"unknown task: {task}")
+    # vocab AFTER branch reassignments: parity/s5_word override n_values
+    # internally (轮 360 回归教训: 重构时先算 voc 会让显式 n_values 的
+    # s5_word 拿到 26 而非 132, canonical launcher 路径答案 token 越界)
     return gen, vocab_size(n_values), n_values
 
 
@@ -412,6 +496,51 @@ def _selftest() -> None:
         raise AssertionError("k_hops < 1 必须拒绝")
     except ValueError:
         pass
+
+    # bubble_trace: 黄金回放 — 从 token 行重建标签序列, 手工逐 pass 模拟核验
+    bt = gen_bubble_trace(32, k=8, j_passes=2, rng=rng)
+    assert bt.tokens.shape == (32, 15) and bt.ans_pos == 14
+    for r in range(32):
+        row = bt.tokens[r]
+        x = (row[1:9] - VALUE_BASE).tolist()
+        assert len(set(x)) == 8 and max(x) < 32, "标签须为 32 池内 8 个互异值"
+        assert row[9] == START
+        j_q = int(row[10]) - VALUE_BASE  # START 后第一槽 = pass 数
+        assert row[11] == SEP
+        p_q = int(row[12]) - VALUE_BASE  # SEP 后 = 查询位置
+        assert 2 <= p_q <= 5, "p 必须取自争议区 {j..k-1-j}"
+        sim = list(x)
+        for _ in range(j_q):
+            for i in range(len(sim) - 1):
+                if sim[i] > sim[i + 1]:
+                    sim[i], sim[i + 1] = sim[i + 1], sim[i]
+        assert sim[p_q] == int(bt.answer[r]) - VALUE_BASE, "bubble replay mismatch"
+    # 池化标签 ⇒ 答案边际被超几何混合打散: best-constant 猜测者 floor 实测
+    # (预注册钉死前测量): 断言 pooled floor < 0.08, 远低于连续标签的 ~0.3
+    big = gen_bubble_trace(4000, k=8, j_passes=2,
+                           rng=np.random.default_rng(7))
+    vals, counts = np.unique(big.answer - VALUE_BASE, return_counts=True)
+    assert len(vals) >= 20 and counts.max() / 4000 < 0.08, "边际应被打散"
+    # 争议区为空必须拒绝
+    try:
+        gen_bubble_trace(4, k=4, j_passes=2, rng=rng)
+        raise AssertionError("k < 2j+1 必须拒绝")
+    except ValueError:
+        pass
+    # 确定性: 同 seed 同批
+    r1 = np.random.default_rng(43)
+    r2 = np.random.default_rng(43)
+    y1 = gen_bubble_trace(4, 8, 2, r1)
+    y2 = gen_bubble_trace(4, 8, 2, r2)
+    assert (y1.tokens == y2.tokens).all() and (y1.answer == y2.answer).all()
+
+    # vocab 覆盖守卫(轮 360 回归教训): 任一 task 在显式错误 n_values 下,
+    # make_generator 返回的 vocab 必须仍覆盖全部发出 token
+    for tv, nv in [("s5_word", 16), ("parity", 999), ("s5_word", None)]:
+        g2, v2, nv2 = make_generator(tv, 4, nv if nv is not None else 120, 0)
+        sample = g2(8, np.random.default_rng(0))
+        assert sample.tokens.max() < v2 and sample.answer.max() < v2, \
+            f"{tv}: vocab {v2} 不覆盖发出 token"
 
     print("reasoning_tasks selftest OK")
 

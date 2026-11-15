@@ -11,3 +11,5 @@ dist/
 benchmarks/results/
 runs/
 data/
+.loop-lock
+uv.lock

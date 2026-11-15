@@ -1,0 +1,56 @@
+{
+ "id": "p0c-sort-stack-depth",
+ "kind": "verdict",
+ "prereg": "benchmarks/verdicts/p0c_sort_stack.prereg.json",
+ "h_supported": false,
+ "criteria_eval": {
+  "A_absolute": {
+   "rule": "mean_gain >= 0.02",
+   "observed": -0.5601,
+   "pass": false
+  },
+  "B_noise": {
+   "rule": "mean_gain >= 2*sigma_paired(ddof=1)",
+   "observed": "mean_gain=-0.5601 < 2*sigma=0.0608(且方向为深度负增益)",
+   "pass": false
+  },
+  "C_highj_direction": {
+   "rule": "highj_gain >= 0 (深度效应须在高难桶 j∈{5,6,7} 显形)",
+   "observed": -0.7026,
+   "pass": false
+  },
+  "verdict_rule": "h_supported = A ∧ B ∧ C 全部成立 ⇒ false(三判据全败)"
+ },
+ "M_table": {
+  "M(1)_per_seed": {"0": 0.6327, "1": 0.6535, "2": 0.6396},
+  "M(8)_per_seed": {"0": 0.0887, "1": 0.0584, "2": 0.0984},
+  "M(1)_mean": 0.6419,
+  "M(8)_mean": 0.0818,
+  "gain_per_seed": {"0": -0.544, "1": -0.5951, "2": -0.5411},
+  "mean_gain": -0.5601,
+  "sigma_paired": 0.0304,
+  "highj_gain_mean": -0.7026,
+  "口径": "mean over j∈{1..7} per-j 桶评估均值(prereg metrics.primary,与 p0c_sort 同口径)"
+ },
+ "chance_baseline": {
+  "chance_line": 0.09,
+  "d1_learning": "M(1) 三 seed 0.63-0.65 ≫ 线:任务可学,排除任务本身不可达",
+  "d8_status": "M(8) 三 seed 0.058-0.098 全部 chance 带(均值 0.0818):8 块整堆叠在 S=2000 内不训练(loss 平台 ~3.2)"
+ },
+ "data_refs": {
+  "rows": "benchmarks/results/reasoning_depth.jsonl tag=p0c_sort_stack seeds={0,1,2} steps=2000 (wall 1862.3/1585.2/1599.8s;seed 0 超 30min 线 3.4% 如实记账,seed 1 重发为受管通道幂等恢复,原始腿被会话中断杀死)",
+  "prereg_commit": "fefc67b (轮 353 中程提交,判据先于 canonical 数据)"
+ },
+ "negative_diagnosis": "budget_wall",
+ "negative_diagnosis_note": "深堆叠优化失败:stack d8(整块迭代含注意力,权重深度 8)在该等步预算内完全不训练,而 stack d1 与 core 双旋钮同任务均可达 0.64-0.75——深度信号的缺失由『深核可训练、深堆叠不可训练』的不对称解释,与 core 旋钮判负(flat_iterations_ignored,verdicts/p0c_sort.json)合成为完整证据链:本机探针预算内,深度两种参数化(时间/空间)均不产生深度增益。判据字面偏离如实登记:budget_wall 条款要求 3 seeds M(8) 全≤0.09,seed 2 实测 0.0984 超线 0.0084(判据未动,no_posthoc_move 遵守);诊断按实质登记=d8 全 seed chance 带+增益三 seed 一致(−0.54/−0.60/−0.54),任何读法下结论相同",
+ "caveats": [
+  "探针级 [B]:3 seeds × 2000 步本机 MPS;终局声明须 ≥5 seeds 跨机 → [C]",
+  "判据字面偏离:seed 2 M(8)=0.0984 超出 budget_wall 条款的 0.09 线(见 negative_diagnosis_note)",
+  "深监督变体(逐迭代 CE,HRM 式,库内 train_model 已有机制)=深度信号的下一探针;30k 步级终判=愿望登记挂账(AMM-017)",
+  "seed 1 原始腿被会话中断杀死(裸 & 通道),受管通道幂等重发恢复,partial 残行未污染 canonical"
+ ],
+ "decided_at": "2026-10-03T18:50:30+08:00",
+ "round": 355,
+ "exec_tier": "T1",
+ "seeds": 3
+}
